@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, TextInput, Text} from 'react-native';
+import {twMerge} from 'tailwind-merge';
 
 export interface InputProps {
   label?: string;
@@ -15,12 +16,12 @@ export interface InputProps {
   onPaste?: (e: React.ClipboardEvent<HTMLInputElement>) => void;
 }
 
-const Input = ({type, placeholder, label, value, onChange, className, ...props}: InputProps) => {
+const UITextInput = ({type, placeholder, label, value, onChange, className, ...props}: InputProps) => {
   return (
     <View>
       {label && <Text style={{marginBottom: 5}}>{label}</Text>}
       <TextInput
-        className={className}
+        className={twMerge('border border-gray-300 p-2 px-3 text-sm text-gray-700 focus:outline-none  focus:ring-blue-500', className)}
         style={{borderRadius: 5}}
         placeholder={placeholder || ''}
         value={value}
@@ -31,4 +32,4 @@ const Input = ({type, placeholder, label, value, onChange, className, ...props}:
   );
 };
 
-export default Input;
+export default UITextInput;

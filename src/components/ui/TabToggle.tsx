@@ -1,95 +1,70 @@
-import React, {createContext, useContext, useEffect, useState} from 'react';
-import {TouchableOpacity, View, Text, Pressable, GestureResponderEvent} from 'react-native';
-import {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
-import Animated from 'react-native-reanimated';
-// for state management
-interface TabMode {
-  x: number;
-  width: number;
-  id: string;
-}
+import Animated, {useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
+import {Pressable, View, Text, GestureResponderEvent, LayoutChangeEvent} from 'react-native';
+import {useContext, createContext, useRef, useCallback, RefObject, useState} from 'react';
+import {twMerge} from 'tailwind-merge';
 
-interface TabProviderType {
-  mode: TabMode;
-  setMode: React.Dispatch<React.SetStateAction<TabMode>>;
-}
-
-const initalState = {
-  mode: {
-    x: 0,
-    width: 0,
-    id: '',
-  },
-  setMode: () => {},
-};
-const TabContext = createContext<TabProviderType>(initalState);
-
-const TabProvider = ({children}: {children: React.ReactNode}) => {
-  const [mode, setMode] = useState(initalState['mode']);
-  return <TabContext.Provider value={{mode, setMode}}>{children}</TabContext.Provider>;
+type TabContextType = {
+  tab: string;
+  setTab: (tab: string) => void;
+  moveSliderValues: (input: {x: number; width: number}) => void;
+  containerRef: RefObject<View>;
 };
 
-const useTabProvider = () => {
-  const context = useContext(TabContext);
-  if (!context) throw new Error('useTabProvider must be used within a TabProvider');
-  return context;
-};
-// for state management
+const TabContext = createContext<null | TabContextType>(null);
 
-export interface TabsProps {
-  defaultMode: string;
-  onChange?: Function;
-  children: ReturnType<typeof Tabs.Button>[];
-}
-
-export function Tabs({children, defaultMode}: TabsProps) {
-  const {setMode, mode} = useTabProvider();
-  const sliderTranslate = useSharedValue(0);
+export default function Tab({children, defaultTab, className}: {children: React.ReactNode; defaultTab: string; className?: string}) {
+  const sliderX = useSharedValue(0);
   const sliderWidth = useSharedValue(0);
+  const [tab, setTab] = useState(defaultTab);
+  const containerRef = useRef<View>(null) as RefObject<View>;
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{translateX: sliderTranslate.value}],
-    width: sliderWidth.value,
-  }));
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{translateX: sliderX.value}],
+      width: sliderWidth.value,
+    };
+  });
 
-  useEffect(() => {
-    if (defaultMode) {
-      // setMode(prev => ({...prev, id: defaultMode}));
-    }
+  const moveSliderValues = useCallback(({x, width}: {x: number; width: number}) => {
+    sliderX.set(withTiming(x, {duration: 200}));
+    sliderWidth.set(withTiming(width, {duration: 200}));
   }, []);
 
-  useEffect(() => {
-    sliderWidth.set(mode.width);
-    sliderTranslate.set(mode.x);
-  }, [mode]);
-
   return (
-    <TabProvider>
-      <View className="p-2 relative flex-row gap-2 bg-slate-400">
-        <Animated.View style={[animatedStyle]} className="slider absolute bg-red-500 w-full h-full top-0 left-0"></Animated.View>
-        {children}
+    <TabContext.Provider value={{moveSliderValues, containerRef, setTab, tab}}>
+      <View className={twMerge('p-1 bg-[#F5F6F9] w-4/5 mx-auto')} style={{borderRadius: 8}}>
+        <View ref={containerRef} className="relative overflow-hidden flex-row gap-2">
+          <Animated.View style={[{borderRadius: 6}, animatedStyle]} className="slider absolute bg-white h-full top-0 left-0"></Animated.View>
+          {children}
+        </View>
       </View>
-    </TabProvider>
+    </TabContext.Provider>
   );
 }
 
-export interface TabsButtonProps {
-  id: string;
-  label: string;
-}
+Tab.Button = function ({label, id, activeColor}: {label: string; id: string; activeColor?: string}) {
+  const ctx = useContext(TabContext);
+  if (!ctx) throw new Error('TabButton must be used within a Tab component');
 
-Tabs.Button = function ({id, label}: TabsButtonProps) {
-  const {setMode} = useTabProvider();
+  const {moveSliderValues, containerRef, setTab, tab} = ctx;
 
   function handlePress(e: GestureResponderEvent) {
-    e.target.measureInWindow((x, width) => {
-      setMode({id, width, x});
+    e.target.measureLayout(containerRef.current, (x, y, width, height) => {
+      moveSliderValues({x, width});
+      setTab(id);
     });
   }
 
   return (
-    <Pressable onPress={handlePress}>
-      <Text>{label}</Text>
+    <Pressable
+      className="flex-1 text-center"
+      onLayout={(e: LayoutChangeEvent) => {
+        e.target.measureLayout(containerRef.current, (x, y, width, height) => {
+          moveSliderValues({x, width});
+        });
+      }}
+      onPress={handlePress}>
+      <Text className={`${id === tab ? 'opacity-100' : 'opacity-50'} p-2 px-4 text-center `}>{label}</Text>
     </Pressable>
   );
 };
