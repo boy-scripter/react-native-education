@@ -1,3 +1,5 @@
+import colorConstant from './src/constant/color.constant';
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   // NOTE: Update this to include the paths to all of your component files.
@@ -8,17 +10,19 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        greyish: {
+          DEFAULT: colorConstant.greyish.DEFAULT,
+          200: colorConstant.greyish['200'],
+        },
         theme: {
-          default: '#1D61E7',
-          900:'#0D0D1B'
+          DEFAULT: colorConstant.theme.DEFAULT,
+          100: colorConstant.theme['100'],
+          900: colorConstant.theme['900'],
         },
       },
       fontFamily: {
         inter: ['Inter-Regular'],
         interBold: ['Inter-Bold'],
-      },
-      backgroundImage: {
-        'theme-gradient': "'linear-gradient(to bottom, white 12%, #1D61E7)',",
       },
     },
   },
