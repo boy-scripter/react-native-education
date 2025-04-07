@@ -1,6 +1,6 @@
 import Animated, {useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
 import {Pressable, View, Text, GestureResponderEvent, LayoutChangeEvent} from 'react-native';
-import {useContext, createContext, useRef, useCallback, RefObject, useState} from 'react';
+import {useContext, createContext, useRef, useCallback, RefObject, useState, useEffect} from 'react';
 import {twMerge} from 'tailwind-merge';
 
 type TabContextType = {
@@ -10,13 +10,27 @@ type TabContextType = {
   containerRef: RefObject<View>;
 };
 
+type TabProps = {
+  children: React.ReactNode;
+  defaultTab: string;
+  sliderClassName?: string;
+  className?: string;
+  onChange?: (tab: string) => void;
+};
+
 const TabContext = createContext<null | TabContextType>(null);
 
-export default function Tab({children, defaultTab, className}: {children: React.ReactNode; defaultTab: string; className?: string}) {
+export default function Tab({children, defaultTab, sliderClassName, onChange, className}: TabProps) {
   const sliderX = useSharedValue(0);
   const sliderWidth = useSharedValue(0);
   const [tab, setTab] = useState(defaultTab);
   const containerRef = useRef<View>(null) as RefObject<View>;
+
+  useEffect(() => {
+    if (typeof onChange === 'function') {
+      onChange(tab);
+    }
+  }, [tab]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -32,8 +46,8 @@ export default function Tab({children, defaultTab, className}: {children: React.
 
   return (
     <TabContext.Provider value={{moveSliderValues, containerRef, setTab, tab}}>
-      <View className={twMerge('p-1 bg-[#F5F6F9] w-4/5 mx-auto')} style={{borderRadius: 8}}>
-        <View ref={containerRef} className="relative overflow-hidden flex-row gap-2">
+      <View className={twMerge('p-1 bg-[#F5F6F9] w-4/5 mx-auto', className)} style={{borderRadius: 8}}>
+        <View ref={containerRef} className={twMerge('relative overflow-hidden flex-row gap-2', sliderClassName)}>
           <Animated.View style={[{borderRadius: 6}, animatedStyle]} className="slider absolute bg-white h-full top-0 left-0"></Animated.View>
           {children}
         </View>
@@ -59,9 +73,9 @@ Tab.Button = function ({label, id, activeColor}: {label: string; id: string; act
     <Pressable
       className="flex-1 text-center"
       onLayout={(e: LayoutChangeEvent) => {
-        e.target.measureLayout(containerRef.current, (x, y, width, height) => {
-          moveSliderValues({x, width});
-        });
+        if (tab === id) {
+          moveSliderValues({x: e.nativeEvent.layout.x, width: e.nativeEvent.layout.width});
+        }
       }}
       onPress={handlePress}>
       <Text className={`${id === tab ? 'opacity-100' : 'opacity-50'} p-2 px-4 text-center `}>{label}</Text>

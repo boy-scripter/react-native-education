@@ -16,12 +16,12 @@ export interface InputProps {
   onPaste?: (e: React.ClipboardEvent<HTMLInputElement>) => void;
 }
 
-const UITextInput = ({type, placeholder, label, value, onChange, className, ...props}: InputProps) => {
+const Input = ({type, placeholder, label, value, onChange, className, ...props}: InputProps) => {
   return (
     <View>
-      {label && <Text style={{marginBottom: 5}}>{label}</Text>}
+      {label && <Text className='py-1 px-1 text-xs text-slate-600' >{label}</Text>}
       <TextInput
-        className={twMerge('border border-gray-300 p-2 px-3 text-sm text-gray-700 focus:outline-none  focus:ring-blue-500', className)}
+        className={twMerge('border border-greyish p-2 px-3 text-sm text-greyish-200 focus:border-theme', className)}
         style={{borderRadius: 5}}
         placeholder={placeholder || ''}
         value={value}
@@ -32,4 +32,4 @@ const UITextInput = ({type, placeholder, label, value, onChange, className, ...p
   );
 };
 
-export default UITextInput;
+export default Input;
