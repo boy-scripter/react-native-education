@@ -6,7 +6,8 @@
       "@assets/*": ["./src/assets/*"],
       "@components/*": ["./src/components/*"],
       "@screens/*": ["./src/screens/*"],
-      "@constant/*": ["./src/constant/*"]
+      "@constant/*": ["./src/constant/*"],
+      "@hooks/*": ["./src/hooks/*"],
     }
   }
 }

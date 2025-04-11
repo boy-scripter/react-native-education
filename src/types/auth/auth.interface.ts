@@ -1,11 +1,11 @@
 import {AuthActionType} from './auth.enum';
 
 export type AuthAction =
-  | {type: AuthActionType.LOGIN_SUCCESS; payload: User}
-  | {type: AuthActionType.SIGNUP_SUCCESS; payload: User}
+  | {type: AuthActionType.LOGIN_SUCCESS; payload: {user: User; access_token: string}}
+  | {type: AuthActionType.SIGNUP_SUCCESS}
   | {type: AuthActionType.LOGOUT}
   | {type: AuthActionType.SET_LOADING; payload: boolean}
-  | {type: AuthActionType.SET_ERROR; payload: string | null};
+  | {type: AuthActionType.SET_ERROR; payload: Error | null};
 
 export interface User {
   id: string;
@@ -36,4 +36,3 @@ export interface AuthContextType {
   forgotPassword: (email: string) => Promise<void>;
   logout: () => void;
 }
-

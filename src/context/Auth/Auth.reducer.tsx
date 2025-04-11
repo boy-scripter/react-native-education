@@ -1,16 +1,12 @@
 import { AuthActionType } from 'src/types/auth/auth.enum';
-import { AuthState } from 'src/types/auth/auth.interface';
+import { AuthState , AuthAction} from 'src/types/auth/auth.interface';
 
-interface AuthAction {
-    type: AuthActionType;
-    payload?: any;
-}
+
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
     switch (action.type) {
         case AuthActionType.LOGIN_SUCCESS:
-        case AuthActionType.SIGNUP_SUCCESS:
-            return { ...state, user: action.payload, loading: false, error: null };
+            return { ...state,user : action.payload.user , access_token : action.payload.access_token , loading: false, error: null };
 
         case AuthActionType.LOGOUT:
             return { ...state, user: null, loading: false, error: null, access_token: null };

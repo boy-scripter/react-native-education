@@ -1,16 +1,17 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {AuthStack} from './Auth.stack';
-// import DashboardStack from './Dashboard.stack';
+import { navigationRef } from '@hooks/useNavigation.hook';
+import DashboardStack from './Dashboard.stack';
 
 const Stack = createStackNavigator();
 
 export function RootStackNavigator() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="Auth">
-        <Stack.Screen name="Auth" component={AuthStack} />
-        {/* <Stack.Screen name="Main" component={DashboardStack} options={{ headerShown: false }} /> */}
+    <NavigationContainer ref={navigationRef}>
+      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="main">
+        <Stack.Screen name="auth" component={AuthStack} />
+        <Stack.Screen name="main" component={DashboardStack}  />
       </Stack.Navigator>
     </NavigationContainer>
   );
