@@ -12,6 +12,7 @@ module.exports = {
       colors: {
         greyish: {
           DEFAULT: colorConstant.greyish.DEFAULT,
+          100: colorConstant.greyish['100'],
           200: colorConstant.greyish['200'],
         },
         theme: {
