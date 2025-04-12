@@ -1,5 +1,5 @@
 import {Image} from 'react-native';
-import {Text, View} from 'react-native';
+import {Text, View, ScrollView} from 'react-native';
 
 export function HomeScreen() {
   const user = {
@@ -21,6 +21,24 @@ export function HomeScreen() {
       question: Math.floor(Math.random() * (40 - 3 + 1)) + 3,
     },
     {
+      name: 'Science Trivia',
+      route: '/quiz/science',
+      image: 'https://example.com/science-trivia.png',
+      question: Math.floor(Math.random() * (40 - 3 + 1)) + 3,
+    },
+    {
+      name: 'History Challenge',
+      route: '/quiz/history',
+      image: 'https://example.com/history-challenge.png',
+      question: Math.floor(Math.random() * (40 - 3 + 1)) + 3,
+    },
+    {
+      name: 'Science Trivia',
+      route: '/quiz/science',
+      image: 'https://example.com/science-trivia.png',
+      question: Math.floor(Math.random() * (40 - 3 + 1)) + 3,
+    },
+    {
       name: 'History Challenge',
       route: '/quiz/history',
       image: 'https://example.com/history-challenge.png',
@@ -29,7 +47,7 @@ export function HomeScreen() {
   ];
 
   return (
-    <View className="px-4 py-4 ">
+    <ScrollView className="px-4 py-4 mt-2 ">
       <View className="flex flex-row justify-between">
         <View className="self-end">
           <Text className="font-interBold">Hi, {user.name}</Text>
@@ -38,7 +56,7 @@ export function HomeScreen() {
         <Image className="h-16 w-16 rounded-full" source={{uri: user.image}} />
       </View>
 
-      <View className="mt-5 w-full px-4 mx-auto flex flex-row p-4 justify-evenly rounded-xl shadow-black shadow-2xl border ">
+      <View style={{elevation: 14}} className="mt-5 w-full px-4 mx-auto flex flex-row p-8 bg-white shadow-white overflow-hidden rounded-xl justify-evenly ">
         <View className="flex-row items-center">
           <Image className="w-10 h-10" source={require('@assets/images/trophy.png')} resizeMode="contain" />
           <View className="pl-3 flex justify-center">
@@ -60,11 +78,11 @@ export function HomeScreen() {
 
       <View className="mt-6">
         <Text className="font-interBold text-theme-900 text-xl mb-4">Let's Play</Text>
-        <View className="flex-row flex-wrap gap-3 ">
-          {options.map((currentObject , index) => {
+        <View className="flex-row flex-wrap gap-x-4 gap-y-5 ">
+          {options.map((currentObject, index) => {
             return (
-              <View key={index} className="rounded-xl basis-1/2 border p-4">
-                <Image className="w-20 h-20" source={require('@assets/images/coin.png')} resizeMode="contain" />
+              <View style={{elevation: 14}} key={index} className={`${index % 2 === 0 && 'translate-y-6'} rounded-xl basis-[48%] bg-white shadow-white p-5 px-6`}>
+                <Image className="w-28 h-28 -mt-[28]" source={require('@assets/images/coin.png')} resizeMode="contain" />
                 <Text className="mt-2 font-interBold">{currentObject.name}</Text>
                 <Text className="my-1 font-interBold text-xs text-greyish-200">{currentObject.question} Questions</Text>
               </View>
@@ -72,6 +90,6 @@ export function HomeScreen() {
           })}
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
