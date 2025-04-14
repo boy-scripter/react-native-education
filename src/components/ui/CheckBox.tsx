@@ -27,10 +27,10 @@ const CheckBox: React.FC<CheckBoxProps> = ({value = false, setValue, label}) => 
 
   return (
     <Pressable className="flex-row items-center" onPress={() => setValue && setValue(value => !value)}>
-      <Animated.View style={[{borderWidth:1}, animatedStyleView]} className={`w-4 h-4 rounded-sm justify-center items-center mr-1`}>
-        <Animated.Text className='text-white' style={[{fontSize: 7}]}>✓</Animated.Text>
+      <Animated.View style={[{borderWidth:1}, animatedStyleView]} className={`p-2 text-2xl py-1 rounded-sm justify-center items-center mr-2`}>
+        <Animated.Text className='text-white' style={[{fontSize: 8}]}>✓</Animated.Text>
       </Animated.View>
-      {label && <Text className="text-xs">{label}</Text>}
+      {label && <Text>{label}</Text>}
     </Pressable>
   );
 };

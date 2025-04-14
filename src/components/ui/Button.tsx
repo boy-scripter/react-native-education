@@ -20,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassN
       className={twMerge('bg-theme border-theme p-3 rounded-lg flex-row items-center justify-center', disabled && 'opacity-50', className)}
       style={{borderWidth: 1}}>
       {position === 'left' && children && <View className="mr-2">{children}</View>}
-      <Text className={twMerge('text-white text-center', textClassName)}>{label}</Text>
+      <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{label}</Text>
       {position === 'right' && children && <View className="ml-2">{children}</View>}
     </Pressable>
   );

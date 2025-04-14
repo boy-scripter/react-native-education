@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 export function RootStackNavigator() {
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="main">
+      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="auth">
         <Stack.Screen name="auth" component={AuthStack} />
         <Stack.Screen name="main" component={DashboardStack}  />
       </Stack.Navigator>

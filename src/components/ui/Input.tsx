@@ -19,9 +19,9 @@ export interface InputProps {
 const Input = ({type, placeholder, label, value, onChange, className, ...props}: InputProps) => {
   return (
     <View>
-      {label && <Text className='py-1 px-1 text-xs text-slate-600' >{label}</Text>}
+      {label && <Text className='py-1 px-1 mb-1 text-theme-900' >{label}</Text>}
       <TextInput
-        className={twMerge('border border-greyish p-2 px-3 text-sm text-greyish-200 focus:border-theme', className)}
+        className={twMerge('border border-greyish p-3 text-greyish-200 focus:border-theme', className)}
         style={{borderRadius: 5}}
         placeholder={placeholder || ''}
         value={value}
