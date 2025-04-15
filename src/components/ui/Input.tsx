@@ -10,22 +10,23 @@ export interface InputProps {
   max?: number;
   className?: string;
   placeholder?: string;
+  style: Record<any, string>;
 
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (text: string) => void;
   onPaste?: (e: React.ClipboardEvent<HTMLInputElement>) => void;
 }
 
-const Input = ({type, placeholder, label, value, onChange, className, ...props}: InputProps) => {
+const Input = ({type, placeholder, label, value, onChange, className, style, ...props}: InputProps) => {
   return (
     <View>
-      {label && <Text className='py-1 px-1 mb-1 text-theme-900' >{label}</Text>}
+      {label && <Text className="py-1 px-1 mb-1 text-theme-900">{label}</Text>}
       <TextInput
         className={twMerge('border border-greyish p-3 text-greyish-200 focus:border-theme', className)}
-        style={{borderRadius: 5}}
+        style={{borderRadius: 5, ...style}}
         placeholder={placeholder || ''}
         value={value}
-        onChangeText={onChange ? text => onChange({target: {value: text}} as any) : undefined}
+        onChangeText={onChange ? text => onChange(text) : undefined}
         {...props}
       />
     </View>
