@@ -6,7 +6,7 @@ import React from 'react';
 import {Image} from 'react-native';
 import {View, ImageBackground, Text} from 'react-native';
 
-export function AuthScreen() {
+export default function AuthScreen() {
   const [tab, setTab] = React.useState('login');
 
   return (
