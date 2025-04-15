@@ -9,7 +9,7 @@ type CheckBoxProps = {
   label?: string;
 };
 
-const CheckBox: React.FC<CheckBoxProps> = ({value = false, setValue, label}) => {
+const CheckBox: React.FC<CheckBoxProps> = ({value = true, setValue, label}) => {
   const animatedValue = useSharedValue(value ? 1 : 0);
 
   const animatedStyleView = useAnimatedStyle(() => ({
@@ -27,7 +27,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({value = false, setValue, label}) => 
 
   return (
     <Pressable className="flex-row items-center" onPress={() => setValue && setValue(value => !value)}>
-      <Animated.View style={[{borderWidth:1}, animatedStyleView]} className={`p-2 text-2xl py-1 rounded-sm justify-center items-center mr-2`}>
+      <Animated.View style={[{borderWidth:1}, animatedStyleView]} className={`p-1 px-2 text-2xl rounded-lg justify-center items-center mr-2`}>
         <Animated.Text className='text-white' style={[{fontSize: 8}]}>✓</Animated.Text>
       </Animated.View>
       {label && <Text>{label}</Text>}

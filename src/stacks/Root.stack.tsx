@@ -7,11 +7,12 @@ import DashboardStack from './Dashboard.stack';
 const Stack = createStackNavigator();
 
 export function RootStackNavigator() {
+  
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="auth">
-        <Stack.Screen name="auth" component={AuthStack} />
-        <Stack.Screen name="main" component={DashboardStack}  />
+      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="authstack">
+        <Stack.Screen name="authstack" component={AuthStack} />
+        <Stack.Screen name="mainstack" component={DashboardStack}  />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -17,14 +17,13 @@ export function AuthScreen() {
       </ImageBackground>
 
       <View style={{borderTopRightRadius: 20, borderTopLeftRadius: 20}} className="bg-white rounded-t-2xl flex-1 p-5">
-        <Tab onChange={setTab} defaultTab="signup">
+        <Tab onChange={(value) => setTab(value)} defaultTab="signup">
           <Tab.Button label="Login" id="login"></Tab.Button>
           <Tab.Button label="Signup" id="signup"></Tab.Button>
         </Tab>
 
         <View className="my-10 flex-1 ">
           {tab === 'login' ? <Login /> : <Signup />}
-
           <View className="flex-row items-center my-5 px-4">
             <View className="flex-1 h-px bg-greyish" />
             <Text className="mx-3 text-sm text-theme-900">Or</Text>

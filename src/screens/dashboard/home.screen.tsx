@@ -50,7 +50,7 @@ export default function HomeScreen() {
     <ScrollView className="px-4 py-4 mt-2 ">
       <View className="flex flex-row justify-between">
         <View className="self-end">
-          <Text className="font-interBold">Hi, {user.name}</Text>
+          <Text className="font-interBold text-xl">Hi, {user.name}</Text>
           <Text>Let's Make this Day Productive</Text>
         </View>
         <Image className="h-16 w-16 rounded-full" source={{uri: user.image}} />

@@ -4,6 +4,7 @@ import CheckBox from '@components/ui/CheckBox';
 import {View, Text} from 'react-native';
 
 export default function Login() {
+
   return (
     <>
       <View className='gap-4'>
