@@ -1,23 +1,19 @@
+import TopImageLayout from '@components/layouts/TopImage.Layout';
 import Login from '@components/Login';
 import Signup from '@components/Signup';
 import Button from '@components/ui/Button';
 import Tab from '@components/ui/TabToggle';
 import React from 'react';
 import {Image} from 'react-native';
-import {View, ImageBackground, Text} from 'react-native';
+import {View, Text} from 'react-native';
 
 export default function AuthScreen() {
   const [tab, setTab] = React.useState('login');
 
   return (
-    <View className="flex-1 bg-theme ">
-      <ImageBackground className="h-60  flex gap-3 justify-end py-5 px-5" source={require('@assets/images/auth.png')}>
-        <Text className="font-interBold text-white text-3xl">Get Started now</Text>
-        <Text className="text-white font-inter text-sm">Create an account or log in to explore about our app</Text>
-      </ImageBackground>
-
-      <View  className="bg-white rounded-t-3xl flex-1 p-5">
-        <Tab onChange={(value) => setTab(value)} defaultTab="signup">
+    <TopImageLayout containerClassName='px-1' image={'@assets/images/auth.png'} title="Get Started now" description="Create an account or log in to explore about our app">
+      
+        <Tab onChange={value => setTab(value)} defaultTab="signup">
           <Tab.Button label="Login" id="login"></Tab.Button>
           <Tab.Button label="Signup" id="signup"></Tab.Button>
         </Tab>
@@ -34,7 +30,7 @@ export default function AuthScreen() {
             <Image className="w-5 h-5" source={require('@assets/images/google.png')} />
           </Button>
         </View>
-      </View>
-    </View>
+
+    </TopImageLayout>
   );
 }
