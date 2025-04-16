@@ -11,7 +11,7 @@ const QuizScreen: React.FC = () => {
       <View className="flex-row mt-10 gap-6 px-2 items-center ">
         <Icon name="doubleright" color="black" size={18} className="border-greyish-100 bg-white border font-interBold p-2 rounded-full" />
         <View className="p-3 px-4 border-2 flex-row items-center gap-2 border-greyish-100  rounded-3xl flex-1">
-          <View className="bg-theme-900 rounded-xl p-1.5  flex-1"></View>
+          <View className="bg-theme rounded-xl p-1.5  flex-1"></View>
           <Text className="text-greyish-100 font-interBold">5/10</Text>
         </View>
       </View>
@@ -37,7 +37,7 @@ const QuizScreen: React.FC = () => {
             />
             {/* circualr indiactor ends here */}
           </View>
-          <Text className="font-interBold text-xl text-theme-900 ">What is the most Poppular game thoughtout the world ?</Text>
+          <Text className="font-interBold text-xl text-theme ">What is the most Poppular game thoughtout the world ?</Text>
         </View>
 
         {/* answer box starts here */}

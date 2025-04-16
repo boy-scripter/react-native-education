@@ -65,7 +65,7 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        <View className="w-px bg-theme-900 mx-4" />
+        <View className="w-px bg-theme mx-4" />
 
         <View className="flex-row  flex-start items-center">
           <Image className="w-10 h-10" source={require('@assets/images/coin.png')} resizeMode="contain" />
@@ -77,7 +77,7 @@ export default function HomeScreen() {
       </View>
 
       <View className="mt-6">
-        <Text className="font-interBold text-theme-900 text-xl mb-4">Let's Play</Text>
+        <Text className="font-interBold text-theme text-xl mb-4">Let's Play</Text>
         <View className="flex-row flex-wrap gap-x-4 gap-y-5 ">
           {options.map((currentObject, index) => {
             return (

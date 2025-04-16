@@ -10,7 +10,7 @@ function LeaderBoardScreen() {
   ];
 
   return (
-    <ScrollView className="bg-theme-900 flex-1">
+    <ScrollView className="bg-theme flex-1">
       <ImageBackground className="h-72" resizeMode="cover" source={require('@assets/images/oval.png')}>
         <Tab className="mt-8" defaultTab="daily">
           <Tab.Button label="Daily" id="daily"></Tab.Button>
@@ -41,13 +41,13 @@ function LeaderBoardScreen() {
             <View style={{elevation: 14, borderRadius: 10}} className="shadow-slate-300 bg-white p-1 px-5" key={index}>
               <View className="flex-row items-center justify-between">
                 <View className='flex-row items-center gap-2'>
-                  <Text className="text-theme-900 text-base font-medium">{index + 1}</Text>
+                  <Text className="text-theme text-base font-medium">{index + 1}</Text>
                   <View className="flex-row items-center">
                     <View className="w-12 h-12 rounded-full bg-gray-300 mr-4"></View>
-                    <Text className="text-theme-900 text-base font-semibold">User {index + 1}</Text>
+                    <Text className="text-theme text-base font-semibold">User {index + 1}</Text>
                   </View>
                 </View>
-                <Text className="text-theme-900 text-base font-medium">100 pts</Text>
+                <Text className="text-theme text-base font-medium">100 pts</Text>
               </View>
             </View>
           ))}
