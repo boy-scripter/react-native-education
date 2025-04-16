@@ -15,7 +15,6 @@ export interface InputProps {
   ref?: React.Ref<TextInput>;
   value?: string;
   onChange?: (text: string) => void;
-  onPaste?: (e: React.ClipboardEvent<HTMLInputElement>) => void;
   onKeyPress?: (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => void;
 }
 
