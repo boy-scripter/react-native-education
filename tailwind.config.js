@@ -17,8 +17,6 @@ module.exports = {
         },
         theme: {
           DEFAULT: colorConstant.theme.DEFAULT,
-          100: colorConstant.theme['100'],
-          900: colorConstant.theme['900'],
         },
       },
       fontFamily: {
