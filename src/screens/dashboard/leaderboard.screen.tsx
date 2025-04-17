@@ -35,6 +35,8 @@ function LeaderBoardScreen() {
           ))}
         </View>
       </ImageBackground>
+     
+     
       <View style={{borderRadius: 25}} className="flex-1 pb-10 bg-white rounded-b-none">
         <View className="mt-4 flex gap-3 mx-4">
           {[1, 2, 3, 4, 5, 6 ,7].map((item, index) => (
@@ -52,6 +54,7 @@ function LeaderBoardScreen() {
             </View>
           ))}
         </View>
+        
       </View>
     </ScrollView>
   );

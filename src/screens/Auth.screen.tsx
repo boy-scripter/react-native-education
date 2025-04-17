@@ -11,7 +11,7 @@ export default function AuthScreen() {
   const [tab, setTab] = React.useState('login');
 
   return (
-    <TopImageLayout containerClassName='px-1' image={'@assets/images/auth.png'} title="Get Started now" description="Create an account or log in to explore about our app">
+    <TopImageLayout image={'@assets/images/auth.png'} title="Get Started now" description="Create an account or log in to explore about our app">
       
         <Tab onChange={value => setTab(value)} defaultTab="signup">
           <Tab.Button label="Login" id="login"></Tab.Button>

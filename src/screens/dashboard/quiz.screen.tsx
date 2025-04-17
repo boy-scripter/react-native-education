@@ -31,7 +31,7 @@ const QuizScreen: React.FC = () => {
               size={90}
               width={8}
               fill={80}
-              tintColor={colorConstant.theme[900]}
+              tintColor={colorConstant.theme.DEFAULT}
               backgroundColor={colorConstant.greyish.DEFAULT}
               lineCap="round"
             />
@@ -61,7 +61,7 @@ interface AnswerBoxProps {
   selectedOption: string | null;
 }
 
-const AnswerBox: React.FC<AnswerBoxProps> = ({onSelect, selectedOption, status = 'correct'}) => {
+const AnswerBox: React.FC<AnswerBoxProps> = ({onSelect, selectedOption, status = 'idle'}) => {
   const option = '434';
 
   const isSelected = selectedOption === option;
@@ -70,13 +70,14 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({onSelect, selectedOption, status =
   const iconName = status === 'incorrect' ? 'close' : status === 'correct' ? 'check' : null;
 
   return (
-    <View style={{borderColor:statusHexColor}} className={`p-3 pr-6 flex-row justify-between border-2 rounded-xl `}>
-     
+    <View style={{borderColor: statusHexColor}} className={`p-3 pr-6 flex-row items-center justify-between border-2 rounded-xl `}>
       <Text className={`font-interBold ${isSelected ? 'text-white' : 'text-greyish-900'}`} onPress={() => onSelect(option)}>
         {option}
       </Text>
 
-      <View style={{borderColor:statusHexColor}} className={`border rounded-full  overflow-hidden `}>{iconName && <Icon style={{backgroundColor:statusHexColor}} className='p-1' name={iconName} color="white" size={19} />}</View>
+      <View style={{borderColor: statusHexColor, backgroundColor : statusHexColor }} className="border h-7 aspect-square rounded-full items-center justify-center overflow-hidden">
+        {iconName && <Icon name={iconName} color="white" size={19} />}
+      </View>
     </View>
   );
 };

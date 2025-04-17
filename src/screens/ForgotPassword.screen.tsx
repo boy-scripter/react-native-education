@@ -18,7 +18,7 @@ const ForgotPasswordScreen = () => {
   };
 
   return (
-    <TopImageLayout image={'@assets/images/forgot.png'} title="Forgot Password" description="Reset your password to regain access to your account">
+    <TopImageLayout  image={'@assets/images/forgot.png'} title="Forgot Password" description="Reset your password to regain access to your account">
       {step == 1 && (
         <>
           <Text className="text-2xl font-bold mb-5">Forgot Password</Text>

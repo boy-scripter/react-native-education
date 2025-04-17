@@ -14,6 +14,10 @@ export function goBack() {
   }
 }
 
+export function canGoBack() {
+  return navigationRef.isReady() && navigationRef.canGoBack();
+}
+
 export function resetRoot(routeName: string, params?: object) {
   if (navigationRef.isReady()) {
     navigationRef.reset({

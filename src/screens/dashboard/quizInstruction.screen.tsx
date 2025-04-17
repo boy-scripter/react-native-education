@@ -7,7 +7,7 @@ import TopImageLayout from '@components/layouts/TopImage.Layout';
 const QuizInstructionScreen = () => {
   return (
     <TopImageLayout
-      containerClassName='p-5'
+      containerClassName='p-5 pt-7'
       image={'@assets/images/quiz-instructions.png'} // Replace with the actual image path
       title="Quiz Instructions"
       description="Follow these instructions carefully before starting the quiz.">
