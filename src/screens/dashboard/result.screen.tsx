@@ -16,7 +16,7 @@ const ResultScreen: React.FC = () => {
   ];
 
   return (
-    <View className="flex-1 px-5 py-24">
+    <View className="flex-1 py-5 px-5 items-center">
       <View className="flex-1">
         {/* circle */}
         <View className="flex w-full items-center">
@@ -32,19 +32,19 @@ const ResultScreen: React.FC = () => {
 
         {/* box information start */}
         <View style={{elevation: 14}} className="flex rounded-xl flex-wrap bg-white shadow-slate-300 flex-row justify-between w-full px-2 py-4 gap-2 mt-12">
-          <View className="w-[48%] py-7 items-center justify-center ">
+          <View className="w-[48%] py-5 items-center justify-center ">
             <Text className="text-lg font-interBold">Correct</Text>
             <Text className="text-2xl font-interBold">15</Text>
           </View>
-          <View className="w-[48%] py-7  items-center justify-center ">
+          <View className="w-[48%] py-5  items-center justify-center ">
             <Text className="text-lg font-interBold">Incorrect</Text>
             <Text className="text-2xl font-interBold">5</Text>
           </View>
-          <View className="w-[48%] py-7 items-center justify-center ">
+          <View className="w-[48%] py-5 items-center justify-center ">
             <Text className="text-lg font-interBold">Skipped</Text>
             <Text className="text-2xl font-interBold">3</Text>
           </View>
-          <View className="w-[48%] py-7 items-center justify-center ">
+          <View className="w-[48%] py-5 items-center justify-center ">
             <Text className="text-lg font-interBold">Total</Text>
             <Text className="text-2xl font-interBold">23</Text>
           </View>
