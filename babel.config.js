@@ -22,6 +22,7 @@ module.exports = {
           '@hooks': './src/hooks',
           '@styles': './src/styles',
           '@navigation': './src/navigation',
+          '@animation': './src/animation',
         },
       },
     ],
