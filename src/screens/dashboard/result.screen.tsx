@@ -1,11 +1,10 @@
+import React from 'react';
 import Button from '@components/ui/Button';
 import colorConstant from '@constant/color.constant';
 import {navigate} from '@hooks/useNavigation.hook';
-import React, {useEffect} from 'react';
 import {View, Text, Share} from 'react-native';
-import Animated, {useAnimatedStyle, useSharedValue, withTiming, interpolate, interpolateColor} from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {twMerge} from 'tailwind-merge';
+import RippleEffect from '@animation/RippleEffect';
 
 const ResultScreen: React.FC = () => {
   const buttons = [
@@ -20,7 +19,7 @@ const ResultScreen: React.FC = () => {
       <View className="flex-1">
         {/* circle */}
         <View className="flex w-full items-center">
-          <RippleEffect color={colorConstant.greyish[200]} className="rounded-full">
+          <RippleEffect count={5} color={colorConstant.greyish[200]} className="rounded-full">
             <View className="w-44 h-44 mx-auto rounded-full bg-theme items-center justify-center">
               <Text className="text-lg text-white font-interBold">Your Score</Text>
               <Text className="text-3xl text-white font-interBold">85</Text>
@@ -68,37 +67,4 @@ const ResultScreen: React.FC = () => {
 };
 export default ResultScreen;
 
-export interface RippleEffectProps {
-  children: React.ReactNode;
-  className?: string;
-  color: string;
-  duration?: number;
-}
 
-const RippleEffect = ({children, className, color, duration = 1000}: RippleEffectProps) => {
-  const rippleOpacity = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => {
-    const scale = interpolate(rippleOpacity.value, [1, 0], [30, 500]);
-    const backgroundColor = interpolateColor(rippleOpacity.value, [1, 0], [color, color + '00']);
-
-    return {
-      backgroundColor,
-      padding: scale,
-    };
-  });
-
-  useEffect(() => {
-    setInterval(() => {
-      rippleOpacity.set(1);
-      rippleOpacity.value = withTiming(0, {duration: duration * 2.5});
-    }, duration);
-  }, []);
-
-  return (
-    <View className="relative">
-      {children}
-      <Animated.View style={animatedStyle} className={twMerge('absolute z-10 h-full aspect-square',className)}></Animated.View>
-    </View>
-  );
-};
