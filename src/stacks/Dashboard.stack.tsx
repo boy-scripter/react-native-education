@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 
 const DashboardStack: React.FC = () => {
   return (
-    <Stack.Navigator initialRouteName="result" screenOptions={{headerShown: false}}>
+    <Stack.Navigator initialRouteName="leaderboard" screenOptions={{headerShown: false}}>
       <Stack.Screen name="home" component={HomeScreen} />
       <Stack.Screen name="quiz" component={QuizScreen} />
       <Stack.Screen name="quiz_instruction" component={QuizInstructionScreen} />
