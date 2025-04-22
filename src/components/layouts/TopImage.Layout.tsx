@@ -3,7 +3,7 @@ import {ImageBackground, View, Text} from 'react-native';
 import {twMerge} from 'tailwind-merge';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import colorConstant from '@constant/color.constant';
-import {goBack , canGoBack} from '@hooks/useNavigation.hook';
+import {goBack, canGoBack} from '@hooks/useNavigation.hook';
 
 interface TopImageLayoutProps {
   image: string;
@@ -16,10 +16,9 @@ interface TopImageLayoutProps {
 const TopImageLayout = ({image, title, description, children, containerClassName}: TopImageLayoutProps) => {
   return (
     <View className="flex-1 bg-theme">
-
       {canGoBack() && (
-        <View className="absolute top-5 left-5 rounded-full bg-white p-2">
-          <Text onPress={() => goBack()}>
+        <View onTouchEnd={() => goBack()} className="absolute z-10 top-5 left-5 rounded-full bg-white p-2">
+          <Text>
             <Icon name="arrow-left" size={24} color={colorConstant.theme.DEFAULT} />
           </Text>
         </View>

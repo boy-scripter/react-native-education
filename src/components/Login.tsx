@@ -18,7 +18,7 @@ export default function Login() {
           </Text>
         </View>
 
-        <Button label="Login"></Button>
+        <Button onPress={() => navigate('mainstack', {screen: 'home'})} label="Login"></Button>
       </View>
     </>
   );

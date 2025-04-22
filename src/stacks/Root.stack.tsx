@@ -10,7 +10,7 @@ export function RootStackNavigator() {
   
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="mainstack">
+      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="authstack">
         <Stack.Screen name="authstack" component={AuthStack} />
         <Stack.Screen name="mainstack" component={DashboardStack}  />
       </Stack.Navigator>
