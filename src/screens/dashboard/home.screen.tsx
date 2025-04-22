@@ -1,5 +1,9 @@
+import Button from '@components/ui/Button';
+import colorConstant from '@constant/color.constant';
+import {navigate} from '@hooks/useNavigation.hook';
 import {Image} from 'react-native';
 import {Text, View, ScrollView} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function HomeScreen() {
   const user = {
@@ -10,38 +14,23 @@ export default function HomeScreen() {
   const options = [
     {
       name: 'Math Quiz',
-      route: '/quiz/math',
+      quiz_route: 'quiz_instruction',
+      pdf: 'pdfview',
       image: 'https://example.com/math-quiz.png',
       question: Math.floor(Math.random() * (40 - 3 + 1)) + 3,
     },
     {
       name: 'Science Trivia',
-      route: '/quiz/science',
+      quiz_route: 'quiz_instruction',
+      pdf: 'pdfview',
       image: 'https://example.com/science-trivia.png',
       question: Math.floor(Math.random() * (40 - 3 + 1)) + 3,
     },
     {
       name: 'Science Trivia',
-      route: '/quiz/science',
+      quiz_route: 'quiz_instruction',
+      pdf: 'pdfview',
       image: 'https://example.com/science-trivia.png',
-      question: Math.floor(Math.random() * (40 - 3 + 1)) + 3,
-    },
-    {
-      name: 'History Challenge',
-      route: '/quiz/history',
-      image: 'https://example.com/history-challenge.png',
-      question: Math.floor(Math.random() * (40 - 3 + 1)) + 3,
-    },
-    {
-      name: 'Science Trivia',
-      route: '/quiz/science',
-      image: 'https://example.com/science-trivia.png',
-      question: Math.floor(Math.random() * (40 - 3 + 1)) + 3,
-    },
-    {
-      name: 'History Challenge',
-      route: '/quiz/history',
-      image: 'https://example.com/history-challenge.png',
       question: Math.floor(Math.random() * (40 - 3 + 1)) + 3,
     },
   ];
@@ -74,17 +63,25 @@ export default function HomeScreen() {
             <Text className="font-interBold text-theme ">100</Text>
           </View>
         </View>
-      </View>
 
+       
+      </View>
+      <Button onPress={() =>navigate('leaderboard')} label='Check Leaderboard' className="flex-row mt-4 items-center">
+          <Icon name="trophy-outline" size={30} color={'yellow'} />
+        </Button>
       <View className="mt-6">
         <Text className="font-interBold text-theme text-xl mb-4">Let's Play</Text>
         <View className="flex-row flex-wrap gap-x-4 gap-y-5 ">
           {options.map((currentObject, index) => {
             return (
-              <View style={{elevation: 14}} key={index} className={`${index % 2 === 0 && 'translate-y-6'} rounded-xl basis-[48%] bg-white shadow-white p-5 px-6`}>
+              <View style={{elevation: 14}} key={index} className={`${index % 2 === 0 && 'translate-y-6'} relative rounded-xl basis-[48%] bg-white shadow-white p-5 px-6`}>
                 <Image className="w-28 h-28 -mt-[28]" source={require('@assets/images/coin.png')} resizeMode="contain" />
                 <Text className="mt-2 font-interBold">{currentObject.name}</Text>
                 <Text className="my-1 font-interBold text-xs text-greyish-200">{currentObject.question} Questions</Text>
+                <View className="absolute rounded-xl border border-greyish-100 top-0 right-2 justify-between mt-2">
+                  <Icon onPress={() => navigate(currentObject.quiz_route)} name="play" size={30} className=" p-1 " color={colorConstant.theme.DEFAULT}></Icon>
+                  <Icon onPress={() => navigate(currentObject.pdf)} name="file-pdf-box" size={30} className=" p-1 " color={colorConstant.theme.DEFAULT}></Icon>
+                </View>
               </View>
             );
           })}
