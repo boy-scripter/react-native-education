@@ -1,4 +1,4 @@
-const extensions = [
+const EXTENSION = [
   '.ts', '.tsx', '.js', '.jsx', '.json', 
   '.ios.js', '.android.js', 
   '.png', '.jpg', '.jpeg', '.gif', '.svg', 
@@ -12,7 +12,7 @@ module.exports = {
       'module-resolver',
       {
         root: ['./src'],
-        extensions, // Spread the array here
+        extensions : EXTENSION, 
         alias: {
           '@assets': './src/assets',
           '@components': './src/components',
