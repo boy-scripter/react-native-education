@@ -5,3 +5,5 @@ export enum AuthActionType {
   SET_LOADING = 'SET_LOADING',
   SET_ERROR = 'SET_ERROR',
 }
+
+export const ACCESS_TOKEN_KEY = 'accessToken'; 
