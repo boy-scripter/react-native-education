@@ -32,6 +32,7 @@ module.exports = {
           '@styles': './src/styles',
           '@navigation': './src/navigation',
           '@animation': './src/animation',
+          '@store': './src/store',
           '@myTypes': './src/types',
         },
       },

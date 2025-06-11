@@ -1,0 +1,13 @@
+schema: http://localhost:8000/graphql
+documents: ./src/store/**/*.graphql
+
+generates:
+  ./src/graphql/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-rtk-query
+    config:
+      importBaseApiFrom: '@store/baseApi/baseApi.slice.ts'
+      importBaseApiAlternateName: 'baseApiSlice'
+      exportHooks: true

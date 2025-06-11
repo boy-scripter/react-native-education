@@ -14,20 +14,17 @@ export interface User {
 
 export interface AuthenticatedUser {
   user: User;
+  isAuthenticated: true;
   access_token: string;
 }
 
 export interface UnauthenticatedUser {
   user: null;
   access_token: null;
+  isAuthenticated: false;
 }
 
-type AuthUser = AuthenticatedUser | UnauthenticatedUser;
-
-export type AuthState = AuthUser & {
-  loading: boolean;
-  error: Error | null;
-};
+export type AuthState =  (AuthenticatedUser | UnauthenticatedUser); 
 
 export interface AuthContextType {
   authState: AuthState;
