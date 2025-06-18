@@ -1,4 +1,4 @@
-import { baseApiSlice } from '@store/baseApi/baseApi.slice.ts';
+import { baseApi } from '@baseApi';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -119,7 +119,7 @@ export const LoginWithEmailDocument = `
 }
     `;
 
-const injectedRtkApi = baseApiSlice.injectEndpoints({
+const injectedRtkApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     loginWithEmail: build.mutation<LoginWithEmailMutation, LoginWithEmailMutationVariables>({
       query: (variables) => ({ document: LoginWithEmailDocument, variables })
@@ -128,5 +128,5 @@ const injectedRtkApi = baseApiSlice.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-export const { useLoginWithEmailMutation } = injectedRtkApi;
+
 

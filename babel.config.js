@@ -1,5 +1,3 @@
-const EXTENSION = ['.ts', '.tsx', '.js', '.jsx', '.json', '.ios.js', '.android.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ttf', '.woff', '.woff2', '.eot', '.otf'];
-
 module.exports = {
   presets: ['module:@react-native/babel-preset', 'nativewind/babel'],
   plugins: [
@@ -21,7 +19,7 @@ module.exports = {
       'module-resolver',
       {
         root: ['./src'],
-        extensions: EXTENSION,
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.ios.js', '.android.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ttf', '.woff', '.woff2', '.eot', '.otf'],
         alias: {
           '@assets': './src/assets',
           '@components': './src/components',

@@ -1,4 +1,4 @@
-schema: http://localhost:8000/graphql
+schema: ${GRAPHQL_SERVER_URL}
 documents: ./src/store/**/*.graphql
 
 generates:
@@ -8,6 +8,6 @@ generates:
       - typescript-operations
       - typescript-rtk-query
     config:
-      importBaseApiFrom: '@store/baseApi/baseApi.slice.ts'
-      importBaseApiAlternateName: 'baseApiSlice'
-      exportHooks: true
+      importBaseApiFrom: '@baseApi'
+      importBaseApiAlternateName: 'baseApi'
+      exportHooks: false

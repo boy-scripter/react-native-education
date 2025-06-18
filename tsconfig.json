@@ -11,6 +11,7 @@
       "@hooks/*": ["./src/hooks/*"],
       "@animation/*": ["./src/animation/*"],
       "@myTypes/*": ["./src/types/*"],
+      "@baseApi": ["./src/baseApi/baseApi"],
     }
   }
 }

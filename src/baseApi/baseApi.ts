@@ -5,7 +5,7 @@ import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query"
 
 const { getItem } = useStorage();
 
-export const baseApiSlice = createApi({
+export const baseApi = createApi({
   baseQuery: graphqlRequestBaseQuery({
     url: process.env.GRAPHQL_BASE_URL!,
     prepareHeaders: (headers) => {
@@ -14,11 +14,7 @@ export const baseApiSlice = createApi({
       return headers;
     },
   }),
-  endpoints: (build) => ({
-      loginWithEmail: build.mutation({
-        query: (variables) => ({  variables })
-      }),
-    }),
+  endpoints: (build) => ({})
 });
 
 
