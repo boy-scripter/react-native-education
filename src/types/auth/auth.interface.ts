@@ -8,7 +8,7 @@ export type AuthAction =
   | {type: AuthActionType.SET_ERROR; payload: Error | null};
 
 export interface User {
-  id: string;
+  _id: string;
   email: string;
 }
 

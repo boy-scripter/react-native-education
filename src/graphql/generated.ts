@@ -97,6 +97,21 @@ export type User = {
   name: Scalars['String']['output'];
 };
 
+export type SignupMutationVariables = Exact<{
+  signupInput2: SignUpDto;
+}>;
+
+
+export type SignupMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', name: string, email: string, avatar?: string | null, active: boolean, _id: string } };
+
+export type LoginWithGoogleMutationVariables = Exact<{
+  code: Scalars['String']['input'];
+  scope: Scalars['String']['input'];
+}>;
+
+
+export type LoginWithGoogleMutation = { __typename?: 'Mutation', loginWithGoogle: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', name: string, email: string, _id: string } } };
+
 export type LoginWithEmailMutationVariables = Exact<{
   input: LoginDto;
 }>;
@@ -105,6 +120,30 @@ export type LoginWithEmailMutationVariables = Exact<{
 export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string } } };
 
 
+export const SignupDocument = `
+    mutation Signup($signupInput2: SignUpDto!) {
+  signup(input: $signupInput2) {
+    name
+    email
+    avatar
+    active
+    _id
+  }
+}
+    `;
+export const LoginWithGoogleDocument = `
+    mutation LoginWithGoogle($code: String!, $scope: String!) {
+  loginWithGoogle(code: $code, scope: $scope) {
+    access_token
+    refresh_token
+    user {
+      name
+      email
+      _id
+    }
+  }
+}
+    `;
 export const LoginWithEmailDocument = `
     mutation loginWithEmail($input: LoginDto!) {
   loginWithEmail(input: $input) {
@@ -121,6 +160,12 @@ export const LoginWithEmailDocument = `
 
 const injectedRtkApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
+    Signup: build.mutation<SignupMutation, SignupMutationVariables>({
+      query: (variables) => ({ document: SignupDocument, variables })
+    }),
+    LoginWithGoogle: build.mutation<LoginWithGoogleMutation, LoginWithGoogleMutationVariables>({
+      query: (variables) => ({ document: LoginWithGoogleDocument, variables })
+    }),
     loginWithEmail: build.mutation<LoginWithEmailMutation, LoginWithEmailMutationVariables>({
       query: (variables) => ({ document: LoginWithEmailDocument, variables })
     }),
@@ -128,5 +173,5 @@ const injectedRtkApi = baseApi.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-
+export const { useSignupMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation } = injectedRtkApi;
 
