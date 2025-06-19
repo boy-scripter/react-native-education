@@ -34,4 +34,8 @@ const Input = ({placeholder, label, className, style, onChange, ...props}: Input
   );
 };
 
+Input.TextError = ({message }: { message: string}) => {
+  return  <Text className="text-red-600">{message}</Text>;
+};
+
 export default Input;

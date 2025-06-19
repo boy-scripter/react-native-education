@@ -98,7 +98,7 @@ export type User = {
 };
 
 export type SignupMutationVariables = Exact<{
-  signupInput2: SignUpDto;
+  signupInput: SignUpDto;
 }>;
 
 
@@ -110,19 +110,19 @@ export type LoginWithGoogleMutationVariables = Exact<{
 }>;
 
 
-export type LoginWithGoogleMutation = { __typename?: 'Mutation', loginWithGoogle: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', name: string, email: string, _id: string } } };
+export type LoginWithGoogleMutation = { __typename?: 'Mutation', loginWithGoogle: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', name: string, email: string, _id: string, active: boolean } } };
 
 export type LoginWithEmailMutationVariables = Exact<{
   input: LoginDto;
 }>;
 
 
-export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string } } };
+export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string, active: boolean } } };
 
 
 export const SignupDocument = `
-    mutation Signup($signupInput2: SignUpDto!) {
-  signup(input: $signupInput2) {
+    mutation Signup($signupInput: SignUpDto!) {
+  signup(input: $signupInput) {
     name
     email
     avatar
@@ -140,12 +140,13 @@ export const LoginWithGoogleDocument = `
       name
       email
       _id
+      active
     }
   }
 }
     `;
 export const LoginWithEmailDocument = `
-    mutation loginWithEmail($input: LoginDto!) {
+    mutation LoginWithEmail($input: LoginDto!) {
   loginWithEmail(input: $input) {
     access_token
     refresh_token
@@ -153,6 +154,7 @@ export const LoginWithEmailDocument = `
       _id
       name
       email
+      active
     }
   }
 }
@@ -166,7 +168,7 @@ const injectedRtkApi = baseApi.injectEndpoints({
     LoginWithGoogle: build.mutation<LoginWithGoogleMutation, LoginWithGoogleMutationVariables>({
       query: (variables) => ({ document: LoginWithGoogleDocument, variables })
     }),
-    loginWithEmail: build.mutation<LoginWithEmailMutation, LoginWithEmailMutationVariables>({
+    LoginWithEmail: build.mutation<LoginWithEmailMutation, LoginWithEmailMutationVariables>({
       query: (variables) => ({ document: LoginWithEmailDocument, variables })
     }),
   }),

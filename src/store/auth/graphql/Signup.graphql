@@ -1,5 +1,5 @@
-mutation Signup($signupInput2: SignUpDto!) {
-  signup(input: $signupInput2) {
+mutation Signup($signupInput: SignUpDto!) {
+  signup(input: $signupInput) {
     name
     email
     avatar

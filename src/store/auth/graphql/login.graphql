@@ -1,4 +1,4 @@
-mutation loginWithEmail($input: LoginDto!) {
+mutation LoginWithEmail($input: LoginDto!) {
   loginWithEmail(input: $input) {
     access_token
     refresh_token
@@ -6,6 +6,8 @@ mutation loginWithEmail($input: LoginDto!) {
       _id
       name
       email
+      active
+      
     }
   }
 }

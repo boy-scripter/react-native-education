@@ -1,9 +1,9 @@
-import {createSlice, isAnyOf, PayloadAction} from '@reduxjs/toolkit';
-import {ACCESS_TOKEN_KEY, AuthState} from '@myTypes/auth';
-import {useStorage} from '@hooks/useStorage.hook';
-import {api } from 'src/graphql/generated';
+import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
+import { ACCESS_TOKEN_KEY, AuthState } from "@myTypes/auth";
+import { useStorage } from "@hooks/useStorage.hook";
+import { api, AuthResponse } from 'src/graphql/generated'
 
-const {setItem, removeItem} = useStorage();
+const { setItem, removeItem } = useStorage();
 
 const initialState: AuthState = {
   user: null,
@@ -11,32 +11,40 @@ const initialState: AuthState = {
   isAuthenticated: false,
 };
 
-const authSlice = createSlice({
-  name: 'auth',
+function setAuthState(state: Draft<AuthState>, payload: AuthResponse) {
+  state.user = payload.user;
+  state.access_token = payload.access_token;
+  state.isAuthenticated = true;
+  setItem(ACCESS_TOKEN_KEY, JSON.stringify(payload.access_token));
+}
+
+export const authSlice = createSlice({
+  name: "auth",
   initialState: initialState as AuthState,
   reducers: {
-    logout: state => {
+    logout: (state) => {
       state.access_token = null;
       state.user = null;
       state.isAuthenticated = false;
-
       removeItem(ACCESS_TOKEN_KEY);
     },
   },
-  extraReducers(builder) {
+  extraReducers: (builder) => {
+    
+    // after login state  
     builder.addMatcher(
-        isAnyOf(
-          api.endpoints.loginWithEmail.matchFulfilled,
-          api.endpoints.LoginWithGoogle.matchFulfilled // ✅ fix casing
-        ),
-        (state, action) => {
-          const { user, access_token } = action.payload;
-          state.user = user;
-          state.access_token = access_token;
-          state.isAuthenticated = true;
-          setItem(ACCESS_TOKEN_KEY, JSON.stringify(access_token));
-        }
-      );
-      
+      api.endpoints.LoginWithEmail.matchFulfilled,
+      (state, { payload }) => {
+        const authData = payload.loginWithEmail;
+        setAuthState(state, authData);
+      }
+    );
+    builder.addMatcher(
+      api.endpoints.LoginWithGoogle.matchFulfilled,
+      (state, { payload }) => {
+        const authData = payload.loginWithGoogle;
+        setAuthState(state, authData);
+      }
+    );
   },
 });
