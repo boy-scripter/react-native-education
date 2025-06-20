@@ -8,28 +8,27 @@ type ButtonProps = {
   label: string;
   children?: React.ReactNode;
   position?: 'left' | 'right';
-  onPress?: (event: GestureResponderEvent) => void;
+  onPress?: (event: GestureResponderEvent) => void | Promise<void>;
   className?: string;
   textClassName?: string;
   disabled?: boolean;
-  asyncCall: () => Promise<void>;
 } & PressableProps;
 
-const Button: React.FC<ButtonProps> = ({children, position = 'left', onPress, asyncCall, className, textClassName, disabled, label}) => {
+const Button: React.FC<ButtonProps> = ({children, position = 'left', onPress, className, textClassName, disabled, label, ...restFields}) => {
   const [isLoading, setIsLoading] = useState(false);
   const isDisabled = isLoading || disabled;
 
   const handlePress = async (event: GestureResponderEvent) => {
-    if (asyncCall != undefined) {
+    if (!onPress) return;
+    if (onPress instanceof Promise) {
       try {
         setIsLoading(true);
-        await asyncCall();
+        await onPress(event);
       } finally {
         setIsLoading(false);
       }
-    } else if (onPress) {
-      onPress(event);
     }
+    onPress(event);
   };
 
   return (
@@ -37,11 +36,12 @@ const Button: React.FC<ButtonProps> = ({children, position = 'left', onPress, as
       onPress={handlePress}
       disabled={isDisabled}
       className={twMerge('bg-theme overflow-hidden border-theme p-2 py-3 rounded-lg flex-row items-center justify-center', isDisabled && 'opacity-50', className)}
-      style={{borderWidth: 1}}>
+      style={{borderWidth: 1}}
+      {...restFields}>
       <LinearGradient colors={['rgba(255, 255, 255, 0.317)', 'transparent']} start={{x: 0.5, y: 0}} end={{x: 0.5, y: 0.5}} style={StyleSheet.absoluteFillObject} />
 
       {isLoading ? (
-        <Loader></Loader>
+        <Loader />
       ) : (
         <>
           {position === 'left' && children && <View className="mr-2">{children}</View>}

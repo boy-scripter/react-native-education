@@ -16,10 +16,7 @@ type LoginFormType = z.infer<typeof LoginSchema>;
 
 export default function Login() {
   const [login] = useLoginWithEmailMutation();
-  const {
-    getValues,
-    formState: {errors},
-  } = useForm({
+  const { getValues, formState: {errors} } = useForm({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: '',
@@ -29,16 +26,14 @@ export default function Login() {
 
   async function handleLogin() {
     const formValues = getValues();
-    await login({
-      input: formValues,
-    }).then(() => navigate('mainstack', {screen: 'home'}));
+    await login({input: formValues}).then(() => navigate('mainstack', {screen: 'home'}));
   }
 
   return (
     <>
       <View className="gap-4">
         <>
-          <Input label="Email" keyboardType="email-address" placeholder="john@example.com"></Input>
+          <Input  label="Email" keyboardType="email-address" placeholder="john@example.com"></Input>
           {errors.email?.message && <Input.TextError message={errors.email.message}></Input.TextError>}
         </>
 
@@ -48,13 +43,13 @@ export default function Login() {
         </>
 
         <View className="flex flex-row my-2 justify-between items-center">
-          <CheckBox label="Remember Me"></CheckBox>
+          <CheckBox label="Remember Me"  ></CheckBox>
           <Text className="font-inter text-theme" onPress={() => navigate('forgot')}>
             Forgot Password ?
           </Text>
         </View>
 
-        <Button asyncCall={handleLogin} disabled={!Object.values(errors).length} label="Login"></Button>
+        <Button onPress={handleLogin} disabled={!Object.values(errors).length} label="Login"></Button>
       </View>
     </>
   );
