@@ -21,6 +21,7 @@ module.exports = {
         root: ['./src'],
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.ios.js', '.android.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ttf', '.woff', '.woff2', '.eot', '.otf'],
         alias: {
+          '@': './src',
           '@assets': './src/assets',
           '@components': './src/components',
           '@constant': './src/constant',
@@ -32,6 +33,7 @@ module.exports = {
           '@animation': './src/animation',
           '@store': './src/store',
           '@myTypes': './src/types',
+          '@baseApi': './src/baseApi/baseApi',
         },
       },
     ],

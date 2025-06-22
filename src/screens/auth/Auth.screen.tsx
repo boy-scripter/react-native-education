@@ -6,16 +6,25 @@ import Tab from '@components/ui/TabToggle';
 import React from 'react';
 import {Image} from 'react-native';
 import {View, Text} from 'react-native';
+import { useLoginWithGoogleMutation } from '@/graphql/generated';
 
 export default function AuthScreen() {
   const [tab, setTab] = React.useState('login');
+
+  const [ google ] = useLoginWithGoogleMutation() 
+
+
+  function handleGoogleLogin()
+    {
+
+    }
 
   return (
     <TopImageLayout image={'@assets/images/auth.png'} title="Get Started now" description="Create an account or log in to explore about our app">
       
         <Tab onChange={value => setTab(value)} defaultTab="signup">
-          <Tab.Button label="Login" id="login"></Tab.Button>
           <Tab.Button label="Signup" id="signup"></Tab.Button>
+          <Tab.Button label="Login" id="login"></Tab.Button>
         </Tab>
 
         <View className="my-10 flex-1 ">
@@ -26,7 +35,7 @@ export default function AuthScreen() {
             <View className="flex-1 h-px bg-greyish" />
           </View>
 
-          <Button label="Continue with Google" className="w-full border-greyish bg-white py-4" textClassName="text-sm text-theme">
+          <Button onPress={handleGoogleLogin} label="Continue with Google" className="w-full border-greyish bg-white py-4" textClassName="text-sm text-theme">
             <Image className="w-5 h-5" source={require('@assets/images/google.png')} />
           </Button>
         </View>

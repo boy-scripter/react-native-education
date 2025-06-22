@@ -3,21 +3,23 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android --port 8080",
     "ios": "react-native run-ios",
     "lint": "eslint .",
-    "start": "react-native start",
+    "start": "react-native start --port 8080",
     "test": "jest",
-    "codegen": " npx graphql-codegen --config codegen.yml"
+    "codegen": "npx graphql-codegen --config codegen.yml",
+   "debugger": "xdg-open \"rndebugger://set-debugger-loc?host=127.0.0.1&port=8080\""
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.1.1",
+    "@hookform/resolvers": "^5.1.0",
     "@react-navigation/native": "^7.0.19",
     "@react-navigation/stack": "^7.2.3",
     "@reduxjs/toolkit": "^2.8.2",
     "@rtk-query/graphql-request-base-query": "^2.3.1",
     "graphql": "^16.11.0",
     "moti": "^0.30.0",
+    "nanoid": "^5.1.5",
     "nativewind": "^4.1.23",
     "npm": "^11.4.1",
     "react": "19.0.0",
@@ -32,9 +34,9 @@
     "react-native-safe-area-context": "^5.3.0",
     "react-native-screens": "^4.10.0",
     "react-native-svg": "^15.11.2",
+    "react-native-toast-message": "^2.3.0",
     "react-native-vector-icons": "^10.2.0",
     "react-redux": "^9.2.0",
-    "redux-thunk": "^3.1.0",
     "tailwind-merge": "^3.1.0",
     "tailwindcss": "^3.4.17",
     "zod": "^3.25.67"

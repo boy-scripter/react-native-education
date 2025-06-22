@@ -1,35 +1,37 @@
-import colorConstant from '@constant/color.constant';
-import React, {useEffect} from 'react';
-import {Pressable, Text} from 'react-native';
-import Animated, {interpolateColor, useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
+import React from 'react';
+import {Text, Pressable} from 'react-native';
+import {MotiView, MotiText} from 'moti';
+import colorConstant from '@/constant/color.constant';
 
 type CheckBoxProps = {
-  value?: boolean;
-  setValue?: React.Dispatch<React.SetStateAction<boolean>>;
+  value: boolean;
+  onChecked?: (value: boolean) => void;
   label?: string;
 };
 
-const CheckBox: React.FC<CheckBoxProps> = ({value = true, setValue, label}) => {
-  const animatedValue = useSharedValue(value ? 1 : 0);
-
-  const animatedStyleView = useAnimatedStyle(() => ({
-    borderColor: interpolateColor(value ? 1 : 0, [0, 1], [colorConstant.greyish[200], 'white']),
-    backgroundColor: interpolateColor(value ? 1 : 0, [0, 1], ['white', colorConstant.theme.DEFAULT]),
-  }));
-
-  // const animatedStyleText = useAnimatedStyle(() => ({
-  //   color: interpolateColor(value ? 1 : 0, [0, 1], ['white', 'white']),
-  // }));
-
-  useEffect(() => {
-    animatedValue.value = value ? 1 : 0;
-  }, [value]);
-
+const CheckBox: React.FC<CheckBoxProps> = ({value = false, onChecked, label}) => {
   return (
-    <Pressable className="flex-row items-center" onPress={() => setValue && setValue(value => !value)}>
-      <Animated.View style={[{borderWidth:1}, animatedStyleView]} className={`p-1 px-2 text-2xl rounded-lg justify-center items-center mr-2`}>
-        <Animated.Text className='text-white' style={[{fontSize: 8}]}>✓</Animated.Text>
-      </Animated.View>
+    <Pressable className="flex-row items-center" onPress={() => onChecked?.(!value)}>
+      <MotiView
+        className="p-1 px-2 text-2xl rounded-lg justify-center items-center mr-2"
+        style={{borderWidth: 1}}
+        from={{
+          backgroundColor: 'white',
+          borderColor: colorConstant.greyish[200],
+        }}
+        animate={{
+          backgroundColor: value ? colorConstant.theme.DEFAULT : 'white',
+          borderColor: value ? 'white' : colorConstant.greyish[200],
+        }}
+        transition={{
+          type: 'timing',
+          duration: 200,
+        }}>
+        <MotiText from={{opacity: 0}} animate={{opacity: value ? 1 : 0}} transition={{type: 'timing', duration: 150}} style={{fontSize: 8, color: 'white'}}>
+          ✓
+        </MotiText>
+      </MotiView>
+
       {label && <Text>{label}</Text>}
     </Pressable>
   );

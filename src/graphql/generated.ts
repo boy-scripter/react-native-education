@@ -98,7 +98,7 @@ export type User = {
 };
 
 export type SignupMutationVariables = Exact<{
-  signupInput: SignUpDto;
+  input: SignUpDto;
 }>;
 
 
@@ -121,8 +121,8 @@ export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: 
 
 
 export const SignupDocument = `
-    mutation Signup($signupInput: SignUpDto!) {
-  signup(input: $signupInput) {
+    mutation Signup($input: SignUpDto!) {
+  signup(input: $input) {
     name
     email
     avatar

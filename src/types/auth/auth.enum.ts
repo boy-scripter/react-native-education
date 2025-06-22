@@ -1,9 +1,3 @@
-export enum AuthActionType {
-  LOGIN_SUCCESS = 'LOGIN_SUCCESS',
-  SIGNUP_SUCCESS = 'SIGNUP_SUCCESS',
-  LOGOUT = 'LOGOUT',
-  SET_LOADING = 'SET_LOADING',
-  SET_ERROR = 'SET_ERROR',
-}
 
-export const ACCESS_TOKEN_KEY = 'accessToken'; 
+
+export const REFRESH_TOKEN = 'refresh_token'; 

@@ -1,5 +1,5 @@
 import Animated, {useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
-import {Pressable, View, Text, GestureResponderEvent, findNodeHandle} from 'react-native';
+import {Pressable, View, Text, GestureResponderEvent} from 'react-native';
 import React, {useContext, createContext, useRef, useCallback, RefObject, useLayoutEffect, ElementRef, ComponentRef} from 'react';
 import {twMerge} from 'tailwind-merge';
 
@@ -67,24 +67,33 @@ Tab.Button = React.memo(function ({label, id}: TabButtonProps) {
 
   const btnRef = useRef<ComponentRef<typeof Pressable>>(null);
   const {activateSliderTab, containerRef, currentTab} = ctx;
-  if (!containerRef) throw new Error('Unable to move tab slider due to parent containerRef');
 
   function handlePress(e: GestureResponderEvent) {
-    containerRef &&
+    containerRef?.current &&
       e.target.measureLayout(containerRef.current, (x, y, width, height) => {
         activateSliderTab({x, width, tab: id});
       });
   }
 
-  useLayoutEffect(() => {
+  // because conatinerref is Empty
+  // useLayoutEffect(() => {
+  //   if (id !== currentTab) return;
+  //   btnRef.current?.measureLayout(containerRef.current, (x, y, width) => {
+  //     activateSliderTab({x, width, tab: id});
+  //   });
+  // }, []);
+
+
+  function handleOnLayout(){
     if (id !== currentTab) return;
+    if (!containerRef?.current) throw new Error('Unable to move tab slider due to parent containerRef');
     btnRef.current?.measureLayout(containerRef.current, (x, y, width) => {
       activateSliderTab({x, width, tab: id});
     });
-  }, []);
+  }
 
   return (
-    <Pressable ref={btnRef} className="flex-1 text-center" onPress={handlePress}>
+    <Pressable ref={btnRef} onLayout={handleOnLayout} className="flex-1 text-center" onPress={handlePress}>
       <Text className={`${id ? 'opacity-100' : 'opacity-50'} p-2 px-4 text-center `}>{label}</Text>
     </Pressable>
   );

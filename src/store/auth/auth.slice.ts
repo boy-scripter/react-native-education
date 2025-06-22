@@ -1,13 +1,13 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
-import { ACCESS_TOKEN_KEY, AuthState } from "@myTypes/auth";
-import { useStorage } from "@hooks/useStorage.hook";
-import { api, AuthResponse } from 'src/graphql/generated'
+import {  AuthState, REFRESH_TOKEN } from "@myTypes/auth";
+import { api, AuthResponse } from '@/graphql/generated'
+import { useStorage } from "@/hooks/useStorage.hook";
 
-const { setItem, removeItem } = useStorage();
 
 const initialState: AuthState = {
   user: null,
   access_token: null,
+  refresh_token: null,
   isAuthenticated: false,
 };
 
@@ -15,18 +15,21 @@ function setAuthState(state: Draft<AuthState>, payload: AuthResponse) {
   state.user = payload.user;
   state.access_token = payload.access_token;
   state.isAuthenticated = true;
-  setItem(ACCESS_TOKEN_KEY, JSON.stringify(payload.access_token));
+
 }
+
+const { removeItem } =  useStorage()
 
 export const authSlice = createSlice({
   name: "auth",
   initialState: initialState as AuthState,
   reducers: {
     logout: (state) => {
+      removeItem(REFRESH_TOKEN)
       state.access_token = null;
+      state.refresh_token = null;
       state.user = null;
       state.isAuthenticated = false;
-      removeItem(ACCESS_TOKEN_KEY);
     },
   },
   extraReducers: (builder) => {
@@ -48,3 +51,6 @@ export const authSlice = createSlice({
     );
   },
 });
+
+export const { logout } = authSlice.actions;
+export default authSlice.reducer
