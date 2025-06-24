@@ -4,6 +4,8 @@ import {ModalProvider} from '@/modals/modal.context';
 
 import Toast from 'react-native-toast-message';
 import { ReduxStore } from '@/store/store';
+import "react-native-devsettings";
+
 
 export default function App() {
   return (

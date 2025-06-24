@@ -12,6 +12,12 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
 
+import java.lang.Class
+import java.lang.reflect.Method
+import android.content.Context
+import com.facebook.react.ReactInstanceManager
+
+
 class MainApplication : Application(), ReactApplication {
 
   override val reactNativeHost: ReactNativeHost =
@@ -40,5 +46,29 @@ class MainApplication : Application(), ReactApplication {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       load()
     }
+    //  initializeFlipper(this, reactNativeHost.reactInstanceManager)
   }
+
+      private fun initializeFlipper(context: Context, reactInstanceManager: ReactInstanceManager) {
+          if (BuildConfig.DEBUG) {
+              try {
+                  // Load the Flipper initializer class via reflection
+                  val flipperClass = Class.forName("com.education.ReactNativeFlipper")
+
+                  // Get the static initializeFlipper method with correct parameter types
+                  val method = flipperClass.getMethod(
+                      "initializeFlipper",
+                      Context::class.java,
+                      Class.forName("com.facebook.react.ReactInstanceManager") // force resolve
+                  )
+
+                  // Invoke the static method
+                  method.invoke(null, context, reactInstanceManager)
+              } catch (e: Exception) {
+                  e.printStackTrace()
+              }
+          }
+      }
+
+
 }

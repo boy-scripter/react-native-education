@@ -122,4 +122,14 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+  debugImplementation('com.facebook.flipper:flipper:0.35.0') {
+    exclude group:'com.facebook.fbjni'
+  }
+
+    dependencies {
+    debugImplementation 'com.facebook.flipper:flipper-network-plugin:0.273.0'
+    }
 }
+
+
