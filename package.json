@@ -9,7 +9,7 @@
     "start": "react-native start --port 8080",
     "test": "jest",
     "codegen": "npx graphql-codegen --config codegen.yml",
-   "debugger": "xdg-open \"rndebugger://set-debugger-loc?host=127.0.0.1&port=8080\""
+    "debugger": "xdg-open \"rndebugger://set-debugger-loc?host=127.0.0.1&port=8080\""
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.0",
@@ -19,7 +19,7 @@
     "@rtk-query/graphql-request-base-query": "^2.3.1",
     "graphql": "^16.11.0",
     "moti": "^0.30.0",
-    "nanoid": "^5.1.5",
+    "nanoid": "^5.1.0",
     "nativewind": "^4.1.23",
     "npm": "^11.4.1",
     "react": "19.0.0",
