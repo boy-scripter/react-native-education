@@ -8,33 +8,36 @@ import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query"
 const { getItem } = useStorage();
 
 const baseQuery = graphqlRequestBaseQuery({
-    url: process.env.GRAPHQL_BASE_URL!,
-    prepareHeaders: (headers) => {
-      const token = getItem<string>(REFRESH_TOKEN);
-      if (token) headers.set('Authorization', `Bearer ${token}`);
-      return headers;
+  url: process.env.GRAPHQL_BASE_URL!,
+  prepareHeaders: (headers) => {
+    const token = getItem<string>(REFRESH_TOKEN);
+    if (token) headers.set('Authorization', `Bearer ${token}`);
+    return headers;
+  },
+  customErrors: ({ response }) => {
+    const err = response.errors?.[0];
+    return {
+      message: err?.message ?? 'Unknown Server error',
+      status: err?.extensions?.status as number | undefined ,
     }
-  })
+  }
+})
 
 
-export const baseQueryWithErrorToast: BaseQueryFn<any, unknown, unknown> = async ( args,  api, extraOptions ) => {
+export const baseQueryWithErrorToast: BaseQueryFn<any, unknown, unknown> = async (args, api, extraOptions) => {
   const result = await baseQuery(args, api, extraOptions);
 
   if (result.error) {
     const errorMessage = result.error?.message || 'Something went wrong';
-
-    errorToast({
-      text1: 'Error',
-      text2: errorMessage,
-    });
+    errorToast({ text1: errorMessage });
   }
 
   return result;
 };
 
- 
+
 export const baseApi = createApi({
-  baseQuery : baseQueryWithErrorToast ,
+  baseQuery: baseQueryWithErrorToast,
   endpoints: (build) => ({})
 });
 

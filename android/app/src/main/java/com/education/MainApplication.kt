@@ -46,7 +46,7 @@ class MainApplication : Application(), ReactApplication {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       load()
     }
-    //  initializeFlipper(this, reactNativeHost.reactInstanceManager)
+     initializeFlipper(this, reactNativeHost.reactInstanceManager)
   }
 
       private fun initializeFlipper(context: Context, reactInstanceManager: ReactInstanceManager) {

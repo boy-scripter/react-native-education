@@ -1,18 +1,17 @@
-
 import Button from '@components/ui/Button';
 import {View} from 'react-native';
-import z from 'zod';
 import {FormInput} from './ui/FormInput';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useSignupMutation} from '@/graphql/generated';
-import { successToast } from './Toast/Toast.config';
-
+import {successToast} from './Toast/Toast.config';
+import z from 'zod';
+import {useEffect} from 'react';
 
 const signUpSchema = z.object({
-  name: z.string().min(4).default(''),
-  email: z.string().email().default(''),
-  password: z.string().min(8).max(25).default(''),
+  name: z.string({ required_error : "Name is required"}).min(4, {message: 'must conatin at least 4 characters'}),
+  email: z.string({ required_error : "Email is required"}).email(),
+  password: z.string({ required_error : "Password is required"}).min(8, {message: 'Password must contain at least 8 characters'}).max(25, {message: 'Password must be at most 25 characters long'}),
 });
 
 type signUpType = z.infer<typeof signUpSchema>;
@@ -20,17 +19,12 @@ type signUpType = z.infer<typeof signUpSchema>;
 export default function Signup() {
   const [Signup] = useSignupMutation();
 
-  const {
-    getValues,
-    control,
-    formState: {errors , isValid},
-  } = useForm({
+  const {handleSubmit, control} = useForm({
     resolver: zodResolver(signUpSchema),
   });
 
-  async function handleOnSubmit() {
-    const formValues = getValues() as Required<signUpType>;
-    await Signup({ input: formValues });
+  async function handleSignup(formValues: signUpType) {
+    await Signup({input: formValues}).unwrap();
     successToast({
       text1: 'Signup successful!',
     });
@@ -39,10 +33,10 @@ export default function Signup() {
   return (
     <>
       <View className="gap-2">
-        <FormInput name="name" control={control} label="Name" errorMessage={errors.name?.message} keyboardType="default" placeholder="Enter Your Name"></FormInput>
-        <FormInput name="email" control={control} label="Email" errorMessage={errors.email?.message} keyboardType="email-address" placeholder="john@example.com"></FormInput>
-        <FormInput secret={true} name="password" control={control} label="Password" errorMessage={errors.password?.message} keyboardType="default" placeholder="Enter Password"></FormInput>
-        <Button onPress={handleOnSubmit} disabled={!isValid} label="Signup" className="w-full bg-theme mt-4"></Button>
+        <FormInput name="name" control={control} label="Name" placeholder="Enter Your Name"></FormInput>
+        <FormInput name="email" control={control} label="Email" keyboardType="email-address" placeholder="john@example.com"></FormInput>
+        <FormInput name="password" control={control} label="Password" placeholder="Enter Password" secret={true}></FormInput>
+        <Button onPress={handleSubmit(handleSignup)} label="Signup" className="w-full bg-theme mt-4"></Button>
       </View>
     </>
   );

@@ -9,15 +9,20 @@ type FormInputProps<T extends FieldValues> = {
   errorMessage?: string;
 } & InputProps;
 
-export const FormInput = <T extends FieldValues>({control, name, label, placeholder, keyboardType = 'default', secureTextEntry = false, errorMessage}: FormInputProps<T>) => {
+export const FormInput = <T extends FieldValues>({control, name, label, placeholder, keyboardType = 'default' ,...rest}: FormInputProps<T>) => {
+
   return (
     <>
       <Controller
         control={control}
         name={name}
-        render={({field: {onChange, value}}) => <Input label={label} placeholder={placeholder} keyboardType={keyboardType} secureTextEntry={secureTextEntry} value={value} onChangeText={onChange} />}
+        render={({field: {onChange, value} , fieldState : {error }}) => (
+          <>
+           <Input label={label} placeholder={placeholder} keyboardType={keyboardType} value={value} onChangeText={onChange} {...rest}/>
+           {error?.message && <Input.TextError message={error.message} />}
+          </>
+        )}
       />
-      {errorMessage && <Input.TextError message={errorMessage} />}
     </>
-  );
+  ); 
 };

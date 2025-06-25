@@ -3,6 +3,7 @@ import {Pressable, Text, PressableProps, View, GestureResponderEvent, StyleSheet
 import {twMerge} from 'tailwind-merge';
 import LinearGradient from 'react-native-linear-gradient';
 import Loader from '@components/ui/Loader';
+import colorConstant from '@/constant/color.constant';
 
 type ButtonProps = {
   label: string;
@@ -14,30 +15,39 @@ type ButtonProps = {
   disabled?: boolean;
 } & PressableProps;
 
-const Button: React.FC<ButtonProps> = ({children, position = 'left', onPress, className, textClassName, disabled, label, ...restFields}) => {
+const theme = {
+  default: {
+    btn: colorConstant.theme.DEFAULT,
+    loader: colorConstant.greyish[100],
+  },
+  white: {
+    btn: colorConstant.greyish,
+    loader: colorConstant.theme.DEFAULT,
+  },
+};
+
+const Button: React.FC<ButtonProps> = ({children, position = 'left', onPress, className, textClassName, disabled, label, ...props}) => {
   const [isLoading, setIsLoading] = useState(false);
   const isDisabled = isLoading || disabled;
 
   const handlePress = async (event: GestureResponderEvent) => {
     if (!onPress) return;
-    if (onPress instanceof Promise) {
-      try {
-        setIsLoading(true);
-        await onPress(event);
-      } finally {
-        setIsLoading(false);
-      }
+
+    try {
+      setIsLoading(true);
+      await onPress(event);
+    } finally {
+      setIsLoading(false);
     }
-    onPress(event);
   };
 
   return (
     <Pressable
       onPress={handlePress}
       disabled={isDisabled}
-      className={twMerge('bg-theme overflow-hidden border-theme p-2 py-3 rounded-lg flex-row items-center justify-center', isDisabled && 'opacity-50', className)}
+      className={twMerge('bg-theme border-theme overflow-hidden p-2 py-3 rounded-lg flex-row items-center justify-center', isDisabled && 'opacity-50', className)}
       style={{borderWidth: 1}}
-      {...restFields}>
+      {...props}>
       <LinearGradient colors={['rgba(255, 255, 255, 0.317)', 'transparent']} start={{x: 0.5, y: 0}} end={{x: 0.5, y: 0.5}} style={StyleSheet.absoluteFillObject} />
 
       {isLoading ? (

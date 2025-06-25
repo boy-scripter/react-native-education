@@ -12,28 +12,18 @@ export function UIToast() {
   return <Toast config={toastConfig} position="top" topOffset={20} />;
 }
 
-type ToastTypeProps = Omit<ToastShowParams , 'type'> 
+type ToastTypeProps = Omit<ToastShowParams, 'type'>;
 
-function successToast({ text1 , text2 }:ToastTypeProps) {
-  return Toast.show({
-    type : 'success',
-    text1 , text2
-  });
+function successToast({text1}: ToastTypeProps) {
+  return Toast.show({text1, type: 'success'});
 }
 
-function errorToast({text1 , text2}: ToastTypeProps) {
-  return Toast.show({
-    type : 'error',
-    text1 , text2
-  });
+function errorToast({text1}: ToastTypeProps) {
+  return Toast.show({text1, type: 'error'});
 }
 
-function infoToast({text1 , text2}: ToastTypeProps) {
-  return Toast.show({
-    type : 'info',
-    text1 , text2
-  });
+function infoToast({text1}: ToastTypeProps) {
+  return Toast.show({text1, type: 'info'});
 }
 
-
-export {successToast , errorToast , infoToast};
+export {successToast, errorToast, infoToast};

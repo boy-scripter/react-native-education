@@ -4,10 +4,10 @@ import colorConstant from '@constant/color.constant';
 
 interface ActivityIndicatorProps extends Props {}
 
-export default  function Loader({size = 'small'}: ActivityIndicatorProps) {
+export default function Loader({size = 'small', color = colorConstant.theme.DEFAULT}: ActivityIndicatorProps) {
   return (
     <>
-      <ActivityIndicator color={colorConstant.theme.DEFAULT} size={size}></ActivityIndicator>
+      <ActivityIndicator color={color} size={size}></ActivityIndicator>
     </>
   );
 }

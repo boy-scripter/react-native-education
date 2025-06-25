@@ -2,18 +2,18 @@ import {RootStackNavigator} from '@/stacks/Root.stack';
 import './global.css';
 import {ModalProvider} from '@/modals/modal.context';
 
-import Toast from 'react-native-toast-message';
-import { ReduxStore } from '@/store/store';
-import "react-native-devsettings";
 
+import {ReduxStore} from '@/store/store';
+import { UIToast } from '@/components/Toast/Toast.config';
+import 'react-native-devsettings';
 
 export default function App() {
   return (
     <ReduxStore>
-        <ModalProvider>
-        <Toast position='top' topOffset={20}  />
+      <ModalProvider>
         <RootStackNavigator></RootStackNavigator>
       </ModalProvider>
+      <UIToast  />
     </ReduxStore>
   );
 }
