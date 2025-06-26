@@ -9,7 +9,7 @@
     "start": "react-native start --port 8080",
     "test": "jest",
     "codegen": "npx graphql-codegen --config codegen.yml",
-    "debugger": "xdg-open \"rndebugger://set-debugger-loc?host=127.0.0.1&port=8080\""
+    "debugger": "npx flipper-server"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.0",
