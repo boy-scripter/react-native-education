@@ -14,7 +14,7 @@ export default function AuthScreen() {
   const [tab, setTab] = React.useState('login');
 
   const [googleMutation] = useLoginWithGoogleMutation();
-
+416020481524-9346sb91r9uu7p15k3ub04u11n444u96.apps.googleusercontent.com
   async function handleGoogleLogin() {
     const {code ,scope} = await goWithGoogle();
 
