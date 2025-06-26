@@ -11,12 +11,12 @@ import {useState} from 'react';
 import {useSelector} from 'react-redux';
 import {selectAuth} from '@/store/auth/auth.selector';
 import {useStorage} from '@/hooks/useStorage.hook';
-import z from 'zod';
 import {REFRESH_TOKEN} from '@/types/auth';
+import z from 'zod';
 
 const LoginSchema = z.object({
-  email: z.string({required_error: 'Name is required'}).email({message: 'Invalid email address'}),
-  password: z.string({required_error: 'password is required'}).min(6, {message: 'Password must be at least 8 characters long'}),
+  email: z.string({required_error: 'Email is required'}).email({message: 'Invalid email address'}),
+  password: z.string({required_error: 'Password is required'}).min(6, {message: 'Password must be at least 8 characters long'}),
 });
 type LoginFormType = z.infer<typeof LoginSchema>;
 
