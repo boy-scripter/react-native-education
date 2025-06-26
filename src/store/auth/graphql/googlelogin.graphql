@@ -1,4 +1,4 @@
-mutation LoginWithGoogle($code: String!, $scope: String!) {
+mutation LoginWithGoogle($code: String!, $scope: [String!]!) {
   loginWithGoogle(code: $code, scope: $scope) {
     access_token
     refresh_token

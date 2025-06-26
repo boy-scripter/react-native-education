@@ -34,7 +34,7 @@ export type Mutation = {
   sendForgotPasswordCode: Scalars['String']['output'];
   setNewResetPassword: Scalars['String']['output'];
   signup: User;
-  validateOtp: Scalars['String']['output'];
+  validateResetOtp: Scalars['String']['output'];
 };
 
 
@@ -45,7 +45,7 @@ export type MutationLoginWithEmailArgs = {
 
 export type MutationLoginWithGoogleArgs = {
   code: Scalars['String']['input'];
-  scope: Scalars['String']['input'];
+  scope: Array<Scalars['String']['input']>;
 };
 
 
@@ -64,7 +64,7 @@ export type MutationSignupArgs = {
 };
 
 
-export type MutationValidateOtpArgs = {
+export type MutationValidateResetOtpArgs = {
   input: ResetPasswordDto;
 };
 
@@ -106,7 +106,7 @@ export type SignupMutation = { __typename?: 'Mutation', signup: { __typename?: '
 
 export type LoginWithGoogleMutationVariables = Exact<{
   code: Scalars['String']['input'];
-  scope: Scalars['String']['input'];
+  scope: Array<Scalars['String']['input']> | Scalars['String']['input'];
 }>;
 
 
@@ -132,7 +132,7 @@ export const SignupDocument = `
 }
     `;
 export const LoginWithGoogleDocument = `
-    mutation LoginWithGoogle($code: String!, $scope: String!) {
+    mutation LoginWithGoogle($code: String!, $scope: [String!]!) {
   loginWithGoogle(code: $code, scope: $scope) {
     access_token
     refresh_token

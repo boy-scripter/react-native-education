@@ -1,4 +1,4 @@
-import Input from '@components/ui/Input';
+
 import Button from '@components/ui/Button';
 import CheckBox from '@components/ui/CheckBox';
 import {View, Text} from 'react-native';

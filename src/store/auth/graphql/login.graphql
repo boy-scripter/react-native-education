@@ -2,6 +2,7 @@ mutation LoginWithEmail($input: LoginDto!) {
   loginWithEmail(input: $input) {
     access_token
     refresh_token
+    
     user {
       _id
       name
