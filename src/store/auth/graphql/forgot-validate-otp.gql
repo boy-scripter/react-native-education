@@ -1,0 +1,6 @@
+mutation ValidateOtp($input: ResetPasswordDto!) {
+  validateOtp(input: $input) {
+    token
+    message
+  }
+}

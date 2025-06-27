@@ -3,12 +3,12 @@ import { useStorage } from '@hooks/useStorage.hook';
 import { REFRESH_TOKEN } from '@myTypes/auth';
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query"
-
+import { GRAPHQL_BASE_URL } from "@env"
 
 const { getItem } = useStorage();
 
 const baseQuery = graphqlRequestBaseQuery({
-  url: process.env.GRAPHQL_BASE_URL!,
+  url: GRAPHQL_BASE_URL,
   prepareHeaders: (headers) => {
     const token = getItem<string>(REFRESH_TOKEN);
     if (token) headers.set('Authorization', `Bearer ${token}`);
@@ -18,7 +18,7 @@ const baseQuery = graphqlRequestBaseQuery({
     const err = response.errors?.[0];
     return {
       message: err?.message ?? 'Unknown Server error',
-      status: err?.extensions?.status as number | undefined ,
+      status: err?.extensions?.status as number | undefined,
     }
   }
 })

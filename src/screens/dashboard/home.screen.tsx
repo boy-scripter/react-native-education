@@ -1,15 +1,15 @@
+import {selectUser} from '@/store/auth/auth.selector';
+import {AuthenticatedUser} from '@/types/auth';
 import Button from '@components/ui/Button';
 import colorConstant from '@constant/color.constant';
 import {navigate} from '@hooks/useNavigation.hook';
 import {Image} from 'react-native';
 import {Text, View, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useSelector} from 'react-redux';
 
 export default function HomeScreen() {
-  const user = {
-    name: 'Shivam',
-    image: 'https://marketplace.canva.com/EAFaFUz4aKo/3/0/1600w/canva-yellow-abstract-cooking-fire-free-logo-tn1zF-_cG9c.jpg',
-  };
+  const user = useSelector(selectUser) as unknown as AuthenticatedUser['user'];
 
   const options = [
     {
@@ -42,7 +42,7 @@ export default function HomeScreen() {
           <Text className="font-interBold text-xl">Hi, {user.name}</Text>
           <Text>Let's Make this Day Productive</Text>
         </View>
-        <Image className="h-16 w-16 rounded-full" source={{uri: user.image}} />
+        <Image className="h-16 w-16 rounded-full" source={user.avatar} />
       </View>
 
       <View style={{elevation: 14}} className="mt-5 w-full px-4 mx-auto flex flex-row p-8 bg-white shadow-white overflow-hidden rounded-xl justify-evenly ">
@@ -63,12 +63,10 @@ export default function HomeScreen() {
             <Text className="font-interBold text-theme ">100</Text>
           </View>
         </View>
-
-       
       </View>
-      <Button onPress={() =>navigate('leaderboard')} label='Check Leaderboard' className="flex-row mt-4 items-center">
-          <Icon name="trophy-outline" size={30} color={'yellow'} />
-        </Button>
+      <Button onPress={() => navigate('leaderboard')} label="Check Leaderboard" className="flex-row mt-4 items-center">
+        <Icon name="trophy-outline" size={30} color={'yellow'} />
+      </Button>
       <View className="mt-6">
         <Text className="font-interBold text-theme text-xl mb-4">Let's Play</Text>
         <View className="flex-row flex-wrap gap-x-4 gap-y-5 ">

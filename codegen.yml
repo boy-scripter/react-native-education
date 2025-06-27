@@ -1,5 +1,5 @@
 schema: http://127.0.0.1:8000/graphql
-documents: ./src/store/**/*.graphql
+documents: ./src/store/**/*.gql
 
 generates:
   ./src/graphql/generated.ts:

@@ -1,5 +1,5 @@
-mutation LoginWithGoogle($code: String!, $scope: [String!]!) {
-  loginWithGoogle(code: $code, scope: $scope) {
+mutation LoginWithGoogle($idToken: String!) {
+  loginWithGoogle(idToken: $idToken) {
     access_token
     refresh_token
     user {
@@ -7,6 +7,7 @@ mutation LoginWithGoogle($code: String!, $scope: [String!]!) {
       email
       _id
       active
+      avatar
     }
   }
 }

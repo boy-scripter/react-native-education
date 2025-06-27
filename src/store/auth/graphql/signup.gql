@@ -1,0 +1,9 @@
+mutation Signup($input: SignUpDto!) {
+  signup(input: $input) {
+    name
+    email
+    avatar
+    active
+    _id
+  }   
+}

@@ -6,21 +6,14 @@ import Tab from '@components/ui/TabToggle';
 import React from 'react';
 import {Image} from 'react-native';
 import {View, Text} from 'react-native';
-import {useLoginWithGoogleMutation} from '@/graphql/generated';
+import {us} from '@/graphql/generated';
 import {goWithGoogle} from '@/store/auth/auth.service';
-import { successToast } from '@/components/Toast/Toast.config';
+import {successToast} from '@/components/Toast/Toast.config';
+import {navigate} from '@/hooks/useNavigation.hook';
 
 export default function AuthScreen() {
   const [tab, setTab] = React.useState('login');
 
-  const [googleMutation] = useLoginWithGoogleMutation();
-416020481524-9346sb91r9uu7p15k3ub04u11n444u96.apps.googleusercontent.com
-  async function handleGoogleLogin() {
-    const {code ,scope} = await goWithGoogle();
-
-    await googleMutation({ code , scope } ).unwrap();
-    successToast({text1 : 'Login With Google SuccessFull'})
-  }
 
 
   return (

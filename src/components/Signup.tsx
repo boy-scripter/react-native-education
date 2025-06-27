@@ -6,7 +6,7 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {useSignupMutation} from '@/graphql/generated';
 import {successToast} from './Toast/Toast.config';
 import z from 'zod';
-import {useEffect} from 'react';
+
 
 const signUpSchema = z.object({
   name: z.string({ required_error : "Name is required"}).min(4, {message: 'must conatin at least 4 characters'}),

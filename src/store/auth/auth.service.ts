@@ -1,25 +1,46 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { useValidateOtpMutation, useLoginWithGoogleMutation, useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation } from '@/graphql/generated';
+import { successToast } from './Toast/Toast.config';
 
-interface GoogleResponse {
-    code: string
-    scope: string[]
-}
-
-await GoogleSignin.configure(); // Android only
 export const goWithGoogle = async () => {
     try {
-        
+
         await GoogleSignin.hasPlayServices(); // Android only
         const userInfo = await GoogleSignin.signIn();
-        console.log(userInfo)
-        const authCode = userInfo.data?.serverAuthCode; // The server auth code
+        const idToken = userInfo.data?.idToken; // The server auth code
 
-        return {
-            code: authCode,
-            scope: userInfo.data?.scopes || ['profile', 'email'].toString(), // customize if needed
-        } as GoogleResponse;
+        return idToken as Required<string>
 
     } catch (error) {
         throw error;
     }
 }
+
+export async function handleGoogleLogin() {
+    const idToken = await goWithGoogle();
+    const [googleMutation] = useLoginWithGoogleMutation();
+    await googleMutation({ idToken }).unwrap();
+    successToast({ text1: 'Login with Google Successful' });
+    navigate('mainstack', { screen: 'home' });
+}
+
+
+export const handleRequestPasswordReset = async (email: string) => {
+    const [sendOtp] = useSendForgotPasswordCodeMutation()
+    await sendOtp({ email }).unwrap();
+    successToast({ text1: 'OTP sent to your email' });
+};
+
+
+export const handleSetNewPassword = async (password: string, token: string) => {
+    const [setNewPassword] = useSetNewResetPasswordMutation()
+    await setNewPassword({ password, token }).unwrap();
+    successToast({ text1: 'Password has been reset' });
+};
+
+export const handleValidateOtp = async (email: string, otp: string) => {
+    const [validateOtp] = useValidateOtpMutation()
+    const result = await validateOtp({ email, otp }).unwrap();
+    successToast({ text1: 'OTP verified successfully' });
+    return result.token;
+};

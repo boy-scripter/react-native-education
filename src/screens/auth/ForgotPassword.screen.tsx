@@ -9,6 +9,7 @@ const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState('');
   const step: number = 3; //must be state
   const handleResetPassword = () => {
+    
     if (!email) {
       Alert.alert('Error', 'Please enter your email address.');
       return;

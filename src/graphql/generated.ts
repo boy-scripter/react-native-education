@@ -27,14 +27,20 @@ export type LoginDto = {
   password: Scalars['String']['input'];
 };
 
+export type MessageResponse = {
+  __typename?: 'MessageResponse';
+  message: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   loginWithEmail: AuthResponse;
   loginWithGoogle: AuthResponse;
-  sendForgotPasswordCode: Scalars['String']['output'];
-  setNewResetPassword: Scalars['String']['output'];
+  refreshToken: MessageResponse;
+  sendForgotPasswordCode: MessageResponse;
+  setNewResetPassword: MessageResponse;
   signup: User;
-  validateResetOtp: Scalars['String']['output'];
+  validateOtp: ValidateOtpResponse;
 };
 
 
@@ -44,8 +50,12 @@ export type MutationLoginWithEmailArgs = {
 
 
 export type MutationLoginWithGoogleArgs = {
-  code: Scalars['String']['input'];
-  scope: Array<Scalars['String']['input']>;
+  idToken: Scalars['String']['input'];
+};
+
+
+export type MutationRefreshTokenArgs = {
+  token: Scalars['String']['input'];
 };
 
 
@@ -64,7 +74,7 @@ export type MutationSignupArgs = {
 };
 
 
-export type MutationValidateResetOtpArgs = {
+export type MutationValidateOtpArgs = {
   input: ResetPasswordDto;
 };
 
@@ -80,6 +90,7 @@ export type ResetPasswordDto = {
 
 export type SetNewPasswordDto = {
   password: Scalars['String']['input'];
+  token: Scalars['String']['input'];
 };
 
 export type SignUpDto = {
@@ -97,6 +108,40 @@ export type User = {
   name: Scalars['String']['output'];
 };
 
+export type ValidateOtpResponse = {
+  __typename?: 'ValidateOtpResponse';
+  message: Scalars['String']['output'];
+  token: Scalars['String']['output'];
+};
+
+export type SendForgotPasswordCodeMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+}>;
+
+
+export type SendForgotPasswordCodeMutation = { __typename?: 'Mutation', sendForgotPasswordCode: { __typename?: 'MessageResponse', message: string } };
+
+export type ValidateOtpMutationVariables = Exact<{
+  input: ResetPasswordDto;
+}>;
+
+
+export type ValidateOtpMutation = { __typename?: 'Mutation', validateOtp: { __typename?: 'ValidateOtpResponse', token: string, message: string } };
+
+export type LoginWithEmailMutationVariables = Exact<{
+  input: LoginDto;
+}>;
+
+
+export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string, active: boolean, avatar?: string | null } } };
+
+export type SetNewResetPasswordMutationVariables = Exact<{
+  input: SetNewPasswordDto;
+}>;
+
+
+export type SetNewResetPasswordMutation = { __typename?: 'Mutation', setNewResetPassword: { __typename?: 'MessageResponse', message: string } };
+
 export type SignupMutationVariables = Exact<{
   input: SignUpDto;
 }>;
@@ -104,44 +149,19 @@ export type SignupMutationVariables = Exact<{
 
 export type SignupMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', name: string, email: string, avatar?: string | null, active: boolean, _id: string } };
 
-export type LoginWithGoogleMutationVariables = Exact<{
-  code: Scalars['String']['input'];
-  scope: Array<Scalars['String']['input']> | Scalars['String']['input'];
-}>;
 
-
-export type LoginWithGoogleMutation = { __typename?: 'Mutation', loginWithGoogle: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', name: string, email: string, _id: string, active: boolean } } };
-
-export type LoginWithEmailMutationVariables = Exact<{
-  input: LoginDto;
-}>;
-
-
-export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string, active: boolean } } };
-
-
-export const SignupDocument = `
-    mutation Signup($input: SignUpDto!) {
-  signup(input: $input) {
-    name
-    email
-    avatar
-    active
-    _id
+export const SendForgotPasswordCodeDocument = `
+    mutation SendForgotPasswordCode($email: String!) {
+  sendForgotPasswordCode(email: $email) {
+    message
   }
 }
     `;
-export const LoginWithGoogleDocument = `
-    mutation LoginWithGoogle($code: String!, $scope: [String!]!) {
-  loginWithGoogle(code: $code, scope: $scope) {
-    access_token
-    refresh_token
-    user {
-      name
-      email
-      _id
-      active
-    }
+export const ValidateOtpDocument = `
+    mutation ValidateOtp($input: ResetPasswordDto!) {
+  validateOtp(input: $input) {
+    token
+    message
   }
 }
     `;
@@ -155,25 +175,50 @@ export const LoginWithEmailDocument = `
       name
       email
       active
+      avatar
     }
+  }
+}
+    `;
+export const SetNewResetPasswordDocument = `
+    mutation SetNewResetPassword($input: SetNewPasswordDto!) {
+  setNewResetPassword(input: $input) {
+    message
+  }
+}
+    `;
+export const SignupDocument = `
+    mutation Signup($input: SignUpDto!) {
+  signup(input: $input) {
+    name
+    email
+    avatar
+    active
+    _id
   }
 }
     `;
 
 const injectedRtkApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    Signup: build.mutation<SignupMutation, SignupMutationVariables>({
-      query: (variables) => ({ document: SignupDocument, variables })
+    SendForgotPasswordCode: build.mutation<SendForgotPasswordCodeMutation, SendForgotPasswordCodeMutationVariables>({
+      query: (variables) => ({ document: SendForgotPasswordCodeDocument, variables })
     }),
-    LoginWithGoogle: build.mutation<LoginWithGoogleMutation, LoginWithGoogleMutationVariables>({
-      query: (variables) => ({ document: LoginWithGoogleDocument, variables })
+    ValidateOtp: build.mutation<ValidateOtpMutation, ValidateOtpMutationVariables>({
+      query: (variables) => ({ document: ValidateOtpDocument, variables })
     }),
     LoginWithEmail: build.mutation<LoginWithEmailMutation, LoginWithEmailMutationVariables>({
       query: (variables) => ({ document: LoginWithEmailDocument, variables })
+    }),
+    SetNewResetPassword: build.mutation<SetNewResetPasswordMutation, SetNewResetPasswordMutationVariables>({
+      query: (variables) => ({ document: SetNewResetPasswordDocument, variables })
+    }),
+    Signup: build.mutation<SignupMutation, SignupMutationVariables>({
+      query: (variables) => ({ document: SignupDocument, variables })
     }),
   }),
 });
 
 export { injectedRtkApi as api };
-export const { useSignupMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation } = injectedRtkApi;
+export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithEmailMutation, useSetNewResetPasswordMutation, useSignupMutation } = injectedRtkApi;
 
