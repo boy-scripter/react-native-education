@@ -3,22 +3,23 @@ import Login from '@components/Login';
 import Signup from '@components/Signup';
 import Button from '@components/ui/Button';
 import Tab from '@components/ui/TabToggle';
-import React from 'react';
+import {useState} from 'react';
 import {Image} from 'react-native';
 import {View, Text} from 'react-native';
-import {us} from '@/graphql/generated';
-import {goWithGoogle} from '@/store/auth/auth.service';
-import {successToast} from '@/components/Toast/Toast.config';
-import {navigate} from '@/hooks/useNavigation.hook';
+import {handleGoogleLogin} from '@/store/auth/auth.service';
+import {AuthRouteProp , Mode} from '@/types/auth';
 
-export default function AuthScreen() {
-  const [tab, setTab] = React.useState('login');
+type Props = {
+  route: AuthRouteProp;
+};
 
-
+export default function AuthScreen({route}: Props) {
+  const {mode} = route.params || {};
+  const [tab, setTab] = useState<Mode>(mode || 'login');
 
   return (
     <TopImageLayout image={'@assets/images/auth.png'} title="Get Started now" description="Create an account or log in to explore about our app">
-      <Tab onChange={value => setTab(value)} defaultTab="signup">
+      <Tab onChange={setTab} defaultTab="signup">
         <Tab.Button label="Signup" id="signup"></Tab.Button>
         <Tab.Button label="Login" id="login"></Tab.Button>
       </Tab>

@@ -20,7 +20,7 @@ type TabProps = {
   defaultTab: string;
   sliderClassName?: string;
   className?: string;
-  onChange?: (tab: string) => void;
+  onChange?: (tab: any) => void;
 };
 
 const TabContext = createContext<null | TabContextType>(null);

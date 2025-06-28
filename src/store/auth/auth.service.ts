@@ -1,8 +1,12 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { useValidateOtpMutation, useLoginWithGoogleMutation, useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation } from '@/graphql/generated';
-import { successToast } from './Toast/Toast.config';
+import { useValidateOtpMutation, useLoginWithGoogleMutation, useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation, useLoginWithEmailMutation, useSignupMutation } from '@/graphql/generated';
+import { successToast } from '@components/Toast/Toast.config';
+import { navigate } from '@/hooks/useNavigation.hook';
+import { loginType, signUpType } from '@/types/auth';
+import { useStorage } from '@/hooks/useStorage.hook';
 
-export const goWithGoogle = async () => {
+
+const goWithGoogle = async () => {
     try {
 
         await GoogleSignin.hasPlayServices(); // Android only
@@ -14,6 +18,19 @@ export const goWithGoogle = async () => {
     } catch (error) {
         throw error;
     }
+}
+
+
+export async function handleEmailLogin(formValues: loginType) {
+    const [login] = useLoginWithEmailMutation()
+    await login({ input: formValues }).unwrap();
+    navigate('mainstack', { screen: 'home' });
+}
+
+export async function handleSignup(formValues: signUpType) {
+    const [signup] = useSignupMutation()
+    await signup({ input: formValues }).unwrap();
+    successToast({ text1: 'Signup successful!' });
 }
 
 export async function handleGoogleLogin() {

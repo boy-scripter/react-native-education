@@ -128,6 +128,13 @@ export type ValidateOtpMutationVariables = Exact<{
 
 export type ValidateOtpMutation = { __typename?: 'Mutation', validateOtp: { __typename?: 'ValidateOtpResponse', token: string, message: string } };
 
+export type LoginWithGoogleMutationVariables = Exact<{
+  idToken: Scalars['String']['input'];
+}>;
+
+
+export type LoginWithGoogleMutation = { __typename?: 'Mutation', loginWithGoogle: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', name: string, email: string, _id: string, active: boolean, avatar?: string | null } } };
+
 export type LoginWithEmailMutationVariables = Exact<{
   input: LoginDto;
 }>;
@@ -162,6 +169,21 @@ export const ValidateOtpDocument = `
   validateOtp(input: $input) {
     token
     message
+  }
+}
+    `;
+export const LoginWithGoogleDocument = `
+    mutation LoginWithGoogle($idToken: String!) {
+  loginWithGoogle(idToken: $idToken) {
+    access_token
+    refresh_token
+    user {
+      name
+      email
+      _id
+      active
+      avatar
+    }
   }
 }
     `;
@@ -207,6 +229,9 @@ const injectedRtkApi = baseApi.injectEndpoints({
     ValidateOtp: build.mutation<ValidateOtpMutation, ValidateOtpMutationVariables>({
       query: (variables) => ({ document: ValidateOtpDocument, variables })
     }),
+    LoginWithGoogle: build.mutation<LoginWithGoogleMutation, LoginWithGoogleMutationVariables>({
+      query: (variables) => ({ document: LoginWithGoogleDocument, variables })
+    }),
     LoginWithEmail: build.mutation<LoginWithEmailMutation, LoginWithEmailMutationVariables>({
       query: (variables) => ({ document: LoginWithEmailDocument, variables })
     }),
@@ -220,5 +245,5 @@ const injectedRtkApi = baseApi.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithEmailMutation, useSetNewResetPasswordMutation, useSignupMutation } = injectedRtkApi;
+export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useSetNewResetPasswordMutation, useSignupMutation } = injectedRtkApi;
 

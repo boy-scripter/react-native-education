@@ -7,7 +7,7 @@ import { Text, Alert} from 'react-native';
 
 const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState('');
-  const step: number = 3; //must be state
+  const step: number = 1; //must be state
   const handleResetPassword = () => {
     
     if (!email) {

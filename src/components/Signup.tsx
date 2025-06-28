@@ -3,32 +3,21 @@ import {View} from 'react-native';
 import {FormInput} from './ui/FormInput';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {useSignupMutation} from '@/graphql/generated';
-import {successToast} from './Toast/Toast.config';
+import {handleSignup} from '@/store/auth/auth.service';
 import z from 'zod';
 
 
-const signUpSchema = z.object({
-  name: z.string({ required_error : "Name is required"}).min(4, {message: 'must conatin at least 4 characters'}),
-  email: z.string({ required_error : "Email is required"}).email(),
-  password: z.string({ required_error : "Password is required"}).min(8, {message: 'Password must contain at least 8 characters'}).max(25, {message: 'Password must be at most 25 characters long'}),
+const SignUpSchema = z.object({
+  name: z.string({required_error: 'Name is required'}).min(4, {message: 'must conatin at least 4 characters'}),
+  email: z.string({required_error: 'Email is required'}).email(),
+  password: z.string({required_error: 'Password is required'}).min(8, {message: 'Password must contain at least 8 characters'}).max(25, {message: 'Password must be at most 25 characters long'}),
 });
 
-type signUpType = z.infer<typeof signUpSchema>;
-
 export default function Signup() {
-  const [Signup] = useSignupMutation();
-
   const {handleSubmit, control} = useForm({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(SignUpSchema),
   });
 
-  async function handleSignup(formValues: signUpType) {
-    await Signup({input: formValues}).unwrap();
-    successToast({
-      text1: 'Signup successful!',
-    });
-  }
 
   return (
     <>
