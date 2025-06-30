@@ -1,7 +1,7 @@
 import { SignUpSchema } from "@/components/Signup";
 import { LoginSchema } from "@/components/Login";
 import { z } from "zod";
-import { RouteProp } from "@react-navigation/native";
+
 
 export interface User {
   _id: string;

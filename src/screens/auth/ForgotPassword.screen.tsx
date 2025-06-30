@@ -8,7 +8,7 @@ import React, {useState} from 'react';
 import {Text, Alert} from 'react-native';
 
 const ForgotPasswordScreen = () => {
-  const [email, setEmail] = useState('');
+
   const [step, setStep] = useState(1);
 
   useRouteEffect<AuthStackParamList, 'ForgotPassword'>(params => {

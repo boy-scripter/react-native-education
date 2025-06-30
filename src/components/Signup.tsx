@@ -7,7 +7,7 @@ import {handleSignup} from '@/store/auth/auth.service';
 import z from 'zod';
 
 
-const SignUpSchema = z.object({
+export const SignUpSchema = z.object({
   name: z.string({required_error: 'Name is required'}).min(4, {message: 'must conatin at least 4 characters'}),
   email: z.string({required_error: 'Email is required'}).email(),
   password: z.string({required_error: 'Password is required'}).min(8, {message: 'Password must contain at least 8 characters'}).max(25, {message: 'Password must be at most 25 characters long'}),
