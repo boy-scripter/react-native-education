@@ -11,16 +11,6 @@ const initialState: AuthState = {
   isAuthenticated: false,
 };
 
-function setAuthState(state: Draft<AuthState>, payload: AuthResponse) {
-
-  state.user = {
-    ...payload.user,
-    avatar: payload.user.avatar ? payload.user.avatar : fallbackAvatar,
-  };
-  state.access_token = payload.access_token;
-  state.isAuthenticated = true;
-
-}
 
 const { removeItem } = useStorage()
 
@@ -58,3 +48,15 @@ export const authSlice = createSlice({
 
 export const { logout } = authSlice.actions;
 export default authSlice.reducer
+
+// helpers
+function setAuthState(state: Draft<AuthState>, payload: AuthResponse) {
+
+  state.user = {
+    ...payload.user,
+    avatar: payload.user.avatar ? payload.user.avatar : fallbackAvatar,
+  };
+  state.access_token = payload.access_token;
+  state.isAuthenticated = true;
+
+}

@@ -1,5 +1,7 @@
 import { RootStackParamList } from '@/types/navigation';
-import { createNavigationContainerRef, } from '@react-navigation/native';
+import { createNavigationContainerRef, RouteProp, useRoute, } from '@react-navigation/native';
+import { useEffect } from 'react';
+
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
@@ -65,4 +67,29 @@ export function getCurrentRoute() {
     return navigationRef.getCurrentRoute();
   }
   return null;
+}
+
+export function useRouteEffect<
+  ParamList extends Record<string, any>,
+  RouteName extends keyof ParamList
+>(
+  callback: (params : ParamList[RouteName]) => void,
+  deps?: (keyof ParamList[RouteName])[]
+) {
+  const route = useRoute<RouteProp<ParamList, RouteName>>();
+  const params = (route.params ?? {}) as ParamList[RouteName];
+
+  const dependencyObject =
+    deps === undefined
+      ? params
+      : deps.reduce((acc, key) => {
+        acc[key] = params[key];
+        return acc;
+      }, {} as Partial<ParamList[RouteName]>);
+
+  const dependency = JSON.stringify(dependencyObject);
+
+  useEffect(() => {
+    callback(params!);
+  }, [dependency]);
 }

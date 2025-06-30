@@ -1,30 +1,13 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useValidateOtpMutation, useLoginWithGoogleMutation, useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation, useLoginWithEmailMutation, useSignupMutation } from '@/graphql/generated';
-import { successToast } from '@components/Toast/Toast.config';
+import { errorToast, successToast } from '@components/Toast/Toast.config';
 import { navigate } from '@/hooks/useNavigation.hook';
 import { loginType, signUpType } from '@/types/auth';
-import { useStorage } from '@/hooks/useStorage.hook';
-
-
-const goWithGoogle = async () => {
-    try {
-
-        await GoogleSignin.hasPlayServices(); // Android only
-        const userInfo = await GoogleSignin.signIn();
-        const idToken = userInfo.data?.idToken; // The server auth code
-
-        return idToken as Required<string>
-
-    } catch (error) {
-        throw error;
-    }
-}
-
 
 export async function handleEmailLogin(formValues: loginType) {
     const [login] = useLoginWithEmailMutation()
     await login({ input: formValues }).unwrap();
-    navigate('mainstack', { screen: 'home' });
+    navigate('DashboardStack', { screen: 'Home' });
 }
 
 export async function handleSignup(formValues: signUpType) {
@@ -34,11 +17,22 @@ export async function handleSignup(formValues: signUpType) {
 }
 
 export async function handleGoogleLogin() {
-    const idToken = await goWithGoogle();
+    let idToken
+
+    await GoogleSignin.hasPlayServices(); // Android only
+    const userInfo = await GoogleSignin.signIn();
+    idToken = userInfo.data?.idToken; // The server auth code
+
+    if (!idToken) {
+        errorToast({ text1: 'Unable To Proceed With Google Account' })
+        throw new Error('Unable To Proceed With Google Account')
+    }
+
     const [googleMutation] = useLoginWithGoogleMutation();
     await googleMutation({ idToken }).unwrap();
     successToast({ text1: 'Login with Google Successful' });
-    navigate('mainstack', { screen: 'home' });
+    navigate('DashboardStack', { screen: 'Home' });
+
 }
 
 

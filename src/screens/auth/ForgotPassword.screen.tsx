@@ -1,3 +1,5 @@
+import {AuthStackParamList} from '@/types/navigation/authstack/authstack.interface';
+import {useRouteEffect} from '@/hooks/useNavigation.hook';
 import TopImageLayout from '@components/layouts/TopImage.Layout';
 import Button from '@components/ui/Button';
 import Input from '@components/ui/Input';
@@ -7,7 +9,14 @@ import {Text, Alert} from 'react-native';
 
 const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState('');
-  const step: number = 1; //must be state
+  const [step, setStep] = useState(1);
+
+  useRouteEffect<AuthStackParamList, 'ForgotPassword'>(params => {
+    if (params?.step) {
+      setStep(step);
+    }
+  });
+
   const handleResetPassword = () => {
     if (!email) {
       Alert.alert('Error', 'Please enter your email address.');

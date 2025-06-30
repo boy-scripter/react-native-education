@@ -28,15 +28,3 @@ export interface UnauthenticatedUser {
 export type AuthState = (AuthenticatedUser | UnauthenticatedUser);
 export type signUpType = z.infer<typeof SignUpSchema>;
 export type loginType = z.infer<typeof LoginSchema>;
-
-
-// authscreen parameter list
-export enum Modes {
-  LOGIN = 'login',
-  SIGNUP = 'signup',
-}
-export type Mode = `${Modes}`; 
-export type AuthStackParamList = {
-  Auth: { mode?: Mode };
-};
-export type AuthRouteProp = RouteProp<AuthStackParamList, 'Auth'>;
