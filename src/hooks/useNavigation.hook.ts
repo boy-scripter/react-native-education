@@ -1,10 +1,25 @@
-import {createNavigationContainerRef, ParamListBase,} from '@react-navigation/native';
+import { RootStackParamList } from '@/types/navigation';
+import { createNavigationContainerRef, } from '@react-navigation/native';
 
-export const navigationRef = createNavigationContainerRef<ParamListBase>();
+export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
-export function navigate(name: string, params?: object) {
+export type RouteNameArgs = {
+  [RouteName in keyof RootStackParamList]: undefined extends RootStackParamList[RouteName]
+  ? [
+    screen: RouteName,
+    params?: RootStackParamList[RouteName],
+    options?: { merge?: boolean; pop?: boolean }
+  ]
+  : [
+    screen: RouteName,
+    params: RootStackParamList[RouteName],
+    options?: { merge?: boolean; pop?: boolean }
+  ];
+}[keyof RootStackParamList]
+
+export function navigate(...args: RouteNameArgs) {
   if (navigationRef.isReady()) {
-    navigationRef.navigate(name, params);
+    navigationRef.navigate(...args);
   }
 }
 
@@ -22,7 +37,7 @@ export function resetRoot(routeName: string, params?: object) {
   if (navigationRef.isReady()) {
     navigationRef.reset({
       index: 0,
-      routes: [{name: routeName, params}],
+      routes: [{ name: routeName, params }],
     });
   }
 }

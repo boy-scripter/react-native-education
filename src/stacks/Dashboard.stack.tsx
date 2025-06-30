@@ -11,13 +11,13 @@ const Stack = createStackNavigator();
 
 const DashboardStack: React.FC = () => {
   return (
-    <Stack.Navigator initialRouteName="leaderboard" screenOptions={{headerShown: false}}>
-      <Stack.Screen name="home" component={HomeScreen} />
-      <Stack.Screen name="quiz" component={QuizScreen} />
-      <Stack.Screen name="quiz_instruction" component={QuizInstructionScreen} />
-      <Stack.Screen name="pdfview" component={PdfViewScreen} />
-      <Stack.Screen name="result" component={ResultScreen} />
-      <Stack.Screen name="leaderboard" component={LeaderBoardScreen} />
+    <Stack.Navigator initialRouteName="Home">
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Quiz" component={QuizScreen} />
+      <Stack.Screen name="QuizResult" component={QuizInstructionScreen} />
+      <Stack.Screen name="PdfView" component={PdfViewScreen} />
+      <Stack.Screen name="Result" component={ResultScreen} />
+      <Stack.Screen name="Leaderboard" component={LeaderBoardScreen} />
     </Stack.Navigator>
   );
 };

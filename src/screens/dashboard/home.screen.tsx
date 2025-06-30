@@ -64,7 +64,7 @@ export default function HomeScreen() {
           </View>
         </View>
       </View>
-      <Button onPress={() => navigate('leaderboard')} label="Check Leaderboard" className="flex-row mt-4 items-center">
+      <Button onPress={() => navigate('AuthStack', {screen: 'LoginAndSignUp'})} label="Check Leaderboard" className="flex-row mt-4 items-center">
         <Icon name="trophy-outline" size={30} color={'yellow'} />
       </Button>
       <View className="mt-6">

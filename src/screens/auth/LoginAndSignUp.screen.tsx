@@ -7,15 +7,10 @@ import {useState} from 'react';
 import {Image} from 'react-native';
 import {View, Text} from 'react-native';
 import {handleGoogleLogin} from '@/store/auth/auth.service';
-import {AuthRouteProp , Mode} from '@/types/auth';
 
-type Props = {
-  route: AuthRouteProp;
-};
+export default function LoginAndSignUpScreen() {
 
-export default function AuthScreen({route}: Props) {
-  const {mode} = route.params || {};
-  const [tab, setTab] = useState<Mode>(mode || 'login');
+  const [tab, setTab] = useState('login');
 
   return (
     <TopImageLayout image={'@assets/images/auth.png'} title="Get Started now" description="Create an account or log in to explore about our app">

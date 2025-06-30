@@ -1,20 +1,18 @@
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator } from '@react-navigation/stack';
-import {AuthStack} from './Auth.stack';
-import { navigationRef } from '@hooks/useNavigation.hook';
+import {createStackNavigator} from '@react-navigation/stack';
+import {navigationRef} from '@hooks/useNavigation.hook';
+import { RootStackParamList} from '@/types/navigation';
+import AuthStack from './Auth.stack';
 import DashboardStack from './Dashboard.stack';
 
-
-
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 export function RootStackNavigator() {
-  
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator screenOptions={{   headerShown: false }} initialRouteName="authstack">
-        <Stack.Screen name="authstack" component={AuthStack} />
-        <Stack.Screen name="mainstack" component={DashboardStack}  />
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="AuthStack">
+        <Stack.Screen name="AuthStack" component={AuthStack} />
+        <Stack.Screen name="DashboardStack" component={DashboardStack} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -3,13 +3,12 @@ import Button from '@components/ui/Button';
 import Input from '@components/ui/Input';
 import SplitInput from '@components/ui/SplitInput';
 import React, {useState} from 'react';
-import { Text, Alert} from 'react-native';
+import {Text, Alert} from 'react-native';
 
 const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState('');
   const step: number = 1; //must be state
   const handleResetPassword = () => {
-    
     if (!email) {
       Alert.alert('Error', 'Please enter your email address.');
       return;
@@ -19,12 +18,12 @@ const ForgotPasswordScreen = () => {
   };
 
   return (
-    <TopImageLayout  image={'@assets/images/forgot.png'} title="Forgot Password" description="Reset your password to regain access to your account">
+    <TopImageLayout image={'@assets/images/forgot.png'} title="Forgot Password" description="Reset your password to regain access to your account">
       {step == 1 && (
         <>
           <Text className="text-2xl font-bold mb-5">Forgot Password</Text>
           <Text className="text-base mb-5 text-greyish-100">Enter your email address below to receive a password reset link.</Text>
-          <Input className="h-12 px-3 mb-5" placeholder="Email Address" keyboardType="email-address" value={email} onChange={setEmail} />
+          <Input className="h-12 px-3 mb-5" placeholder="Email Address" keyboardType="email-address" value={email} onChange={text => setEmail(text)} />
           <Button label="Reset Password" onPress={handleResetPassword}></Button>
         </>
       )}

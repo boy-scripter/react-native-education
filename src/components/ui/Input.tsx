@@ -11,9 +11,9 @@ export type InputProps = {
   placeholder?: string;
   style?: Record<any, string>;
   value?: string;
-  onChange?: (text: string) => void;
+  onChange?: (text: string) => any;
   secret?: boolean;
-} & TextInputProps;
+} & Pick<TextInputProps, 'keyboardType'>;
 
 const Input = ({placeholder, label, className, style, secret, onChange, ...props}: InputProps) => {
   const [hidden, setHidden] = useState(false);
@@ -43,13 +43,8 @@ const Input = ({placeholder, label, className, style, secret, onChange, ...props
 
 Input.TextError = ({message}: {message: string}) => {
   return (
-    <View className='flex-row items-center' >
-      <Icon
-        name="circle" 
-        size={8}
-        color="red"
-        style={{marginRight: 6}}
-      />
+    <View className="flex-row items-center">
+      <Icon name="circle" size={8} color="red" style={{marginRight: 6}} />
       <Text className="text-red-600 text-sm">{message}</Text>
     </View>
   );
