@@ -2,7 +2,7 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 
 
 export type AuthStackParamList = {
-  LoginAndSignUp?: { mode: 'login' | 'signup'  };
+  LoginAndSignup?: { mode: 'login' | 'signup'  };
   ForgotPassword?: { step: number  };
 };
 

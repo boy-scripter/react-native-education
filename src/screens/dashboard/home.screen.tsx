@@ -1,15 +1,16 @@
 import {selectUser} from '@/store/auth/auth.selector';
+import {useRootState} from '@/store/store';
 import {AuthenticatedUser} from '@/types/auth';
 import Button from '@components/ui/Button';
 import colorConstant from '@constant/color.constant';
 import {navigate} from '@hooks/useNavigation.hook';
 import {Image} from 'react-native';
+import Img from '@/components/ui/Img';
 import {Text, View, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useSelector} from 'react-redux';
 
 export default function HomeScreen() {
-  const user = useSelector(selectUser) as unknown as AuthenticatedUser['user'];
+  const user = useRootState(selectUser) as unknown as AuthenticatedUser['user'];
 
   const options = [
     {
@@ -42,7 +43,7 @@ export default function HomeScreen() {
           <Text className="font-interBold text-xl">Hi, {user.name}</Text>
           <Text>Let's Make this Day Productive</Text>
         </View>
-        <Image className="h-16 w-16 rounded-full" source={user.avatar} />
+        <Img className="h-16 w-16 rounded-full" source={user.avatar!} />
       </View>
 
       <View style={{elevation: 14}} className="mt-5 w-full px-4 mx-auto flex flex-row p-8 bg-white shadow-white overflow-hidden rounded-xl justify-evenly ">
@@ -64,7 +65,7 @@ export default function HomeScreen() {
           </View>
         </View>
       </View>
-      <Button onPress={() => navigate('AuthStack', {screen: 'LoginAndSignUp'})} label="Check Leaderboard" className="flex-row mt-4 items-center">
+      <Button onPress={() => navigate('AuthStack', {screen: 'LoginAndSignup'})} label="Check Leaderboard" className="flex-row mt-4 items-center">
         <Icon name="trophy-outline" size={30} color={'yellow'} />
       </Button>
       <View className="mt-6">

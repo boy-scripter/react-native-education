@@ -1,3 +1,3 @@
 
 
-export const REFRESH_TOKEN = 'refresh_token'; 
+export const REMEMBER_ME = 'remember_me'; 

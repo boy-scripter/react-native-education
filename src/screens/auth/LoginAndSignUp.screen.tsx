@@ -6,18 +6,29 @@ import Tab from '@components/ui/TabToggle';
 import {useState} from 'react';
 import {Image} from 'react-native';
 import {View, Text} from 'react-native';
-import {handleGoogleLogin} from '@/store/auth/auth.service';
-import {useRouteEffect} from '@/hooks/useNavigation.hook';
+import {navigate, useRouteEffect} from '@/hooks/useNavigation.hook';
 import {AuthStackParamList} from '@/types/navigation/authstack/authstack.interface';
+import {useLoginWithGoogleMutation} from '@/graphql/generated';
+import {successToast} from '@/components/Toast/Toast.config';
+import {goWithGoogle} from '@/store/auth/auth.service';
 
 export default function LoginAndSignUpScreen() {
+  const [googleMutation] = useLoginWithGoogleMutation();
+
   const [tab, setTab] = useState('login');
 
-  useRouteEffect<AuthStackParamList, 'LoginAndSignUp'>(params => {
+  useRouteEffect<AuthStackParamList, 'LoginAndSignup'>(params => {
     if (params?.mode) {
       setTab(params.mode);
     }
   });
+
+  const handleGoogleLogin = async () => {
+    const idToken = await goWithGoogle();
+    await googleMutation({idToken}).unwrap();
+    successToast({text1: 'Login with Google Successful'});
+    navigate('DashboardStack', {screen: 'Home'});
+  };
 
   return (
     <TopImageLayout image={'@assets/images/auth.png'} title="Get Started now" description="Create an account or log in to explore about our app">

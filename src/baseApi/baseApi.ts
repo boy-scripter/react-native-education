@@ -1,6 +1,6 @@
 import { errorToast } from '@components/Toast/Toast.config';
 import { useStorage } from '@hooks/useStorage.hook';
-import { REFRESH_TOKEN } from '@myTypes/auth';
+import { REMEMBER_ME } from '@myTypes/auth';
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query"
 import { GRAPHQL_BASE_URL } from "@env"
@@ -10,7 +10,7 @@ const { getItem } = useStorage();
 const baseQuery = graphqlRequestBaseQuery({
   url: GRAPHQL_BASE_URL,
   prepareHeaders: (headers) => {
-    const token = getItem<string>(REFRESH_TOKEN);
+    const token = getItem<string>(REMEMBER_ME);
     if (token) headers.set('Authorization', `Bearer ${token}`);
     return headers;
   },

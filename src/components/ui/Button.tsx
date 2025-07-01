@@ -3,7 +3,7 @@ import {Pressable, Text, PressableProps, View, GestureResponderEvent, StyleSheet
 import {twMerge} from 'tailwind-merge';
 import LinearGradient from 'react-native-linear-gradient';
 import Loader from '@components/ui/Loader';
-import colorConstant from '@/constant/color.constant';
+import colorConstant from '@constant/color.constant';
 
 type ButtonProps = {
   label: string;
@@ -33,11 +33,16 @@ const Button: React.FC<ButtonProps> = ({children, position = 'left', onPress, cl
   const handlePress = async (event: GestureResponderEvent) => {
     if (!onPress) return;
 
-    try {
-      setIsLoading(true);
-      await onPress(event);
-    } finally {
-      setIsLoading(false);
+    const result = onPress(event);
+
+    // Check if result is a Promise
+    if (result && typeof result.then === 'function') {
+      try {
+        setIsLoading(true);
+        await result;
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 

@@ -26,5 +26,3 @@ export interface UnauthenticatedUser {
 }
 
 export type AuthState = (AuthenticatedUser | UnauthenticatedUser);
-export type signUpType = z.infer<typeof SignUpSchema>;
-export type loginType = z.infer<typeof LoginSchema>;
