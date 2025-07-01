@@ -1,5 +1,5 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
-import { AuthState, REMEMBER_ME } from "@myTypes/auth";
+import { AuthenticatedUser, AuthState, REMEMBER_ME } from "@myTypes/auth";
 import { api, AuthResponse } from '@/graphql/generated'
 import { useStorage } from "@/hooks/useStorage.hook";
 import fallbackAvatar from '@assets/images/profile.png'
@@ -31,10 +31,10 @@ export const authSlice = createSlice({
       removeItem(REMEMBER_ME);
       state.access_token = null;
       state.refresh_token = null;
-      state.user = null;
+      state.user = null;   
       state.isAuthenticated = false;
     },
-    setAuthState(state, action: PayloadAction<AuthResponse>) {
+    setAuthState(state, action: PayloadAction<AuthenticatedUser>) {
       applyAuthState(state, action.payload);
     },
   },
