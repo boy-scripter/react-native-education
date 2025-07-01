@@ -2,13 +2,29 @@ import {AuthStackParamList} from '@/types/navigation/authstack/authstack.interfa
 import {useRouteEffect} from '@/hooks/useNavigation.hook';
 import TopImageLayout from '@components/layouts/TopImage.Layout';
 import Button from '@components/ui/Button';
-import Input from '@components/ui/Input';
 import SplitInput from '@components/ui/SplitInput';
 import React, {useState} from 'react';
 import {Text, Alert} from 'react-native';
+import {FormInput} from '@/components/ui/FormInput';
+import z from 'zod';
+import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+
+const Step1Schema = z.object({
+  email: z.string().email('Enter A Valid Email Address'),
+});
+
+const Step3Schema = z
+  .object({
+    newPassword: z.string().min(6, 'Password must be at least 6 characters'),
+    confirmPassword: z.string(),
+  })
+  .refine(data => data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
 
 const ForgotPasswordScreen = () => {
-
   const [step, setStep] = useState(1);
 
   useRouteEffect<AuthStackParamList, 'ForgotPassword'>(params => {
@@ -17,14 +33,13 @@ const ForgotPasswordScreen = () => {
     }
   });
 
-  const handleResetPassword = () => {
-    if (!email) {
-      Alert.alert('Error', 'Please enter your email address.');
-      return;
-    }
-    // Add password reset logic here
-    Alert.alert('Success', 'Password reset link has been sent to your email.');
-  };
+  const {handleSubmit: handleStep1Submit, control: step1Control} = useForm({
+    resolver: zodResolver(Step1Schema),
+  });
+
+  const {handleSubmit: handleStep3Submit, control: step3Control} = useForm({
+    resolver: zodResolver(Step3Schema),
+  });
 
   return (
     <TopImageLayout image={'@assets/images/forgot.png'} title="Forgot Password" description="Reset your password to regain access to your account">
@@ -32,8 +47,8 @@ const ForgotPasswordScreen = () => {
         <>
           <Text className="text-2xl font-bold mb-5">Forgot Password</Text>
           <Text className="text-base mb-5 text-greyish-100">Enter your email address below to receive a password reset link.</Text>
-          <Input className="h-12 px-3 mb-5" placeholder="Email Address" keyboardType="email-address" value={email} onChange={text => setEmail(text)} />
-          <Button label="Reset Password" onPress={handleResetPassword}></Button>
+          <FormInput control={step1Control} className="h-12 px-3 mb-5" placeholder="Email Address" keyboardType="email-address" name="email"  />
+          <Button label="Reset Password" onPress={handleStep1Submit(handleResetPassword)}></Button>
         </>
       )}
       {step == 2 && (
@@ -48,9 +63,9 @@ const ForgotPasswordScreen = () => {
         <>
           <Text className="text-2xl font-bold mb-4">Set New Password</Text>
           <Text className="text-base mb-2 text-greyish-100">Enter your new password below to reset your account password.</Text>
-          <Input className="mb-5" placeholder="New Password" />
-          <Input placeholder="Confirm Password" />
-          <Button label="Reset Password" className="mt-4" onPress={() => Alert.alert('Success', 'Password has been reset successfully.')}></Button>
+          <FormInput control={step3Control} name="newPassword" className="mb-5" placeholder="New Password" />
+          <FormInput control={step3Control} name='confirmPassword' placeholder="Confirm Password" />
+          <Button label="Reset Password" className="mt-4" onPress={handleStep3Submit(handleStep3Submit)}></Button>
         </>
       )}
     </TopImageLayout>

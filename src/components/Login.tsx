@@ -11,7 +11,7 @@ import {selectAuth} from '@/store/auth/auth.selector';
 import {useStorage} from '@/hooks/useStorage.hook';
 import {loginType, REFRESH_TOKEN} from '@/types/auth';
 import {handleEmailLogin} from '@/store/auth/auth.service';
-import z from 'zod'
+import z from 'zod';
 
 export const LoginSchema = z.object({
   email: z.string({required_error: 'Email is required'}).email({message: 'Invalid email address'}),
@@ -45,7 +45,7 @@ export default function Login() {
         <FormInput name="password" control={control} label="Password" secret={true} placeholder="Enter Password"></FormInput>
         <View className="flex flex-row my-2 justify-between items-center">
           <CheckBox value={rememberMe} onChecked={setRememberMe} label="Remember Me"></CheckBox>
-          <Text className="font-inter text-theme" onPress={() => navigate('forgot')}>
+          <Text className="font-inter text-theme" onPress={() => navigate('AuthStack', {screen: 'ForgotPassword'})}>
             Forgot Password ?
           </Text>
         </View>
