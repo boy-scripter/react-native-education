@@ -56,7 +56,7 @@ const ForgotPasswordScreen = () => {
   });
 
   const onRequestReset = async ({email}: Step1SchemaType) => {
-    await sendOtp({email}).unwrap();
+    // const [  ] = await sendOtp({email}).unwrap();
     successToast({text1: 'OTP sent to your email'});
     setStep(2);
   };
@@ -98,6 +98,9 @@ const ForgotPasswordScreen = () => {
           <Text className="text-2xl font-bold mb-4">Enter OTP</Text>
           <Text className="text-base text-greyish-100">We have sent an OTP to your email. Please enter it below to verify.</Text>
           <SplitInput inputClassName="text-xl w-14" onSplitChange={data => (otp.current = data)} className="mt-5 flex justify-center" count={6} />
+          <Button onPress={handleStep1Submit(onRequestReset)} label="Resend OTP ?">
+            60s
+          </Button>
           <Button label="Verify OTP" className="mt-4" onPress={onVerifyOtp} />
         </>
       )}

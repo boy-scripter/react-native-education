@@ -20,6 +20,7 @@
     "@react-navigation/stack": "^7.2.3",
     "@reduxjs/toolkit": "^2.8.2",
     "@rtk-query/graphql-request-base-query": "^2.3.1",
+    "async-mutex": "^0.5.0",
     "graphql": "^16.11.0",
     "moti": "^0.30.0",
     "nanoid": "^5.1.0",

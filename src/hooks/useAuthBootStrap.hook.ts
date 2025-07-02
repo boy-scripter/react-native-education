@@ -1,26 +1,28 @@
-import {useEffect} from 'react';
-import {useStorage} from './useStorage.hook';
-import {resetRoot} from './useNavigation.hook';
-import {useAppDispatch} from '@/store/store';
-import {setAuthState} from '@/store/auth/auth.slice';
-import {AuthenticatedUser, AuthState, REMEMBER_ME} from '@/types/auth';
+import { useStorage } from './useStorage.hook';
+import { useAppDispatch } from '@/store/store';
+import { setAuthState } from '@/store/auth/auth.slice';
+import { AuthenticatedUser, AuthState, REMEMBER_ME } from '@/types/auth';
+import { useEffect } from 'react';
+import { useUserQuery } from '@/graphql/generated';
 
-const {getItem} = useStorage();
+const { getItem } = useStorage();
+
 export function useAuthBootstrap() {
   const dispatch = useAppDispatch();
+  const userQuery = useUserQuery();
+
+  const remember_me = getItem<AuthState>(REMEMBER_ME);
 
   useEffect(() => {
-    const checkToken = async () => {
-      const remember_me = await getItem<AuthState>(REMEMBER_ME);
+    if (remember_me && remember_me.access_token) {
+       useUserQuery();
+    }
+  }, [])
 
-      if (remember_me) {
-        resetRoot('DashboardStack', {screen: 'Home'});
-        dispatch(setAuthState(remember_me as AuthenticatedUser));
-      } else {
-        resetRoot('AuthStack', {screen: 'LoginAndSignup'});
-      }
-    };
+  if (remember_me) {
+    dispatch(setAuthState(remember_me as AuthenticatedUser));
+    return true;
+  }
 
-    checkToken();
-  }, []);
+  return false
 }

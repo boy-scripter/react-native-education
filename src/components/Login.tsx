@@ -5,13 +5,12 @@ import {navigate} from '@hooks/useNavigation.hook';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {FormInput} from './ui/FormInput';
-import {useState} from 'react';
-import {selectAuth} from '@/store/auth/auth.selector';
+import {selectAuth, selectRememberMe} from '@/store/auth/auth.selector';
 import {useStorage} from '@/hooks/useStorage.hook';
-import {REMEMBER_ME} from '@/types/auth';
 import {useLoginWithEmailMutation} from '@/graphql/generated';
-import {useRootState} from '@/store/store';
+import {useAppDispatch, useRootState} from '@/store/store';
 import z from 'zod';
+import {setRememberMe} from '@/store/auth/auth.slice';
 
 export const LoginSchema = z.object({
   email: z.string({required_error: 'Email is required'}).email({message: 'Invalid email address'}),
@@ -21,9 +20,8 @@ export type loginType = z.infer<typeof LoginSchema>;
 
 export default function Login() {
   const [login] = useLoginWithEmailMutation();
-  const [rememberMe, setRememberMe] = useState(false);
-  const {setItem} = useStorage();
-  const auth = useRootState(selectAuth);
+  const rememberMe = useRootState(selectRememberMe);
+  const dispatch = useAppDispatch();
 
   const {handleSubmit, control} = useForm({
     resolver: zodResolver(LoginSchema),
@@ -36,9 +34,6 @@ export default function Login() {
   async function handleOnLoginClick(formValues: loginType) {
     await login({input: formValues}).unwrap();
     navigate('DashboardStack', {screen: 'Home'});
-    if (rememberMe) {
-      setItem(REMEMBER_ME, auth.refresh_token);
-    }
   }
 
   return (
@@ -47,7 +42,7 @@ export default function Login() {
         <FormInput name="email" control={control} label="Email" keyboardType="email-address" placeholder="john@example.com"></FormInput>
         <FormInput name="password" control={control} label="Password" secret={true} placeholder="Enter Password"></FormInput>
         <View className="flex flex-row my-2 justify-between items-center">
-          <CheckBox value={rememberMe} onChecked={setRememberMe} label="Remember Me"></CheckBox>
+          <CheckBox value={rememberMe} onChecked={() => dispatch(setRememberMe(!rememberMe))} label="Remember Me"></CheckBox>
           <Text className="font-inter text-theme" onPress={() => navigate('AuthStack', {screen: 'ForgotPassword'})}>
             Forgot Password ?
           </Text>

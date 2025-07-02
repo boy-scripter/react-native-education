@@ -1,7 +1,3 @@
-import { SignUpSchema } from "@/components/Signup";
-import { LoginSchema } from "@/components/Login";
-import { z } from "zod";
-
 
 export interface User {
   _id: string;
@@ -25,4 +21,6 @@ export interface UnauthenticatedUser {
   isAuthenticated: false;
 }
 
-export type AuthState = (AuthenticatedUser | UnauthenticatedUser);
+export type AuthState = (AuthenticatedUser | UnauthenticatedUser) & {
+  remember_me: boolean
+};

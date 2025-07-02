@@ -11,10 +11,13 @@ import {AuthStackParamList} from '@/types/navigation/authstack/authstack.interfa
 import {useLoginWithGoogleMutation} from '@/graphql/generated';
 import {successToast} from '@/components/Toast/Toast.config';
 import {goWithGoogle} from '@/store/auth/auth.service';
+import {useStorage} from '@/hooks/useStorage.hook';
+import {REMEMBER_ME} from '@/types/auth';
+import {useRootState} from '@/store/store';
+import {selectAuth} from '@/store/auth/auth.selector';
 
 export default function LoginAndSignUpScreen() {
   const [googleMutation] = useLoginWithGoogleMutation();
-
   const [tab, setTab] = useState('login');
 
   useRouteEffect<AuthStackParamList, 'LoginAndSignup'>(params => {
