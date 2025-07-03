@@ -1,13 +1,12 @@
 import Button from '@components/ui/Button';
 import CheckBox from '@components/ui/CheckBox';
 import {View, Text} from 'react-native';
-import {navigate} from '@hooks/useNavigation.hook';
+import {navigate, resetRoot} from '@hooks/useNavigation.hook';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {FormInput} from './ui/FormInput';
-import {selectAuth, selectRememberMe} from '@/store/auth/auth.selector';
-import {useStorage} from '@/hooks/useStorage.hook';
-import {useLoginWithEmailMutation} from '@/graphql/generated';
+import {selectRememberMe} from '@/store/auth/auth.selector';
+import {useLoginWithEmailMutation} from '@store/auth/endpoints';
 import {useAppDispatch, useRootState} from '@/store/store';
 import z from 'zod';
 import {setRememberMe} from '@/store/auth/auth.slice';
@@ -33,7 +32,7 @@ export default function Login() {
 
   async function handleOnLoginClick(formValues: loginType) {
     await login({input: formValues}).unwrap();
-    navigate('DashboardStack', {screen: 'Home'});
+    resetRoot('DashboardStack');
   }
 
   return (

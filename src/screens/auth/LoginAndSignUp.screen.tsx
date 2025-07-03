@@ -6,15 +6,12 @@ import Tab from '@components/ui/TabToggle';
 import {useState} from 'react';
 import {Image} from 'react-native';
 import {View, Text} from 'react-native';
-import {navigate, useRouteEffect} from '@/hooks/useNavigation.hook';
+import { resetRoot, useRouteEffect} from '@/hooks/useNavigation.hook';
 import {AuthStackParamList} from '@/types/navigation/authstack/authstack.interface';
-import {useLoginWithGoogleMutation} from '@/graphql/generated';
+import {useLoginWithGoogleMutation} from '@store/auth/endpoints';
 import {successToast} from '@/components/Toast/Toast.config';
 import {goWithGoogle} from '@/store/auth/auth.service';
-import {useStorage} from '@/hooks/useStorage.hook';
-import {REMEMBER_ME} from '@/types/auth';
-import {useRootState} from '@/store/store';
-import {selectAuth} from '@/store/auth/auth.selector';
+
 
 export default function LoginAndSignUpScreen() {
   const [googleMutation] = useLoginWithGoogleMutation();
@@ -30,7 +27,7 @@ export default function LoginAndSignUpScreen() {
     const idToken = await goWithGoogle();
     await googleMutation({idToken}).unwrap();
     successToast({text1: 'Login with Google Successful'});
-    navigate('DashboardStack', {screen: 'Home'});
+    resetRoot('DashboardStack')
   };
 
   return (

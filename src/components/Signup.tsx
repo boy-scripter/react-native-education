@@ -4,7 +4,7 @@ import {FormInput} from './ui/FormInput';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {successToast} from './Toast/Toast.config';
-import {useSignupMutation} from '@/graphql/generated';
+import {useSignupMutation} from '@store/auth/endpoints';
 
 import z from 'zod';
 

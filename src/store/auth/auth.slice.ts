@@ -2,18 +2,24 @@ import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
 import { AuthState, REMEMBER_ME } from "@myTypes/auth";
 import { api, AuthResponse } from '@/graphql/generated'
 import { useStorage } from "@/hooks/useStorage.hook";
+import { AuthenticatedUser } from '@myTypes/auth'
+import {  navigate } from "@/hooks/useNavigation.hook";
 import fallbackAvatar from '@assets/images/profile.png'
 
-const initialState: AuthState = {
-  user: null,
-  access_token: null,
-  refresh_token: null,
-  isAuthenticated: false,
+
+const { removeItem, setItem , getItem } = useStorage()
+
+
+const authState = getItem<AuthState>(REMEMBER_ME)
+const initialState = {
+  user: authState?.user || null,
+  access_token: authState?.access_token || null,
+  refresh_token: authState?.refresh_token || null,
+  isAuthenticated: authState?.isAuthenticated || false,
   remember_me: true
-};
+} ;
 
-const { removeItem, setItem } = useStorage()
-
+console.log(initialState , authState)
 function applyAuthState(state: Draft<AuthState>, payload: AuthResponse) {
   state.user = {
     ...payload.user,
@@ -23,9 +29,7 @@ function applyAuthState(state: Draft<AuthState>, payload: AuthResponse) {
   state.refresh_token = payload.refresh_token;
   state.isAuthenticated = true;
 
-  if (state.remember_me) {
-    setItem(REMEMBER_ME, state);
-  }
+  if (state.remember_me) setItem(REMEMBER_ME, state);
 
 }
 
@@ -41,6 +45,7 @@ export const authSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       state.remember_me = false;
+      navigate('AuthStack')
     },
 
     setRememberMe: (state, action: PayloadAction<boolean>) => {
@@ -93,7 +98,7 @@ export const authSlice = createSlice({
         };
 
         if (state.remember_me) {
-          setItem<Auth(REMEMBER_ME, state);
+          setItem<AuthenticatedUser['user']>(REMEMBER_ME, state.user);
         }
 
       }

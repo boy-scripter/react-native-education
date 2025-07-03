@@ -24,7 +24,6 @@ const SplitInput: React.FC<SplitInputProps> = ({count, className, inputClassName
     onSplitChange(values.current.join(''));
     // Auto-focus next input if current has text
     if (text && index < count - 1) {
-      console.log(inputRefs.current[index + 1]);
       inputRefs.current[index + 1]?.focus();
     }
   };

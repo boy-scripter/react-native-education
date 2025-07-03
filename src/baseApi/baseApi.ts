@@ -1,22 +1,24 @@
 import { errorToast } from '@components/Toast/Toast.config';
 import { useStorage } from '@hooks/useStorage.hook';
-import { REMEMBER_ME } from '@myTypes/auth';
+import { AuthenticatedUser, REMEMBER_ME } from '@myTypes/auth';
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query"
 import { GRAPHQL_BASE_URL } from "@env"
 import { Mutex } from 'async-mutex'
-import { api as authApi } from '@/graphql/generated';
-import { RootState } from '@/store/store';
-import { selectAuth } from '@/store/auth/auth.selector';
-import { logout } from '@/store/auth/auth.slice';
+import { authApi } from '@store/auth/endpoints';
+import { RootState } from '@store/store';
+import { selectAuth } from '@store/auth/auth.selector';
+import { logout } from '@store/auth/auth.slice';
+import { DocumentNode } from 'graphql';
 
 
 const { getItem } = useStorage();
 const mutex = new Mutex()
-const baseQuery = graphqlRequestBaseQuery({
+
+const baseQuery  = graphqlRequestBaseQuery({
   url: GRAPHQL_BASE_URL,
   prepareHeaders: (headers) => {
-    const token = getItem<string>(REMEMBER_ME);
+    const token = getItem<AuthenticatedUser>(REMEMBER_ME)?.access_token;
     if (token) headers.set('Authorization', `Bearer ${token}`);
     return headers;
   },
@@ -27,27 +29,24 @@ const baseQuery = graphqlRequestBaseQuery({
       status: err?.extensions?.status as number | undefined,
     }
   }
-})
+}) as BaseQueryType
 
 
-export const baseQueryWithReAuth: BaseQueryFn<any, unknown, unknown> = async (
-  args,
-  api,
-  extraOptions
-) => {
+export const finalBaseQuery: BaseQueryType = async (args, api, extraOptions: ExtraOptions) => {
   // Wait if there's already a token refresh in progress
   await mutex.waitForUnlock();
 
   let result = await baseQuery(args, api, extraOptions);
 
   // Handle general errors
-  if (result.error && result.error.status !== 401) {
+  if (result.error && !(extraOptions?.skipToast)) {
     const errorMessage = result.error?.message || 'Something went wrong';
     errorToast({ text1: errorMessage });
   }
 
   // If token expired (401), attempt refresh
-  if (result.error?.status === 401) {
+  if (result.error?.message.toLowerCase() === 'unauthorized') {
+
     const state = api.getState() as RootState;
     const refresh_token = selectAuth(state).refresh_token;
 
@@ -57,10 +56,17 @@ export const baseQueryWithReAuth: BaseQueryFn<any, unknown, unknown> = async (
     }
 
     if (!mutex.isLocked()) {
+   
       const release = await mutex.acquire();
       try {
-        await api.dispatch(authApi.endpoints.RefreshToken.initiate({ token: refresh_token })).unwrap();
-
+            console.log('reached here')
+            await api.dispatch(
+              authApi.endpoints.RefreshToken
+              .initiate({ token: refresh_token }))
+              .unwrap();
+          
+          console.log('reached not here')
+          // code not woeking here why
         // Retry original request with new token
         result = await baseQuery(args, api, extraOptions);
       } catch {
@@ -81,8 +87,19 @@ export const baseQueryWithReAuth: BaseQueryFn<any, unknown, unknown> = async (
 
 
 export const baseApi = createApi({
-  baseQuery: baseQueryWithReAuth,
+  baseQuery: finalBaseQuery,
   endpoints: (build) => ({})
 });
 
 
+interface ExtraOptions {
+  skipToast?: boolean
+}
+
+type BaseQueryType = BaseQueryFn<{
+  document: string | DocumentNode;
+  variables?: any;
+}, unknown, {
+  message: string;
+  status: number | undefined;
+}, ExtraOptions>

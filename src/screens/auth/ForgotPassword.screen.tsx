@@ -9,7 +9,7 @@ import {FormInput} from '@/components/ui/FormInput';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {errorToast, successToast} from '@/components/Toast/Toast.config';
-import {useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation, useValidateOtpMutation} from '@/graphql/generated';
+import {useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation, useValidateOtpMutation} from '@store/auth/endpoints';
 import z from 'zod';
 
 const Step1Schema = z.object({
