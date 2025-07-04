@@ -4241,6 +4241,11 @@ csstype@^3.0.2:
   resolved "https://registry.npmjs.org/csstype/-/csstype-3.1.3.tgz"
   integrity sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==
 
+cycle@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/cycle/-/cycle-1.0.3.tgz"
+  integrity sha512-TVF6svNzeQCOpjCqsy0/CSy8VgObG3wXusJ73xW2GbG5rGx7lC8zxDSURicsXI2UsGdi2L0QNRCi745/wUDvsA==
+
 data-uri-to-buffer@^4.0.0:
   version "4.0.1"
   resolved "https://registry.npmjs.org/data-uri-to-buffer/-/data-uri-to-buffer-4.0.1.tgz"
@@ -4278,7 +4283,7 @@ dataloader@^2.2.3:
   resolved "https://registry.npmjs.org/dataloader/-/dataloader-2.2.3.tgz"
   integrity sha512-y2krtASINtPFS1rSDjacrFgn1dcUuoREVabwlOGOe4SdxenREqwjwjElAdwvbGM7kgZz9a3KVicWR7vcz8rnzA==
 
-dayjs@^1.8.15:
+dayjs@^1.8.15, dayjs@^1.8.29:
   version "1.11.13"
   resolved "https://registry.npmjs.org/dayjs/-/dayjs-1.11.13.tgz"
   integrity sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==
@@ -8614,6 +8619,14 @@ recast@^0.23.11:
     source-map "~0.6.1"
     tiny-invariant "^1.3.3"
     tslib "^2.0.1"
+
+redux-flipper@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.npmjs.org/redux-flipper/-/redux-flipper-2.0.3.tgz"
+  integrity sha512-JpNEZnBnBE9kGiZZrmzi23cFD9gjRUFoJE6nX0MPfmMVeIqfvkJWMATnbqRsTn8xwBXvWtOk+7Qbs8u4RZZcVw==
+  dependencies:
+    cycle "^1.0.3"
+    dayjs "^1.8.29"
 
 redux-thunk@^3.1.0:
   version "3.1.0"

@@ -81,7 +81,7 @@ export type MutationValidateOtpArgs = {
 export type Query = {
   __typename?: 'Query';
   getHello: Scalars['String']['output'];
-  me: UserResponse;
+  me: User;
 };
 
 export type RefreshTokenResponse = {
@@ -121,11 +121,6 @@ export type User = {
   name: Scalars['String']['output'];
 };
 
-export type UserResponse = {
-  __typename?: 'UserResponse';
-  user: User;
-};
-
 export type ValidateOtpResponse = {
   __typename?: 'ValidateOtpResponse';
   message: Scalars['String']['output'];
@@ -160,13 +155,6 @@ export type LoginWithEmailMutationVariables = Exact<{
 
 export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string, active: boolean, avatar?: string | null } } };
 
-export type RefreshTokenMutationVariables = Exact<{
-  token: Scalars['String']['input'];
-}>;
-
-
-export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken: { __typename?: 'RefreshTokenResponse', message: string, access_token: string } };
-
 export type SetNewResetPasswordMutationVariables = Exact<{
   input: SetNewPasswordDto;
 }>;
@@ -184,7 +172,7 @@ export type SignupMutation = { __typename?: 'Mutation', signup: { __typename?: '
 export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQuery = { __typename?: 'Query', me: { __typename?: 'UserResponse', user: { __typename?: 'User', name: string, email: string, avatar?: string | null, active: boolean, _id: string } } };
+export type UserQuery = { __typename?: 'Query', me: { __typename?: 'User', name: string, email: string, avatar?: string | null, active: boolean, _id: string } };
 
 
 export const SendForgotPasswordCodeDocument = `
@@ -233,14 +221,6 @@ export const LoginWithEmailDocument = `
   }
 }
     `;
-export const RefreshTokenDocument = `
-    mutation RefreshToken($token: String!) {
-  refreshToken(token: $token) {
-    message
-    access_token
-  }
-}
-    `;
 export const SetNewResetPasswordDocument = `
     mutation SetNewResetPassword($input: SetNewPasswordDto!) {
   setNewResetPassword(input: $input) {
@@ -262,13 +242,11 @@ export const SignupDocument = `
 export const UserDocument = `
     query User {
   me {
-    user {
-      name
-      email
-      avatar
-      active
-      _id
-    }
+    name
+    email
+    avatar
+    active
+    _id
   }
 }
     `;
@@ -287,9 +265,6 @@ const injectedRtkApi = baseApi.injectEndpoints({
     LoginWithEmail: build.mutation<LoginWithEmailMutation, LoginWithEmailMutationVariables>({
       query: (variables) => ({ document: LoginWithEmailDocument, variables })
     }),
-    RefreshToken: build.mutation<RefreshTokenMutation, RefreshTokenMutationVariables>({
-      query: (variables) => ({ document: RefreshTokenDocument, variables })
-    }),
     SetNewResetPassword: build.mutation<SetNewResetPasswordMutation, SetNewResetPasswordMutationVariables>({
       query: (variables) => ({ document: SetNewResetPasswordDocument, variables })
     }),
@@ -303,5 +278,5 @@ const injectedRtkApi = baseApi.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useRefreshTokenMutation, useSetNewResetPasswordMutation, useSignupMutation, useUserQuery, useLazyUserQuery } = injectedRtkApi;
+export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useSetNewResetPasswordMutation, useSignupMutation, useUserQuery, useLazyUserQuery } = injectedRtkApi;
 

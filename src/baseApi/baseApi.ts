@@ -5,20 +5,26 @@ import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query"
 import { GRAPHQL_BASE_URL } from "@env"
 import { Mutex } from 'async-mutex'
-import { authApi } from '@store/auth/endpoints';
 import { RootState } from '@store/store';
 import { selectAuth } from '@store/auth/auth.selector';
-import { logout } from '@store/auth/auth.slice';
+import { logout, setAccessToken } from '@store/auth/auth.slice';
 import { DocumentNode } from 'graphql';
 
 
 const { getItem } = useStorage();
 const mutex = new Mutex()
-
-const baseQuery  = graphqlRequestBaseQuery({
+const REFRESH_TOKEN_DOCUMENT = `
+mutation RefreshToken($token: String!) {
+  refreshToken(token: $token) {
+    message
+    access_token
+  }
+}
+`;
+const baseQuery = graphqlRequestBaseQuery({
   url: GRAPHQL_BASE_URL,
-  prepareHeaders: (headers) => {
-    const token = getItem<AuthenticatedUser>(REMEMBER_ME)?.access_token;
+  prepareHeaders: (headers, { getState }) => {
+    const token = (getState() as RootState).auth.access_token;
     if (token) headers.set('Authorization', `Bearer ${token}`);
     return headers;
   },
@@ -56,24 +62,31 @@ export const finalBaseQuery: BaseQueryType = async (args, api, extraOptions: Ext
     }
 
     if (!mutex.isLocked()) {
-   
+
       const release = await mutex.acquire();
+
       try {
-            console.log('reached here')
-            await api.dispatch(
-              authApi.endpoints.RefreshToken
-              .initiate({ token: refresh_token }))
-              .unwrap();
-          
-          console.log('reached not here')
-          // code not woeking here why
-        // Retry original request with new token
+        const refreshResult = await baseQuery({
+          document: REFRESH_TOKEN_DOCUMENT,
+          variables: { token: refresh_token }
+        }, api, { skipToast: true });
+        
+        console.log('ia m here', refreshResult)
+        // Assuming the access_token is returned under refreshResult.data.refreshToken
+        const newAccessToken = (refreshResult?.data as any)?.refreshToken?.access_token;
+        if (!newAccessToken) throw new Error("Failed to refresh access token");
+
+        // Update the access token in the state
+        api.dispatch(setAccessToken(newAccessToken));
+
         result = await baseQuery(args, api, extraOptions);
       } catch {
         api.dispatch(logout());
       } finally {
         release();
       }
+
+
     } else {
       // Wait for the ongoing refresh to finish and retry
       await mutex.waitForUnlock();
@@ -96,10 +109,4 @@ interface ExtraOptions {
   skipToast?: boolean
 }
 
-type BaseQueryType = BaseQueryFn<{
-  document: string | DocumentNode;
-  variables?: any;
-}, unknown, {
-  message: string;
-  status: number | undefined;
-}, ExtraOptions>
+type BaseQueryType = BaseQueryFn<{ document: string | DocumentNode; variables?: any }, unknown, { message: string; status: number | undefined }, ExtraOptions>

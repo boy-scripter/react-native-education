@@ -3,12 +3,10 @@ import { AuthState, REMEMBER_ME } from "@myTypes/auth";
 import { api, AuthResponse } from '@/graphql/generated'
 import { useStorage } from "@/hooks/useStorage.hook";
 import { AuthenticatedUser } from '@myTypes/auth'
-import {  navigate } from "@/hooks/useNavigation.hook";
+import { navigate } from "@/hooks/useNavigation.hook";
 import fallbackAvatar from '@assets/images/profile.png'
 
-
-const { removeItem, setItem , getItem } = useStorage()
-
+const { removeItem, setItem, getItem } = useStorage()
 
 const authState = getItem<AuthState>(REMEMBER_ME)
 const initialState = {
@@ -17,9 +15,9 @@ const initialState = {
   refresh_token: authState?.refresh_token || null,
   isAuthenticated: authState?.isAuthenticated || false,
   remember_me: true
-} ;
+};
 
-console.log(initialState , authState)
+
 function applyAuthState(state: Draft<AuthState>, payload: AuthResponse) {
   state.user = {
     ...payload.user,
@@ -48,13 +46,17 @@ export const authSlice = createSlice({
       navigate('AuthStack')
     },
 
-    setRememberMe: (state, action: PayloadAction<boolean>) => {
-      state.remember_me = action.payload;
+    setAccessToken: (state, action: PayloadAction<string | null>) => {
+      state.access_token = action.payload;
+
+      if (state.remember_me) {
+        const oldData = getItem<AuthenticatedUser>(REMEMBER_ME)
+        setItem(REMEMBER_ME, { ...oldData, access_token: action.payload });
+      }
     },
 
-
-    setAuthState(state, action: PayloadAction<AuthResponse>) {
-      applyAuthState(state, action.payload);
+    setRememberMe: (state, action: PayloadAction<boolean>) => {
+      state.remember_me = action.payload;
     },
 
   },
@@ -75,20 +77,10 @@ export const authSlice = createSlice({
     );
 
     builder.addMatcher(
-      api.endpoints.RefreshToken.matchFulfilled,
-      (state, { payload }) => {
-        state.access_token = payload.refreshToken.access_token;
-        if (state.remember_me) {
-          setItem(REMEMBER_ME, state);
-        }
-      }
-    );
-
-    builder.addMatcher(
       api.endpoints.User.matchFulfilled,
       (state, { payload }) => {
 
-        const user = payload.me.user;
+        const user = payload.me;
         state.user = {
           _id: user._id,
           name: user.name,
@@ -96,9 +88,10 @@ export const authSlice = createSlice({
           active: user.active,
           avatar: user.avatar || fallbackAvatar,
         };
-
+        
         if (state.remember_me) {
-          setItem<AuthenticatedUser['user']>(REMEMBER_ME, state.user);
+          const oldData = getItem<AuthenticatedUser>(REMEMBER_ME);
+          setItem(REMEMBER_ME, { ...oldData, user: state.user });
         }
 
       }
@@ -107,5 +100,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { logout, setAuthState, setRememberMe } = authSlice.actions;
+export const { logout, setRememberMe, setAccessToken } = authSlice.actions;
 export default authSlice.reducer;

@@ -5,15 +5,20 @@ import { useDispatch , TypedUseSelectorHook , useSelector ,Provider} from "react
 import AuthReducer from './auth/auth.slice'
 import { ReactNode } from "react";
 
+const  middlewares = [baseApi.middleware];
+
+if (__DEV__) {
+  const createDebugger = require("redux-flipper").default;
+  middlewares.push(createDebugger());
+}
 
 export const store = configureStore({
     reducer: {
         [baseApi.reducerPath]: baseApi.reducer, // Register the base API reducer
          auth : AuthReducer 
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middlewares),
     devTools: true, 
-
 })
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

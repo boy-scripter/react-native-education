@@ -6,16 +6,16 @@ import Tab from '@components/ui/TabToggle';
 import {useState} from 'react';
 import {Image} from 'react-native';
 import {View, Text} from 'react-native';
-import { resetRoot, useRouteEffect} from '@/hooks/useNavigation.hook';
+import {resetRoot, useRouteEffect} from '@/hooks/useNavigation.hook';
 import {AuthStackParamList} from '@/types/navigation/authstack/authstack.interface';
 import {useLoginWithGoogleMutation} from '@store/auth/endpoints';
 import {successToast} from '@/components/Toast/Toast.config';
 import {goWithGoogle} from '@/store/auth/auth.service';
-
+import {StepsAnimation} from '@/animation/StepsAnimation';
 
 export default function LoginAndSignUpScreen() {
   const [googleMutation] = useLoginWithGoogleMutation();
-  const [tab, setTab] = useState('login');
+  const [tab, setTab] = useState('1');
 
   useRouteEffect<AuthStackParamList, 'LoginAndSignup'>(params => {
     if (params?.mode) {
@@ -27,27 +27,41 @@ export default function LoginAndSignUpScreen() {
     const idToken = await goWithGoogle();
     await googleMutation({idToken}).unwrap();
     successToast({text1: 'Login with Google Successful'});
-    resetRoot('DashboardStack')
+    resetRoot('DashboardStack');
   };
 
   return (
     <TopImageLayout image={'@assets/images/auth.png'} title="Get Started now" description="Create an account or log in to explore about our app">
-      <Tab onChange={setTab} defaultTab="signup">
-        <Tab.Button label="Signup" id="signup"></Tab.Button>
-        <Tab.Button label="Login" id="login"></Tab.Button>
+      <Tab onChange={setTab} defaultTab="1">
+        <Tab.Button label="Signup" id="1"></Tab.Button>
+        <Tab.Button label="Login" id="2"></Tab.Button>
       </Tab>
 
       <View className="my-10 flex-1 ">
-        {tab === 'login' ? <Login /> : <Signup />}
-        <View className="flex-row items-center my-5 px-4">
-          <View className="flex-1 h-px bg-greyish" />
-          <Text className="mx-3 text-sm text-theme">Or</Text>
-          <View className="flex-1 h-px bg-greyish" />
-        </View>
-
-        <Button onPress={handleGoogleLogin} label="Continue with Google" className="w-full border-greyish bg-white py-4" textClassName="text-sm text-theme">
-          <Image className="w-5 h-5" source={require('@assets/images/google.png')} />
-        </Button>
+        <StepsAnimation className='h-full w-full border-lime-500 border' step={parseInt(tab)}>
+          <>
+            <Signup />
+            <View className="flex-row items-center my-5 px-4">
+              <View className="flex-1 h-px bg-greyish" />
+              <Text className="mx-3 text-sm text-theme">Or</Text>
+              <View className="flex-1 h-px bg-greyish" />
+            </View>
+            <Button onPress={handleGoogleLogin} label="Continue with Google" className="w-full border-greyish bg-white py-4" textClassName="text-sm text-theme">
+              <Image className="w-5 h-5" source={require('@assets/images/google.png')} />
+            </Button>
+          </>
+          <>
+            <Login />
+            <View className="flex-row items-center my-5 px-4">
+              <View className="flex-1 h-px bg-greyish" />
+              <Text className="mx-3 text-sm text-theme">Or</Text>
+              <View className="flex-1 h-px bg-greyish" />
+            </View>
+            <Button onPress={handleGoogleLogin} label="Continue with Google" className="w-full border-greyish bg-white py-4" textClassName="text-sm text-theme">
+              <Image className="w-5 h-5" source={require('@assets/images/google.png')} />
+            </Button>
+          </>
+        </StepsAnimation>
       </View>
     </TopImageLayout>
   );

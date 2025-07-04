@@ -16,12 +16,12 @@ export const SignUpSchema = z.object({
 export type signUpType = z.infer<typeof SignUpSchema>;
 
 export default function Signup() {
+  const [signup] = useSignupMutation();
   const {handleSubmit, control} = useForm({
     resolver: zodResolver(SignUpSchema),
   });
 
   async function handleSignup(formValues: signUpType) {
-    const [signup] = useSignupMutation();
     await signup({input: formValues}).unwrap();
     successToast({text1: 'Signup successful!'});
   }

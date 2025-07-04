@@ -11,6 +11,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 export function RootStackNavigator() {
   const isLoggedIn = useAuthBootstrap();
+  console.log('isLoggedIn', isLoggedIn);
 
   return (
     <NavigationContainer ref={navigationRef}>
