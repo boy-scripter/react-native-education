@@ -12,6 +12,7 @@ import {useLoginWithGoogleMutation} from '@store/auth/endpoints';
 import {successToast} from '@/components/Toast/Toast.config';
 import {goWithGoogle} from '@/store/auth/auth.service';
 import {StepsAnimation} from '@/animation/StepsAnimation';
+import {ScrollView} from 'moti';
 
 export default function LoginAndSignUpScreen() {
   const [googleMutation] = useLoginWithGoogleMutation();
@@ -31,38 +32,43 @@ export default function LoginAndSignUpScreen() {
   };
 
   return (
-    <TopImageLayout image={'@assets/images/auth.png'} title="Get Started now" description="Create an account or log in to explore about our app">
-      <Tab onChange={setTab} defaultTab="1">
-        <Tab.Button label="Signup" id="1"></Tab.Button>
-        <Tab.Button label="Login" id="2"></Tab.Button>
-      </Tab>
+    <ScrollView className='bg-white'>
+      <TopImageLayout image={'@assets/images/auth.png'} title="Get Started Now" description="Create an account or log in to explore about our app">
+        <Tab onChange={setTab} defaultTab="1">
+          <Tab.Button label="Signup" id="1"></Tab.Button>
+          <Tab.Button label="Login" id="2"></Tab.Button>
+        </Tab>
 
-      <View className="my-10 flex-1 ">
-        <StepsAnimation className='h-full w-full border-lime-500 border' step={parseInt(tab)}>
-          <>
-            <Signup />
-            <View className="flex-row items-center my-5 px-4">
-              <View className="flex-1 h-px bg-greyish" />
-              <Text className="mx-3 text-sm text-theme">Or</Text>
-              <View className="flex-1 h-px bg-greyish" />
+        <View className="my-10  flex-1 ">
+          <StepsAnimation className="w-full flex-1 " step={parseInt(tab)}>
+            {/* signup */}
+            <View className="flex-1">
+              <Signup />
+              <View className="flex-row items-center my-5 px-4">
+                <View className="flex-1 h-px bg-greyish" />
+                <Text className="mx-3 text-sm text-theme">Or</Text>
+                <View className="flex-1 h-px bg-greyish" />
+              </View>
+              <Button onPress={handleGoogleLogin} label="Continue with Google" className="w-full border-greyish bg-white py-4" textClassName="text-sm text-theme">
+                <Image className="w-5 h-5" source={require('@assets/images/google.png')} />
+              </Button>
             </View>
-            <Button onPress={handleGoogleLogin} label="Continue with Google" className="w-full border-greyish bg-white py-4" textClassName="text-sm text-theme">
-              <Image className="w-5 h-5" source={require('@assets/images/google.png')} />
-            </Button>
-          </>
-          <>
-            <Login />
-            <View className="flex-row items-center my-5 px-4">
-              <View className="flex-1 h-px bg-greyish" />
-              <Text className="mx-3 text-sm text-theme">Or</Text>
-              <View className="flex-1 h-px bg-greyish" />
+
+            {/* login */}
+            <View className="flex-1">
+              <Login />
+              <View className="flex-row items-center my-5 px-4">
+                <View className="flex-1 h-px bg-greyish" />
+                <Text className="mx-3 text-sm text-theme">Or</Text>
+                <View className="flex-1 h-px bg-greyish" />
+              </View>
+              <Button onPress={handleGoogleLogin} label="Continue with Google" className="w-full border-greyish bg-white py-4" textClassName="text-sm text-theme">
+                <Image className="w-5 h-5" source={require('@assets/images/google.png')} />
+              </Button>
             </View>
-            <Button onPress={handleGoogleLogin} label="Continue with Google" className="w-full border-greyish bg-white py-4" textClassName="text-sm text-theme">
-              <Image className="w-5 h-5" source={require('@assets/images/google.png')} />
-            </Button>
-          </>
-        </StepsAnimation>
-      </View>
-    </TopImageLayout>
+          </StepsAnimation>
+        </View>
+      </TopImageLayout>
+    </ScrollView>
   );
 }

@@ -10,7 +10,7 @@ interface StepsAnimationProps {
   mode?: 'soft' | 'hard'; // 🔥 new feature
 }
 
-export const StepsAnimation = ({step, children, className, duration = 400, mode = 'soft'}: StepsAnimationProps) => {
+export const StepsAnimation = ({step, children, className, duration = 300, mode = 'soft'}: StepsAnimationProps) => {
   const childArray = React.Children.toArray(children);
 
   if (mode === 'soft') {
@@ -21,15 +21,13 @@ export const StepsAnimation = ({step, children, className, duration = 400, mode 
           return (
             <MotiView
               key={`step-${index + 1}`}
-              from={{opacity: 0, translateY: 20, scale: 0.95}}
               animate={{
                 opacity: show ? 1 : 0,
-                translateY: show ? 0 : 20,
-                scale: show ? 1 : 0.96,
+                translateX: show ? 0 : index < step - 1 ? -10 : 10,  // Slide in from left for previous steps, right for next
               }}
               style={{
                 pointerEvents: show ? 'auto' : 'none', // Prevent touch events when hidden
-                height: show ? 'auto' : 0, // Adjust height for smooth transition
+                display: show ? 'flex' : 'none', // Hide the view completely when not shown
               }}
               transition={{type: 'timing', duration}}
               className={twMerge('overflow-hidden', className)}>
@@ -42,28 +40,23 @@ export const StepsAnimation = ({step, children, className, duration = 400, mode 
   }
 
   // Soft mode with AnimatePresence
+  const activeChild = childArray[step - 1];
   return (
-    <AnimatePresence>
-      {childArray.map((child, index) => {
-        const realIndex = index + 1;
-        if (realIndex !== step) return null;
-
-        return (
-          <MotiView
-            key={`step-${realIndex}`}
-            from={{opacity: 0, translateY: 20}}
-            animate={{opacity: 1, translateY: 0}}
-            exit={{opacity: 0, translateY: -20}}
-            transition={{type: 'timing', duration}}
-            className={className}>
-            {child}
-          </MotiView>
-        );
-      })}
+    <AnimatePresence exitBeforeEnter>
+      {activeChild && (
+        <MotiView
+          key={`step-${step}`}
+          from={{opacity: 0, translateX: 10}}
+          animate={{opacity: 1, translateX: 0}}
+          exit={{opacity: 0, translateX: -10}}
+          transition={{type: 'timing', duration}}
+          className={className}>
+          {activeChild}
+        </MotiView>
+      )}
     </AnimatePresence>
   );
 };
-
 
 // SMANTHANA@mail.dangminhhoa.edu.vn
 // Tq7Cz3Zy0Jv3

@@ -1,19 +1,14 @@
-import Animated, {useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
+// Tab.tsx
+import React, {useContext, createContext, useRef, useCallback, RefObject, useLayoutEffect, useState, useEffect, ComponentRef, use} from 'react';
 import {Pressable, View, Text, GestureResponderEvent} from 'react-native';
-import React, {useContext, createContext, useRef, useCallback, RefObject, useLayoutEffect, ElementRef, ComponentRef} from 'react';
+import {MotiView} from 'moti';
 import {twMerge} from 'tailwind-merge';
 
-interface activateSliderTabProps {
+interface ActivateSliderTabProps {
   x: number;
   width: number;
   tab: string;
 }
-
-type TabContextType = {
-  currentTab: string;
-  activateSliderTab: (input: activateSliderTabProps) => void;
-  containerRef: RefObject<View> | null;
-};
 
 type TabProps = {
   children: React.ReactNode;
@@ -23,32 +18,44 @@ type TabProps = {
   onChange?: (tab: any) => void;
 };
 
-const TabContext = createContext<null | TabContextType>(null);
+const TabContext = createContext<null | ReturnType<typeof useTabContextCreator>>(null);
+
+export const useTabContextCreator = ({defaultTab, onChange}: {defaultTab: string; onChange?: (tab: string) => void}) => {
+  const containerRef = useRef<View>(null);
+  const [sliderPosition, setSliderPosition] = useState({x: 0, width: 0});
+  const [currentTab, setCurrentTab] = useState(defaultTab);
+
+  const activateSliderTab = useCallback(
+    ({x, width, tab}: ActivateSliderTabProps) => {
+      setSliderPosition({x, width});
+      setCurrentTab(tab);
+      if (typeof onChange === 'function') {
+        onChange(tab);
+      }
+    },
+    [onChange],
+  );
+
+  return {
+    containerRef,
+    sliderPosition,
+    currentTab,
+    activateSliderTab,
+  };
+};
 
 export default function Tab({children, defaultTab, sliderClassName, onChange, className}: TabProps) {
-  const sliderX = useSharedValue(0);
-  const sliderWidth = useSharedValue(0);
-  const containerRef = useRef<View>(null) as RefObject<View> | null;
-  const currentTab = defaultTab;
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{translateX: sliderX.value}],
-      width: sliderWidth.value,
-    };
-  });
-
-  const activateSliderTab = useCallback(({x, width, tab}: activateSliderTabProps) => {
-    sliderX.set(withTiming(x, {duration: 200}));
-    sliderWidth.set(withTiming(width, {duration: 200}));
-    if (typeof onChange == 'function') onChange(tab);
-  }, []);
-
+  const {containerRef, sliderPosition, currentTab, activateSliderTab} = useTabContextCreator({defaultTab, onChange});
   return (
-    <TabContext.Provider value={{activateSliderTab, containerRef, currentTab}}>
+    <TabContext.Provider value={{activateSliderTab, containerRef, currentTab, sliderPosition}}>
       <View className={twMerge('p-1 bg-[#F5F6F9] w-4/5 mx-auto', className)} style={{borderRadius: 8}}>
         <View ref={containerRef} className={twMerge('relative overflow-hidden flex-row gap-2', sliderClassName)}>
-          <Animated.View style={[{borderRadius: 6}, animatedStyle]} className="slider absolute bg-white h-full top-0 left-0"></Animated.View>
+          <MotiView
+            animate={{translateX: sliderPosition.x, width: sliderPosition.width}}
+            transition={{type: 'spring', damping: 15, stiffness: 200}}
+            style={{borderRadius: 6}}
+            className="slider absolute bg-white h-full top-0 left-0"
+          />
           {children}
         </View>
       </View>
@@ -61,40 +68,50 @@ export interface TabButtonProps {
   id: string;
 }
 
-Tab.Button = React.memo(function ({label, id}: TabButtonProps) {
+Tab.Button = React.memo(function TabButton({label, id}: TabButtonProps) {
   const ctx = useContext(TabContext);
   if (!ctx) throw new Error('TabButton must be used within a Tab component');
 
   const btnRef = useRef<ComponentRef<typeof Pressable>>(null);
   const {activateSliderTab, containerRef, currentTab} = ctx;
+  const hasInitialized = useRef(false);
 
-  function handlePress(e: GestureResponderEvent) {
-    containerRef?.current &&
-      e.target.measureLayout(containerRef.current, (x, y, width, height) => {
+  const handlePress = (e: GestureResponderEvent) => {
+    if (!containerRef?.current) return;
+
+    btnRef.current?.measureLayout(
+      containerRef.current,
+      (x, y, width) => {
         activateSliderTab({x, width, tab: id});
-      });
-  }
+      },
+      () => {
+        console.warn('Failed to measure layout for tab:', id);
+      },
+    );
+  };
 
-  // because conatinerref is Empty
-  // useLayoutEffect(() => {
-  //   if (id !== currentTab) return;
-  //   btnRef.current?.measureLayout(containerRef.current, (x, y, width) => {
-  //     activateSliderTab({x, width, tab: id});
-  //   });
-  // }, []);
-
-
-  function handleOnLayout(){
+  const handleOnLayout = () => {
+    if (hasInitialized.current) return;
     if (id !== currentTab) return;
-    if (!containerRef?.current) throw new Error('Unable to move tab slider due to parent containerRef');
-    btnRef.current?.measureLayout(containerRef.current, (x, y, width) => {
-      activateSliderTab({x, width, tab: id});
-    });
-  }
+    if (!containerRef?.current) return;
+
+    btnRef.current?.measureLayout(
+      containerRef.current,
+      (x, y, width) => {
+        activateSliderTab({x, width, tab: id});
+        hasInitialized.current = true;
+      },
+      () => {
+        console.warn('Failed to measure layout on mount for tab:', id);
+      },
+    );
+  };
+
+  const isActive = id === currentTab;
 
   return (
-    <Pressable ref={btnRef} onLayout={handleOnLayout} className="flex-1 text-center" onPress={handlePress}>
-      <Text className={`${id ? 'opacity-100' : 'opacity-50'} p-2 px-4 text-center `}>{label}</Text>
+    <Pressable ref={btnRef} onLayout={handleOnLayout} onPress={handlePress} className="flex-1">
+      <Text className={`${isActive ? 'opacity-100' : 'opacity-50'} p-2 px-4 text-center`}>{label}</Text>
     </Pressable>
   );
 });

@@ -3,10 +3,10 @@ import {Pressable, Text, PressableProps, View, GestureResponderEvent, StyleSheet
 import {twMerge} from 'tailwind-merge';
 import LinearGradient from 'react-native-linear-gradient';
 import Loader from '@components/ui/Loader';
-import colorConstant from '@constant/color.constant';
+
 
 type ButtonProps = {
-  label: string;
+  label?: string;
   children?: React.ReactNode;
   position?: 'left' | 'right';
   onPress?: (event: GestureResponderEvent) => void | Promise<void>;
@@ -15,16 +15,6 @@ type ButtonProps = {
   disabled?: boolean;
 } & PressableProps;
 
-const theme = {
-  default: {
-    btn: colorConstant.theme.DEFAULT,
-    loader: colorConstant.greyish[100],
-  },
-  white: {
-    btn: colorConstant.greyish,
-    loader: colorConstant.theme.DEFAULT,
-  },
-};
 
 const Button: React.FC<ButtonProps> = ({children, position = 'left', onPress, className, textClassName, disabled, label, ...props}) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -60,7 +50,7 @@ const Button: React.FC<ButtonProps> = ({children, position = 'left', onPress, cl
       ) : (
         <>
           {position === 'left' && children && <View className="mr-2">{children}</View>}
-          <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{label}</Text>
+          {(!!label) && <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{label}</Text>}
           {position === 'right' && children && <View className="ml-2">{children}</View>}
         </>
       )}

@@ -2261,6 +2261,11 @@
   resolved "https://registry.npmjs.org/@pkgjs/parseargs/-/parseargs-0.11.0.tgz"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
+"@react-native-community/blur@^4.4.1":
+  version "4.4.1"
+  resolved "https://registry.npmjs.org/@react-native-community/blur/-/blur-4.4.1.tgz"
+  integrity sha512-XBSsRiYxE/MOEln2ayunShfJtWztHwUxLFcSL20o+HNNRnuUDv+GXkF6FmM2zE8ZUfrnhQ/zeTqvnuDPGw6O8A==
+
 "@react-native-community/cli-clean@15.0.1":
   version "15.0.1"
   resolved "https://registry.npmjs.org/@react-native-community/cli-clean/-/cli-clean-15.0.1.tgz"
@@ -8561,6 +8566,11 @@ react-test-renderer@19.0.0:
   dependencies:
     react-is "^19.0.0"
     scheduler "^0.25.0"
+
+react-timer-hook@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.npmjs.org/react-timer-hook/-/react-timer-hook-4.0.5.tgz"
+  integrity sha512-elDxx4OIxBTbm4rXSK5cjBHkq06prO2qY9JzoYxOa11AkL3ij69jp0VuDUOqcehEK38CV0uu7FzUKtPVISRLKA==
 
 react@19.0.0:
   version "19.0.0"

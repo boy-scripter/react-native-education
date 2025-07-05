@@ -8,9 +8,9 @@ interface ModalStructure {
   component: React.FC<any>;
 }
 
-const ModalContext = createContext<null | ReturnType<typeof useModalContextCreator>>(null);
+const ModalContext = createContext<null | ReturnType<typeof udseModalContextCreator>>(null);
 
-const useModalContextCreator = () => {
+const udseModalContextCreator = () => {
   const [modalList, setModalList] = useState<ModalStructure[]>([]);
 
   const getModalId = () => nanoid();
@@ -67,7 +67,7 @@ const ModalRenderer = ( {  index = 0 } : { index ?: number }) => {
 
 
  const ModalProvider = ({children}: {children: ReactNode}) => {
-  const {open, close, modalList } = useModalContextCreator();
+  const {open, close, modalList } = udseModalContextCreator();
 
   return (
     <ModalContext.Provider value={{open, close, modalList}}>

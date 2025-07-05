@@ -1,5 +1,5 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator  , TransitionPresets} from '@react-navigation/stack';
 import HomeScreen from '@screens/dashboard/home.screen';
 import QuizScreen from '@screens/dashboard/quiz.screen';
 import LeaderBoardScreen from '@screens/dashboard/leaderboard.screen';
@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 
 const DashboardStack: React.FC = () => {
   return (
-    <Stack.Navigator screenOptions={{headerShown : false}} initialRouteName="Home">
+    <Stack.Navigator  screenOptions={{headerShown: false, ...TransitionPresets.SlideFromRightIOS, gestureEnabled: true}} initialRouteName="Home">
       <Stack.Screen name="Home" component={HomeScreen} />
       {/* <Stack.Screen name="Quiz" component={QuizScreen} />
       <Stack.Screen name="QuizResult" component={QuizInstructionScreen} />

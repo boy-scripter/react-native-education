@@ -28,7 +28,7 @@ const TopImageLayout = ({image, title, description, children, containerClassName
         <Text className="font-interBold text-white text-3xl">{title}</Text>
         {description && <Text className="text-white font-inter text-sm">{description}</Text>}
       </ImageBackground>
-      <View className={twMerge('flex-1 bg-white  rounded-t-3xl overflow-hidden px-5  py-8', containerClassName)}>{children}</View>
+      <View className={twMerge('flex-1 bg-white  rounded-t-3xl overflow-hidden px-5 pt-8', containerClassName)}>{children}</View>
     </View>
   );
 };
