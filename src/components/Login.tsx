@@ -8,8 +8,9 @@ import {FormInput} from './ui/FormInput';
 import {selectRememberMe} from '@/store/auth/auth.selector';
 import {useLoginWithEmailMutation} from '@store/auth/endpoints';
 import {useAppDispatch, useRootState} from '@/store/store';
-import z from 'zod';
 import {setRememberMe} from '@/store/auth/auth.slice';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import z from 'zod';
 
 export const LoginSchema = z.object({
   email: z.string({required_error: 'Email is required'}).email({message: 'Invalid email address'}),
@@ -47,7 +48,7 @@ export default function Login() {
           </Text>
         </View>
 
-        <Button onPress={handleSubmit(handleOnLoginClick)} label="Login"></Button>
+        <Button icon='login' onPress={handleSubmit(handleOnLoginClick)} label="Login"></Button>
       </View>
     </>
   );

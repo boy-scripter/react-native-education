@@ -23,6 +23,8 @@
     "@rtk-query/graphql-request-base-query": "^2.3.1",
     "async-mutex": "^0.5.0",
     "graphql": "^16.11.0",
+    "lottie-ios": "^4.5.1",
+    "lottie-react-native": "^7.2.3",
     "moti": "^0.30.0",
     "nanoid": "^5.1.0",
     "nativewind": "^4.1.23",

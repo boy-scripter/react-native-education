@@ -3,7 +3,7 @@ import {Pressable, Text, PressableProps, View, GestureResponderEvent, StyleSheet
 import {twMerge} from 'tailwind-merge';
 import LinearGradient from 'react-native-linear-gradient';
 import Loader from '@components/ui/Loader';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type ButtonProps = {
   label?: string;
@@ -13,10 +13,11 @@ type ButtonProps = {
   className?: string;
   textClassName?: string;
   disabled?: boolean;
+  icon? : string; // Icon to be displayed on the button
+  iconPosition?: 'left' | 'right';
 } & PressableProps;
 
-
-const Button: React.FC<ButtonProps> = ({children, position = 'left', onPress, className, textClassName, disabled, label, ...props}) => {
+const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassName, disabled, label, position = 'right' , icon , iconPosition = 'left',...props}) => {
   const [isLoading, setIsLoading] = useState(false);
   const isDisabled = isLoading || disabled;
 
@@ -45,15 +46,35 @@ const Button: React.FC<ButtonProps> = ({children, position = 'left', onPress, cl
       {...props}>
       <LinearGradient colors={['rgba(255, 255, 255, 0.317)', 'transparent']} start={{x: 0.5, y: 0}} end={{x: 0.5, y: 0.5}} style={StyleSheet.absoluteFillObject} />
 
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
-          {position === 'left' && children && <View className="mr-2">{children}</View>}
-          {(!!label) && <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{label}</Text>}
-          {position === 'right' && children && <View className="ml-2">{children}</View>}
-        </>
-      )}
+        {/* Extra children (e.g. countdown, badge) */}
+        { position === 'left' && children && (
+          <View style={{display: !isLoading ? 'flex' : 'none'}} className="mx-2 flex-row items-center">{children}</View>
+        )}
+
+        {/* Icon */}
+        {!isLoading && icon && iconPosition === 'left' && (
+          <Icon size={20} color="#fff" name={icon} className="mr-2"></Icon>
+        )}
+
+        {/* Label or Loader */}
+        {isLoading ? (
+          <Loader />
+        ) : (
+          !!label && (
+            <Text className={twMerge('text-white font-interBold text-center', textClassName)}>
+              {label}
+            </Text>
+          )
+        )}
+
+        {!isLoading && icon && iconPosition === 'right' && (
+          <Icon size={20} color="#fff" name={icon} className="ml-2"></Icon>
+        )}
+
+        {/* Extra children (e.g. countdown, badge) */}
+        { position === 'right' && children && (
+          <View style={{display: !isLoading ? 'flex' : 'none'}} className="mx-2 flex-row items-center">{children}</View>
+        )}
     </Pressable>
   );
 };

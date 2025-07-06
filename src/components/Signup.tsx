@@ -5,7 +5,7 @@ import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {successToast} from './Toast/Toast.config';
 import {useSignupMutation} from '@store/auth/endpoints';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import z from 'zod';
 
 export const SignUpSchema = z.object({
@@ -32,7 +32,7 @@ export default function Signup() {
         <FormInput name="name" control={control} label="Name" placeholder="Enter Your Name"></FormInput>
         <FormInput name="email" control={control} label="Email" keyboardType="email-address" placeholder="john@example.com"></FormInput>
         <FormInput name="password" control={control} label="Password" placeholder="Enter Password" secret={true}></FormInput>
-        <Button onPress={handleSubmit(handleSignup)} label="Signup" className="w-full bg-theme mt-4"></Button>
+        <Button onPress={handleSubmit(handleSignup)} label="Signup" className="w-full bg-theme mt-4" icon="account-plus"></Button>
       </View>
     </>
   );

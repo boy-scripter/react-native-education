@@ -14,6 +14,7 @@ import {goWithGoogle} from '@/store/auth/auth.service';
 import {StepsAnimation} from '@/animation/StepsAnimation';
 import {ScrollView} from 'moti';
 
+
 export default function LoginAndSignUpScreen() {
   const [googleMutation] = useLoginWithGoogleMutation();
   const [tab, setTab] = useState('1');
@@ -33,7 +34,7 @@ export default function LoginAndSignUpScreen() {
 
   return (
     <ScrollView className='bg-white'>
-      <TopImageLayout image={'@assets/images/auth.png'} title="Get Started Now" description="Create an account or log in to explore about our app">
+      <TopImageLayout lottie={require('@assets/lottie/loginsignup.json')} >
         <Tab onChange={setTab} defaultTab="1">
           <Tab.Button label="Signup" id="1"></Tab.Button>
           <Tab.Button label="Login" id="2"></Tab.Button>

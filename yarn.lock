@@ -6823,10 +6823,15 @@ lighthouse-logger@^1.0.0:
     debug "^2.6.9"
     marky "^1.2.2"
 
-lightningcss-win32-x64-msvc@1.29.3:
+lightningcss-linux-x64-gnu@1.29.3:
   version "1.29.3"
-  resolved "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.29.3.tgz"
-  integrity sha512-IszwRPu2cPnDQsZpd7/EAr0x2W7jkaWqQ1SwCVIZ/tSbZVXPLt6k8s6FkcyBjViCzvB5CW0We0QbbP7zp2aBjQ==
+  resolved "https://registry.npmjs.org/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.29.3.tgz"
+  integrity sha512-ySZTNCpbfbK8rqpKJeJR2S0g/8UqqV3QnzcuWvpI60LWxnFN91nxpSSwCbzfOXkzKfar9j5eOuOplf+klKtINg==
+
+lightningcss-linux-x64-musl@1.29.3:
+  version "1.29.3"
+  resolved "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.29.3.tgz"
+  integrity sha512-3pVZhIzW09nzi10usAXfIGTTSTYQ141dk88vGFNCgawIzayiIzZQxEcxVtIkdvlEq2YuFsL9Wcj/h61JHHzuFQ==
 
 lightningcss@^1.27.0:
   version "1.29.3"
@@ -6950,6 +6955,16 @@ loose-envify@^1.0.0, loose-envify@^1.4.0:
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
+
+lottie-ios@^4.5.1:
+  version "4.5.1"
+  resolved "https://registry.npmjs.org/lottie-ios/-/lottie-ios-4.5.1.tgz"
+  integrity sha512-LmFJG5ip7ZTuoMttmV6NyAY6dR8sEyVYEJOqJytS+fRAjpvqsF0tM/1VFt3lV7Ck7XB043QHwVelLag7fOx/TA==
+
+lottie-react-native@^7.2.3:
+  version "7.2.3"
+  resolved "https://registry.npmjs.org/lottie-react-native/-/lottie-react-native-7.2.3.tgz"
+  integrity sha512-GCtJOyPrqhZI+uEjuyDI+m0mlzhPC+RSeLM1mzo9ooYFqpXXavY+kilPbnTgL8krQ3rqHW4Skq5zdPv9ueJjHQ==
 
 lower-case-first@^2.0.2:
   version "2.0.2"
