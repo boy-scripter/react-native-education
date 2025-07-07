@@ -1,5 +1,5 @@
 import React, {Component, createContext, ReactNode, useCallback, useContext, useState} from 'react';
-import UIModalComponent from './Modal'
+import {UIModalComponent} from './index'
 import { nanoid } from 'nanoid'
 
 interface ModalStructure {

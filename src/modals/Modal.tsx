@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Text } from 'react-native'; // or 'react-native-web' if applicable
+import {Modal, Text} from 'react-native'; // or 'react-native-web' if applicable
 
 export type ModalComponentProps = {
   title?: string;
@@ -8,20 +8,13 @@ export type ModalComponentProps = {
   component: React.ComponentType;
 };
 
-const UIModalComponent = ({ visible, title, onClose ,component: Component }: ModalComponentProps) => {
+ export const UIModalComponent = React.memo(({visible, title, onClose, component: Component}: ModalComponentProps) => {
   return (
     <Modal animationType="slide" onRequestClose={onClose} visible={visible} transparent>
       <>
-        {title && (
-          <Text className="text-black text-2xl text-center">
-            {title}
-          </Text>
-        )}
+        {title && <Text className="text-black text-2xl text-center">{title}</Text>}
         <Component />
       </>
     </Modal>
   );
-};
-
-export default React.memo(UIModalComponent);
-
+});

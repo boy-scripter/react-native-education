@@ -23,7 +23,7 @@ const Input = ({placeholder, label, className, style, secret, onChange, ...props
       {label && <Text className="py-1 px-1 mb-1 text-theme">{label}</Text>}
       <View>
         <TextInput
-          className={twMerge('border border-greyish-100 p-3 placeholder:text-greyish-100 focus:border-theme', className)}
+          className={twMerge('border-2 border-greyish-100 p-3 placeholder:text-greyish-100 bg-white rounded-xl shadow-sm focus:border-theme', className)}
           style={[{borderRadius: 5}, style]}
           placeholder={placeholder || ''}
           onChangeText={onChange}

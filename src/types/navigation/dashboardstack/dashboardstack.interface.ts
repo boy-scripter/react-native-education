@@ -7,6 +7,7 @@ export type DashboardStackParamList = {
   PdfView: { url: string };
   Result: undefined;
   Leaderboard: { topicId: string };
+  EditProfile: undefined ;
 };
 
 export type DashboardStackNavigation = NavigatorScreenParams<DashboardStackParamList>;

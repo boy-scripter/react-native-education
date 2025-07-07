@@ -28,28 +28,9 @@ export const CustomToast = ({text1, type}: ToastProps) => {
   const iconName = icons[type] || icons.info;
 
   return (
-    <View className="mx-4">
- <BlurView
-          blurType="light"
-          blurAmount={10}
-          className='w-full h-10'
-          style={{
-            borderRadius: 16,
-            paddingHorizontal: 16,
-            paddingVertical: 12,
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderColor: iconColor,
-            borderWidth: 1,
-            shadowColor: '#000',
-            shadowOpacity: 0.1,
-            shadowRadius: 10,
-            overflow: 'hidden',
-          }}
-        >
-          <MaterialCommunityIcons name={iconName} size={22} color={iconColor} style={{ marginRight: 12 }} />
-          <Text style={{ fontSize: 14, fontWeight: '500', flex: 1 }}>{text1}</Text>
-        </BlurView>
+    <View style={{borderColor: iconColor}} className="flex-row gap-3 items-center rounded-xl bg-white px-4 py-3 mx-4 shadow-lg border-2 border-gray-100 space-x-3">
+      <MaterialCommunityIcons name={iconName} size={20} color={iconColor} />
+      <Text className="text-sm font-medium flex-1"> {text1} </Text>
     </View>
   );
 };

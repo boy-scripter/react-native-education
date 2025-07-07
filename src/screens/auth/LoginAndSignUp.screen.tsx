@@ -50,7 +50,7 @@ export default function LoginAndSignUpScreen() {
                 <Text className="mx-3 text-sm text-theme">Or</Text>
                 <View className="flex-1 h-px bg-greyish" />
               </View>
-              <Button onPress={handleGoogleLogin} label="Continue with Google" className="w-full border-greyish bg-white py-4" textClassName="text-sm text-theme">
+              <Button position='left' onPress={handleGoogleLogin} label="Continue with Google" className="w-full border-greyish bg-white py-4" textClassName="text-sm text-theme">
                 <Image className="w-5 h-5" source={require('@assets/images/google.png')} />
               </Button>
             </View>
@@ -63,7 +63,7 @@ export default function LoginAndSignUpScreen() {
                 <Text className="mx-3 text-sm text-theme">Or</Text>
                 <View className="flex-1 h-px bg-greyish" />
               </View>
-              <Button onPress={handleGoogleLogin} label="Continue with Google" className="w-full border-greyish bg-white py-4" textClassName="text-sm text-theme">
+              <Button position='left' onPress={handleGoogleLogin} label="Continue with Google" className="w-full border-greyish bg-white py-4" textClassName="text-sm text-theme">
                 <Image className="w-5 h-5" source={require('@assets/images/google.png')} />
               </Button>
             </View>

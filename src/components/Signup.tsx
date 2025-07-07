@@ -5,7 +5,6 @@ import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {successToast} from './Toast/Toast.config';
 import {useSignupMutation} from '@store/auth/endpoints';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import z from 'zod';
 
 export const SignUpSchema = z.object({

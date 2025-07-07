@@ -43,7 +43,9 @@ export default function HomeScreen() {
           <Text className="font-interBold text-xl">Hi, {user.name}</Text>
           <Text>Let's Make this Day Productive</Text>
         </View>
-        <Img className="h-16 w-16 rounded-full" source={user.avatar!} />
+        <View>
+          <Img onPress={() => navigate('DashboardStack', {screen: 'EditProfile'})} className="w-16 h-16 rounded-full" source={user.avatar!} />
+        </View>
       </View>
 
       <View style={{elevation: 14}} className="mt-5 w-full px-4 mx-auto flex flex-row p-8 bg-white shadow-white overflow-hidden rounded-xl justify-evenly ">

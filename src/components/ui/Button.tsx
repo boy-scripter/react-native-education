@@ -15,9 +15,10 @@ type ButtonProps = {
   disabled?: boolean;
   icon? : string; // Icon to be displayed on the button
   iconPosition?: 'left' | 'right';
+  iconColor?: string; 
 } & PressableProps;
 
-const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassName, disabled, label, position = 'right' , icon , iconPosition = 'left',...props}) => {
+const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassName, disabled, label, iconColor = '#fff', position = 'right' , icon , iconPosition = 'left',...props}) => {
   const [isLoading, setIsLoading] = useState(false);
   const isDisabled = isLoading || disabled;
 
@@ -41,7 +42,7 @@ const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassN
     <Pressable
       onPress={handlePress}
       disabled={isDisabled}
-      className={twMerge('bg-theme border-theme overflow-hidden p-2 py-3 rounded-lg flex-row items-center justify-center', isDisabled && 'opacity-50', className)}
+      className={twMerge('bg-theme border-theme overflow-hidden p-2 py-3 rounded-lg flex-row gap-2 items-center justify-center', isDisabled && 'opacity-50', className)}
       style={{borderWidth: 1}}
       {...props}>
       <LinearGradient colors={['rgba(255, 255, 255, 0.317)', 'transparent']} start={{x: 0.5, y: 0}} end={{x: 0.5, y: 0.5}} style={StyleSheet.absoluteFillObject} />
@@ -53,7 +54,7 @@ const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassN
 
         {/* Icon */}
         {!isLoading && icon && iconPosition === 'left' && (
-          <Icon size={20} color="#fff" name={icon} className="mr-2"></Icon>
+          <Icon size={20} color={iconColor} name={icon} ></Icon>
         )}
 
         {/* Label or Loader */}
@@ -68,7 +69,7 @@ const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassN
         )}
 
         {!isLoading && icon && iconPosition === 'right' && (
-          <Icon size={20} color="#fff" name={icon} className="ml-2"></Icon>
+          <Icon size={20} color="#fff" name={icon} ></Icon>
         )}
 
         {/* Extra children (e.g. countdown, badge) */}
