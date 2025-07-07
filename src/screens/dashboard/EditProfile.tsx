@@ -7,8 +7,7 @@ import colorConstant from '@/constant/color.constant';
 import {selectUser} from '@/store/auth/auth.selector';
 import {useRootState} from '@/store/store';
 import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {View,} from 'react-native';
 import z from 'zod';
 
 const profileSchema = z.object({
@@ -26,7 +25,7 @@ const EditProfileScreen = () => {
   const [birthday, setBirthday] = useState('');
 
   return (
-    <TopImageLayout title="Edit Your Profile" description="Update your personal information below" lottie={require('@assets/lottie/profile.json')}>
+    <TopImageLayout title="Edit Your Profile" description="Update your personal information below" lottie={require('@assets/lottie/forgot.json')}>
       <View className="items-center my-4">
         <View className="relative"></View>
         <Img source={user?.avatar!} className="w-36 h-36 rounded-full border-2 border-theme" />

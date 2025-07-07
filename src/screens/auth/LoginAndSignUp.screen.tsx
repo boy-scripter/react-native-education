@@ -34,8 +34,8 @@ export default function LoginAndSignUpScreen() {
 
   return (
     <ScrollView className='bg-white'>
-      <TopImageLayout lottie={require('@assets/lottie/loginsignup.json')} >
-        <Tab onChange={setTab} defaultTab="1">
+      <TopImageLayout  lottie={require('@assets/lottie/loginsignup.json')} >
+        <Tab onChange={setTab} className='mt-4' defaultTab="1">
           <Tab.Button label="Signup" id="1"></Tab.Button>
           <Tab.Button label="Login" id="2"></Tab.Button>
         </Tab>

@@ -34,7 +34,7 @@ const TopImageLayout = ({image, lottie, title, description, children, containerC
         </View>
       )}
 
-      {title && <Text className="font-interBold px-5 text-white text-2xl py-1 z-10">{title}</Text>}
+      {title && <Text className="font-interBold px-5 text-white text-2xl py-2 z-10">{title}</Text>}
 
       {image && <ImageBackground source={{uri: image}} className="h-48 justify-end py-5 px-5" resizeMode="cover"></ImageBackground>}
 

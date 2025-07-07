@@ -13,7 +13,8 @@ export type InputProps = {
   value?: string;
   onChange?: (text: string) => any;
   secret?: boolean;
-} & Pick<TextInputProps, 'keyboardType'>;
+  
+} & Pick<TextInputProps, 'keyboardType' | 'editable' | 'pointerEvents'>;
 
 const Input = ({placeholder, label, className, style, secret, onChange, ...props}: InputProps) => {
   const [hidden, setHidden] = useState(false);

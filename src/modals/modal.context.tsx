@@ -1,5 +1,5 @@
 import React, {Component, createContext, ReactNode, useCallback, useContext, useState} from 'react';
-import {UIModalComponent} from './index'
+import {UIModalComponent} from './Modal'
 import { nanoid } from 'nanoid'
 
 interface ModalStructure {
@@ -8,9 +8,9 @@ interface ModalStructure {
   component: React.FC<any>;
 }
 
-const ModalContext = createContext<null | ReturnType<typeof udseModalContextCreator>>(null);
+const ModalContext = createContext<null | ReturnType<typeof useModalContextCreator>>(null);
 
-const udseModalContextCreator = () => {
+const useModalContextCreator = () => {
   const [modalList, setModalList] = useState<ModalStructure[]>([]);
 
   const getModalId = () => nanoid();
@@ -45,6 +45,8 @@ const udseModalContextCreator = () => {
   return {close, open, modalList };
 };
 
+
+
 const ModalRenderer = ( {  index = 0 } : { index ?: number }) => {
   const { modalList , close  } = useModal()
   if (index >= modalList.length) return null;
@@ -66,8 +68,9 @@ const ModalRenderer = ( {  index = 0 } : { index ?: number }) => {
 }
 
 
- const ModalProvider = ({children}: {children: ReactNode}) => {
-  const {open, close, modalList } = udseModalContextCreator();
+
+const ModalProvider = ({children}: {children: ReactNode}) => {
+  const {open, close, modalList } = useModalContextCreator();
 
   return (
     <ModalContext.Provider value={{open, close, modalList}}>

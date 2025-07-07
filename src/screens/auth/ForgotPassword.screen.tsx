@@ -93,12 +93,12 @@ const ForgotPasswordScreen = () => {
   };
 
   return ( 
-    <TopImageLayout lottie={require('@assets/lottie/forgot.json')} title="Forgot Password" description="Reset your password to regain access to your account">
-      <StepsAnimation step={step}>
+    <TopImageLayout lottie={require('@assets/lottie/forgot.json')} >
+      <StepsAnimation className='mt-4' step={step}>
         {
           <>
-            <Text className="text-2xl font-bold mb-5">Enter Email</Text>
-            <Text className="text-base mb-5 text-greyish-100">Enter your email address below to receive a password reset link.</Text>
+            <Text className="text-2xl font-bold mb-2">Enter Email</Text>
+            <Text className="text-base mb-5 text-greyish-100">Enter your email address below to receive a password OTP.</Text>
             <FormInput control={step1Control} className="h-12 px-3 mb-2" placeholder="Email Address" keyboardType="email-address" name="email" />
             <Button icon="email-outline" label="Reset Password" onPress={handleStep1Submit(onRequestReset)} className="mt-4"></Button>
           </>
