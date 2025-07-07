@@ -39,7 +39,7 @@ export default function Login() {
   return (
     <>
       <View className="gap-4">
-        <FormInput name="email" control={control} label="Email" keyboardType="email-address" placeholder="john@example.com"></FormInput>
+        <FormInput  name="email" control={control} label="Email" keyboardType="email-address" placeholder="john@example.com"></FormInput>
         <FormInput name="password" control={control} label="Password" secret={true} placeholder="Enter Password"></FormInput>
         <View className="flex flex-row my-2 justify-between items-center">
           <CheckBox value={rememberMe} onChecked={() => dispatch(setRememberMe(!rememberMe))} label="Remember Me"></CheckBox>

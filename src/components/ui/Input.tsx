@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import colorConstant from '@constant/color.constant';
 
 export type InputProps = {
+  icon?: string;
   label?: string;
   name?: string;
   className?: string;
@@ -13,18 +14,21 @@ export type InputProps = {
   value?: string;
   onChange?: (text: string) => any;
   secret?: boolean;
-  
 } & Pick<TextInputProps, 'keyboardType' | 'editable' | 'pointerEvents'>;
 
-const Input = ({placeholder, label, className, style, secret, onChange, ...props}: InputProps) => {
+const Input = ({placeholder, label, className, style, secret, onChange, icon, ...props}: InputProps) => {
   const [hidden, setHidden] = useState(false);
 
   return (
     <View>
       {label && <Text className="py-1 px-1 mb-1 text-theme">{label}</Text>}
-      <View>
+      <View className="flex-row  ">
+        <View className="border-[1.5px] border-greyish-100 border-r-0 rounded-r-none px-2 items-center justify-center">
+          <Icon name="check" className="" size={24} color={colorConstant.greyish[100]} />
+        </View>
+
         <TextInput
-          className={twMerge('border-2 border-greyish-100 p-3 placeholder:text-greyish-100 bg-white rounded-xl shadow-sm focus:border-theme', className)}
+          className={twMerge('border-[1.5px] border-greyish-100 border-l-0 rounded-l-none p-3 flex-1 placeholder:text-greyish-100 bg-white  shadow-sm focus:border-theme', className)}
           style={[{borderRadius: 5}, style]}
           placeholder={placeholder || ''}
           onChangeText={onChange}
