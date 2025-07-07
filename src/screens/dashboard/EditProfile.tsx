@@ -1,13 +1,13 @@
 import TopImageLayout from '@/components/layouts/TopImage.Layout';
 import Button from '@/components/ui/Button';
-import {FormInput} from '@/components/ui/FormInput';
+import { DatePickerInput } from '@/components/ui/DatePicker';
 import Img from '@/components/ui/Img';
 import Input from '@/components/ui/Input';
 import colorConstant from '@/constant/color.constant';
 import {selectUser} from '@/store/auth/auth.selector';
 import {useRootState} from '@/store/store';
 import React, {useState} from 'react';
-import {View,} from 'react-native';
+import {ScrollView, View,} from 'react-native';
 import z from 'zod';
 
 const profileSchema = z.object({
@@ -25,7 +25,8 @@ const EditProfileScreen = () => {
   const [birthday, setBirthday] = useState('');
 
   return (
-    <TopImageLayout title="Edit Your Profile" description="Update your personal information below" lottie={require('@assets/lottie/forgot.json')}>
+    <ScrollView>
+    <TopImageLayout title="Edit Your Profile" description="Update your personal information below" lottie={require('@assets/lottie/profile.json')}>
       <View className="items-center my-4">
         <View className="relative"></View>
         <Img source={user?.avatar!} className="w-36 h-36 rounded-full border-2 border-theme" />
@@ -56,11 +57,12 @@ const EditProfileScreen = () => {
           />
         </View>
 
-        <Input placeholder="Your Birthday (YYYY-MM-DD)" value={birthday} />
+        <DatePickerInput onChange={setBirthday}></DatePickerInput>
 
         <Button label="Save" className="mt-auto mb-2" icon="content-save" />
       </View>
     </TopImageLayout>
+    </ScrollView>
   );
 };
 

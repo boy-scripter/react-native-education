@@ -1,6 +1,6 @@
 import React, {Component, createContext, ReactNode, useCallback, useContext, useState} from 'react';
 import {UIModalComponent} from './Modal'
-import { nanoid } from 'nanoid'
+import { nanoid } from 'nanoid/non-secure'
 
 interface ModalStructure {
   id: string;
@@ -22,7 +22,7 @@ const useModalContextCreator = () => {
   const open = useCallback((component: React.FC<any> , title? : string) => {
     const modalId = getModalId();
 
-    if (!isModalExist(modalId)) {
+    if (!modalList.some(modalsConfig => modalsConfig.id === modalId)) {
       setModalList(state =>
         state.concat({
           id: modalId,
@@ -32,15 +32,15 @@ const useModalContextCreator = () => {
       );
     }
     return modalId
-  }, []);
+  }, [modalList]);
 
   const close = useCallback((id: string ) => {
-    const modalId = id ;
+    const modalId = id 
 
-    if (isModalExist(modalId)) {
+    if (isModalExist(modalId))     {
       setModalList(state => state.filter(modal => modal.id !== modalId));
     }
-  }, []);
+  }, [modalList]);
 
   return {close, open, modalList };
 };
@@ -49,13 +49,14 @@ const useModalContextCreator = () => {
 
 const ModalRenderer = ( {  index = 0 } : { index ?: number }) => {
   const { modalList , close  } = useModal()
+
   if (index >= modalList.length) return null;
   const { component : Component , title,id } = modalList[index];
 
   function NestedModalComponent() {
       return (
       <>
-         <Component ></Component>
+         <Component></Component>
          <ModalRenderer index={index + 1}/>
       </>
       )

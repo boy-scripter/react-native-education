@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import {Pressable} from 'react-native';
 import {DateTime} from 'luxon';
-import {useModal} from '@/modals';
 import Input from './Input';
 import DatePicker from 'react-native-date-picker';
+import {useModal} from '@/modals/modal.context';
+import Button from './Button';
 
 interface Props {
   value?: string; // ISO or formatted string
@@ -13,7 +14,7 @@ interface Props {
   className?: string;
 }
 
-export function DatePickerInput({value, onChange, placeholder = 'Select Date', className = ''}: Props) {
+export function DatePickerInput({value, label, onChange, placeholder = 'Select Date', className = ''}: Props) {
   const {open, close} = useModal();
 
   // Parse the incoming value to a DateTime
@@ -24,21 +25,33 @@ export function DatePickerInput({value, onChange, placeholder = 'Select Date', c
 
     const modalId = open(
       () => (
-        <DatePicker
-          date={tempDate}
-          mode="date"
-          onDateChange={newDate => {
-            tempDate = newDate;
-          }}
-          onConfirm={() => {
-            const formatted = DateTime.fromJSDate(tempDate!).toISODate();
-            onChange(formatted!);
-            close(modalId);
-          }}
-          onCancel={() => close(modalId)}
-        />
+        <>
+          <DatePicker
+            date={tempDate}
+            mode="date"
+            onDateChange={newDate => {
+              tempDate = newDate;
+            }}
+            onConfirm={() => {
+              const formatted = DateTime.fromJSDate(tempDate!).toISODate();
+              onChange(formatted!);
+              close(modalId);
+            }}
+            onCancel={() => close(modalId)}
+          />
+          <Button
+            label="Confirm"
+            icon="check"
+            onPress={() => {
+              const formatted = DateTime.fromJSDate(tempDate!).toISODate();
+              onChange(formatted!);
+              close(modalId);
+            }}
+            className="mt-4"
+          />
+        </>
       ),
-      'Select Date',
+      label || 'Select Date ',
     );
   };
 

@@ -13,7 +13,7 @@ export function RootStackNavigator() {
 
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName={isLoggedIn ? 'DashboardStack' : 'AuthStack'}>
+      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName={!isLoggedIn ? 'DashboardStack' : 'AuthStack'}>
         <Stack.Screen name="AuthStack" component={AuthStack} />
         <Stack.Screen name="DashboardStack" component={DashboardStack} />
       </Stack.Navigator>

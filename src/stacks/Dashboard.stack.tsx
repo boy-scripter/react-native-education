@@ -12,7 +12,7 @@ const Stack = createNativeStackNavigator();
 
 const DashboardStack: React.FC = () => {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false, animation: 'slide_from_right', gestureEnabled: true}} initialRouteName="Home">
+    <Stack.Navigator screenOptions={{headerShown: false, animation: 'slide_from_right', gestureEnabled: true}} initialRouteName="EditProfile">
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       {/* <Stack.Screen name="Quiz" component={QuizScreen} />
