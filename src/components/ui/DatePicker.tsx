@@ -1,20 +1,20 @@
 import React, {useState} from 'react';
 import {Pressable} from 'react-native';
 import {DateTime} from 'luxon';
-import Input from './Input';
+import Input, {InputProps} from './Input';
 import DatePicker from 'react-native-date-picker';
 import {useModal} from '@/modals/modal.context';
 import Button from './Button';
 
-interface Props {
+type DatePickerInputProps = {
   value?: string; // ISO or formatted string
   onChange: (date: string) => void;
   placeholder?: string;
   label?: string;
   className?: string;
-}
+} & InputProps;
 
-export function DatePickerInput({value, label, onChange, placeholder = 'Select Date', className = ''}: Props) {
+export function DatePickerInput({value, label, onChange, placeholder = 'Select Date', className = '', ...props}: DatePickerInputProps) {
   const {open, close} = useModal();
 
   // Parse the incoming value to a DateTime
@@ -60,7 +60,7 @@ export function DatePickerInput({value, label, onChange, placeholder = 'Select D
 
   return (
     <Pressable onPress={handleOpen} className={className}>
-      <Input placeholder={placeholder} value={displayValue} editable={false} pointerEvents="none" />
+      <Input icon='calendar-range' {...props} placeholder={placeholder} value={displayValue} editable={false} pointerEvents="none" />
     </Pressable>
   );
 }

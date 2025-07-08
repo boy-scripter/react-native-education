@@ -22,13 +22,15 @@ const Input = ({placeholder, label, className, style, secret, onChange, icon, ..
   return (
     <View>
       {label && <Text className="py-1 px-1 mb-1 text-theme">{label}</Text>}
-      <View className="flex-row  ">
-        <View className="border-[1.5px] border-greyish-100 border-r-0 rounded-r-none px-2 items-center justify-center">
-          <Icon name="check" className="" size={24} color={colorConstant.greyish[100]} />
-        </View>
+      <View className="flex-row group ">
+        {icon && (
+          <View className="bg-greyish-100/20 border-[1.5px] border-greyish-100 border-r-0 px-2.5 items-center justify-center rounded-l-lg group-focus:border-theme">
+            <Icon name={icon} className="" size={27} color={colorConstant.theme.DEFAULT} />
+          </View>
+        )}
 
         <TextInput
-          className={twMerge('border-[1.5px] border-greyish-100 border-l-0 rounded-l-none p-3 flex-1 placeholder:text-greyish-100 bg-white  shadow-sm focus:border-theme', className)}
+          className={twMerge('border-[1.5px] border-greyish-100 border-l-0 rounded-2xl rounded-l-none  p-3 flex-1 placeholder:text-greyish-100 bg-white shadow-sm group-focus:border-theme', className)}
           style={[{borderRadius: 5}, style]}
           placeholder={placeholder || ''}
           onChangeText={onChange}
@@ -37,7 +39,7 @@ const Input = ({placeholder, label, className, style, secret, onChange, icon, ..
           {...props}
         />
         {secret && (
-          <Pressable onPress={() => setHidden(prev => !prev)} className="absolute right-3 top-0  bottom-0 justify-center">
+          <Pressable onPress={() => setHidden(prev => !prev)} className="absolute right-3 top-0 bottom-0 justify-center">
             <Icon name={hidden ? 'eye' : 'eye-off'} size={24} color={colorConstant.greyish[100]} />
           </Pressable>
         )}

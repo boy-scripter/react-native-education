@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LottieView from 'lottie-react-native';
 import colorConstant from '@constant/color.constant';
 import {goBack, canGoBack} from '@hooks/useNavigation.hook';
-import {logout} from '@/store/auth/auth.slice';
 
 interface TopImageLayoutProps {
   image?: string; // For image background

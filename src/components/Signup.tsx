@@ -28,10 +28,10 @@ export default function Signup() {
   return (
     <>
       <View className="gap-2">
-        <FormInput name="name" control={control} label="Name" placeholder="Enter Your Name"></FormInput>
-        <FormInput name="email" control={control} label="Email" keyboardType="email-address" placeholder="john@example.com"></FormInput>
-        <FormInput name="password" control={control} label="Password" placeholder="Enter Password" secret={true}></FormInput>
-        <Button onPress={handleSubmit(handleSignup)} label="Signup" className="w-full bg-theme mt-4" icon="account-plus"></Button>
+        <FormInput name="name" control={control} label="Name" placeholder="Enter Your Name" icon="account" />
+        <FormInput name="email" control={control} label="Email" keyboardType="email-address" placeholder="john@example.com" icon="email" />
+        <FormInput name="password" control={control} label="Password" placeholder="Enter Password" secret={true} icon="lock" />
+        <Button onPress={handleSubmit(handleSignup)} label="Signup" className="w-full bg-theme mt-4" icon="account-plus" />
       </View>
     </>
   );

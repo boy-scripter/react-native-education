@@ -4,6 +4,7 @@ import {Controller, Control, FieldValues, Path} from 'react-hook-form';
 import Input, {InputProps} from './Input';
 
 type FormInputProps<T extends FieldValues> = {
+  
   control: Control<T>;
   name: Path<T>;
   errorMessage?: string;
