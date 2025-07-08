@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Pressable} from 'react-native';
+import {Pressable, Text, View} from 'react-native';
 import {DateTime} from 'luxon';
 import Input, {InputProps} from './Input';
 import DatePicker from 'react-native-date-picker';
@@ -25,7 +25,7 @@ export function DatePickerInput({value, label, onChange, placeholder = 'Select D
 
     const modalId = open(
       () => (
-        <>
+        <View className='flex justify-center'>
           <DatePicker
             date={tempDate}
             mode="date"
@@ -49,7 +49,7 @@ export function DatePickerInput({value, label, onChange, placeholder = 'Select D
             }}
             className="mt-4"
           />
-        </>
+        </View>
       ),
       label || 'Select Date ',
     );
@@ -60,7 +60,9 @@ export function DatePickerInput({value, label, onChange, placeholder = 'Select D
 
   return (
     <Pressable onPress={handleOpen} className={className}>
-      <Input icon='calendar-range' {...props} placeholder={placeholder} value={displayValue} editable={false} pointerEvents="none" />
+      <View pointerEvents="none">
+        <Input icon="calendar-range" {...props} editable={false} placeholder={placeholder} value={displayValue} />
+      </View>
     </Pressable>
   );
 }

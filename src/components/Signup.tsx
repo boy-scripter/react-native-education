@@ -1,6 +1,6 @@
 import Button from '@components/ui/Button';
 import {View} from 'react-native';
-import {FormInput} from './ui/FormInput';
+import {FormInput} from '@components/ui/Forms/FormInput';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {successToast} from './Toast/Toast.config';

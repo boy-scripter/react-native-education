@@ -1,6 +1,6 @@
 import TopImageLayout from '@/components/layouts/TopImage.Layout';
 import Button from '@/components/ui/Button';
-import {DatePickerInput} from '@/components/ui/DatePicker';
+import {DatePickerInput} from '@/components/ui/DatePickerInput';
 import Img from '@/components/ui/Img';
 import Input from '@/components/ui/Input';
 import colorConstant from '@/constant/color.constant';
@@ -58,7 +58,7 @@ const EditProfileScreen = () => {
             />
           </View>
 
-          <DatePickerInput onChange={setBirthday}></DatePickerInput>
+          <DatePickerInput value={birthday} onChange={setBirthday}></DatePickerInput>
 
           <Button label="Save" className="mt-auto mb-2" icon="content-save" />
         </View>

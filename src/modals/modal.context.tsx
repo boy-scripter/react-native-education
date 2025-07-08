@@ -16,6 +16,7 @@ const useModalContextCreator = () => {
   const getModalId = () => nanoid();
 
   function isModalExist(id: string) {
+    console.log("Checking if modal exists with id:", id);         
     return modalList.some(modalsConfig => modalsConfig.id === id);
   }
 
@@ -36,19 +37,21 @@ const useModalContextCreator = () => {
 
   const close = useCallback((id: string ) => {
     const modalId = id 
-
+console.log(id)
     if (isModalExist(modalId))     {
       setModalList(state => state.filter(modal => modal.id !== modalId));
     }
   }, [modalList]);
 
-  return {close, open, modalList };
+
+
+  return {close, open,isModalExist ,modalList };
 };
 
 
 
 const ModalRenderer = ( {  index = 0 } : { index ?: number }) => {
-  const { modalList , close  } = useModal()
+  const { modalList , close ,isModalExist } = useModal()
 
   if (index >= modalList.length) return null;
   const { component : Component , title,id } = modalList[index];
@@ -71,10 +74,10 @@ const ModalRenderer = ( {  index = 0 } : { index ?: number }) => {
 
 
 const ModalProvider = ({children}: {children: ReactNode}) => {
-  const {open, close, modalList } = useModalContextCreator();
+  const {open, close, modalList ,isModalExist} = useModalContextCreator();
 
   return (
-    <ModalContext.Provider value={{open, close, modalList}}>
+    <ModalContext.Provider value={{open, close, modalList ,isModalExist}}>
       {children}
       <ModalRenderer></ModalRenderer>
     </ModalContext.Provider>

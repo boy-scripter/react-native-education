@@ -5,7 +5,7 @@ import Button from '@components/ui/Button';
 import SplitInput from '@components/ui/SplitInput';
 import React, {useState, useRef} from 'react';
 import {Text, View} from 'react-native';
-import {FormInput} from '@/components/ui/FormInput';
+import {FormInput} from '@/components/ui/Forms/FormInput';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {errorToast, successToast} from '@/components/Toast/Toast.config';
