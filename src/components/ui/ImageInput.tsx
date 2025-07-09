@@ -10,7 +10,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 type ImageInputProps = Pick<InputProps, 'onChange' | 'value' | 'className' | 'icon'> &
   Pick<ImgProps, 'fallbackUri'> &
   Pick<ButtonProps, 'textClassName' | 'label'> & {
-    buttonClassName: string;
+    buttonClassName?: string;
   };
 
 const ImageInput: React.FC<ImageInputProps> = ({value, label, className, buttonClassName, textClassName, onChange, fallbackUri, icon}) => {

@@ -2,10 +2,8 @@ import TopImageLayout from '@/components/layouts/TopImage.Layout';
 import Button from '@/components/ui/Button';
 import {DatePickerInput} from '@/components/ui/DatePickerInput';
 import ImageInput from '@/components/ui/ImageInput';
-import Img from '@/components/ui/Img';
 import Input from '@/components/ui/Input';
 import {RadioInput} from '@/components/ui/RadioInput';
-import colorConstant from '@/constant/color.constant';
 import {selectUser} from '@/store/auth/auth.selector';
 import {useRootState} from '@/store/store';
 import React, {useState} from 'react';
@@ -27,9 +25,9 @@ const EditProfileScreen = () => {
   const [birthday, setBirthday] = useState('');
 
   return (
-    <ScrollView>
-      <TopImageLayout title="Edit Your Profile" description="Update your personal information below" lottie={require('@assets/lottie/profile.json')}>
-        <ImageInput source={user?.avatar!}></ImageInput>
+    <TopImageLayout title="Edit Your Profile" description="Update your personal information below" lottie={require('@assets/lottie/profile.json')}>
+      <ScrollView>
+        <ImageInput value={user?.avatar!}></ImageInput>
 
         <View className="flex-1 gap-6 pt-4 pb-2">
           <Input icon="account" placeholder="Your Nickname" value={nickname} />
@@ -48,8 +46,8 @@ const EditProfileScreen = () => {
 
           <Button label="Save" className="mt-auto mb-2" icon="content-save" />
         </View>
-      </TopImageLayout>
-    </ScrollView>
+      </ScrollView>
+    </TopImageLayout>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Pressable, Text, View} from 'react-native';
 import {DateTime} from 'luxon';
 import Input, {InputProps} from './Input';
@@ -16,39 +16,33 @@ type DatePickerInputProps = {
 
 export function DatePickerInput({value, label, onChange, placeholder = 'Select Date', className = '', ...props}: DatePickerInputProps) {
   const {open, close} = useModal();
-
+  let modalId = useRef<string>('');
   // Parse the incoming value to a DateTime
   const initialDate = value ? (DateTime.fromISO(value).isValid ? DateTime.fromISO(value).toJSDate() : new Date()) : new Date();
+
+  const confirm = (date : any = '17-18-2002') => {
+    const formatted = DateTime.fromJSDate(date).toISODate();
+    onChange(formatted!);
+    close(modalId.current);
+  };
 
   const handleOpen = () => {
     let tempDate = initialDate;
 
-    const modalId = open(
+    modalId.current = open(
       () => (
-        <View className='flex justify-center'>
+        <View className="flex items-center">
           <DatePicker
             date={tempDate}
             mode="date"
-            onDateChange={newDate => {
-              tempDate = newDate;
-            }}
+            theme="auto"
+            onDateChange={newDate => (tempDate = newDate)}
             onConfirm={() => {
               const formatted = DateTime.fromJSDate(tempDate!).toISODate();
               onChange(formatted!);
-              close(modalId);
             }}
-            onCancel={() => close(modalId)}
           />
-          <Button
-            label="Confirm"
-            icon="check"
-            onPress={() => {
-              const formatted = DateTime.fromJSDate(tempDate!).toISODate();
-              onChange(formatted!);
-              close(modalId);
-            }}
-            className="mt-4"
-          />
+          <Button label="Confirm" icon="check" onPress={confirm} className="mt-4 w-full" />
         </View>
       ),
       label || 'Select Date ',
@@ -61,7 +55,7 @@ export function DatePickerInput({value, label, onChange, placeholder = 'Select D
   return (
     <Pressable onPress={handleOpen} className={className}>
       <View pointerEvents="none">
-        <Input icon="calendar-range" {...props} editable={false} placeholder={placeholder} value={displayValue} />
+        <Input icon="calendar-range" editable={false} placeholder={placeholder} value={displayValue} {...props} />
       </View>
     </Pressable>
   );
