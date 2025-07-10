@@ -1,34 +1,58 @@
-import {Pressable, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
+import {InputProps} from './Input';
+import {twMerge} from 'tailwind-merge';
+import Button from './Button';
+import React from 'react';
 
 type RadioInputProps = {
-  options: any[];
+  options: Options[];
+  value?: string;
+  onChange?: (val: string) => void;
+  renderItem?: (item: Options, selected: boolean) => React.FC<{ 
+    onPress: () => void; 
+    className?: string
+  }>;
+  className?: string;
+  itemClassName?: string;
+  activeClassName?: string;
+} & InputProps;
+
+interface Options {
   value: string;
-  onChange: (val: string) => void;
-  renderItem?: (item: any, selected: boolean, onPress: () => void) => React.ReactNode;
-};
+  label?: string;
+  icon?: string;
+}
 
-const RadioInput = ({options, value, onChange, renderItem}: RadioInputProps) => {
+export const RadioInput = ({options, value, onChange, renderItem, label, className, itemClassName, activeClassName = 'bg-theme'}: RadioInputProps) => {
   return (
-    <View className="flex-row justify-between">
-      {options.map((item, index) => {
-        const isSelected = item.value === value;
-        const onPress = () => onChange(item.value);
+    <View className="w-full">
+      {label && <Text className="text-theme  font-semibold text-lg mb-2">{label}</Text>}
 
-        if (renderItem) {
-          return (
-            <View key={item.value} className={index === 0 ? 'mr-2' : 'ml-2'}>
-              {renderItem(item, isSelected, onPress)}
-            </View>
-          );
-        }
+      <View className={twMerge('flex-row w-full gap-2', className)}>
+        {options.map((item, index) => {
+          const isSelected = item.value === value;
 
-        // Default rendering fallback
-        return (
-          <Pressable key={item.value} onPress={onPress} className={`flex-1 ${index === 0 ? 'mr-2' : 'ml-2'} rounded-xl items-center p-4 ${isSelected ? 'bg-theme' : 'bg-theme/70'}`}>
-            <Text className="text-white font-semibold">{item.label}</Text>
-          </Pressable>
-        );
-      })}
+          const handleOnPress = (e: any) => {
+            if (typeof onChange === 'function') {
+              onChange(item.value);
+            }
+          };
+
+          if (typeof renderItem == 'function') {
+            const ItemComponent = renderItem(item, isSelected);
+
+            const additionalProps = {
+              onPress: () => handleOnPress(item),
+              className: isSelected ? activeClassName : undefined,
+            };
+
+            return <ItemComponent key={item.value} {...additionalProps}></ItemComponent>;
+          }
+
+          // Default rendering fallback
+          return <Button label={item.label} icon={item.icon} className={twMerge(`px-4 bg-theme/70 ${isSelected && activeClassName}`, itemClassName)} key={item.value} onPress={handleOnPress}></Button>;
+        })}
+      </View>
     </View>
   );
 };

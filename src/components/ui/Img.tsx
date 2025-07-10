@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Image, View, StyleSheet} from 'react-native';
 import {twMerge} from 'tailwind-merge';
 
-type ImgProps = {
+export type ImgProps = {
   source: string | number ;
   fallbackUri?: string;
   className?: string;

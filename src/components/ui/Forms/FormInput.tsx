@@ -1,7 +1,7 @@
 // FormInput.tsx
 import React from 'react';
 import {Controller, Control, FieldValues, Path} from 'react-hook-form';
-import Input, {InputProps} from './Input';
+import Input, {InputProps} from '../Input';
 
 type FormInputProps<T extends FieldValues> = {
   

@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Loader from '@components/ui/Loader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-type ButtonProps = {
+export type ButtonProps = {
   label?: string;
   children?: React.ReactNode;
   position?: 'left' | 'right';
@@ -68,6 +68,7 @@ const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassN
           )
         )}
 
+        {/* Icon */}
         {!isLoading && icon && iconPosition === 'right' && (
           <Icon size={20} color="#fff" name={icon} ></Icon>
         )}
