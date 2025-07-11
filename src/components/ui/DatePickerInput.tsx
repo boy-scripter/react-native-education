@@ -16,20 +16,13 @@ type DatePickerInputProps = {
 
 export function DatePickerInput({value, label, onChange, placeholder = 'Select Date', className = '', ...props}: DatePickerInputProps) {
   const {open, close} = useModal();
-  let modalId = useRef<string>('');
-  // Parse the incoming value to a DateTime
-  const initialDate = value ? (DateTime.fromISO(value).isValid ? DateTime.fromISO(value).toJSDate() : new Date()) : new Date();
 
-  const confirm = (date : any = '17-18-2002') => {
-    const formatted = DateTime.fromJSDate(date).toISODate();
-    onChange(formatted!);
-    close(modalId.current);
-  };
+  const initialDate = value ? (DateTime.fromISO(value).isValid ? DateTime.fromISO(value).toJSDate() : new Date()) : new Date();
 
   const handleOpen = () => {
     let tempDate = initialDate;
 
-    modalId.current = open(
+    const modalId = open(
       () => (
         <View className="flex items-center">
           <DatePicker
@@ -42,7 +35,16 @@ export function DatePickerInput({value, label, onChange, placeholder = 'Select D
               onChange(formatted!);
             }}
           />
-          <Button label="Confirm" icon="check" onPress={confirm} className="mt-4 w-full" />
+          <Button
+            label="Confirm"
+            icon="check"
+            onPress={() => {
+              const formatted = DateTime.fromJSDate(tempDate).toISODate();
+              onChange(formatted!);
+              close(modalId);
+            }}
+            className="mt-4 w-full"
+          />
         </View>
       ),
       label || 'Select Date ',

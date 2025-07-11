@@ -21,7 +21,7 @@ const Img: React.FC<ImgProps> = ({source, fallbackUri, className, imageClassName
   const imageSource = isRemote ? {uri: finalUri} : (source as number);
 
   return (
-    <View onTouchEnd={onPress} className={twMerge('overflow-hidden', className)} style={styles.container}>
+    <View onTouchEnd={onPress} className={twMerge('', className)}>
       {loading && <View className={twMerge('absolute inset-0 bg-gray-300 rounded')} />}
       <Image
       
@@ -38,10 +38,6 @@ const Img: React.FC<ImgProps> = ({source, fallbackUri, className, imageClassName
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-  },
-});
+
 
 export default Img;

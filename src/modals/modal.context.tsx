@@ -1,4 +1,4 @@
-import React, {Component, createContext, ReactNode, useCallback, useContext, useEffect, useState} from 'react';
+import React, { createContext, ReactNode, useCallback, useContext, useState} from 'react';
 import {UIModalComponent} from './Modal';
 import {nanoid} from 'nanoid/non-secure';
 
@@ -34,11 +34,12 @@ const useModalContextCreator = () => {
   const close = useCallback(
     (id: string) => {
       const modalId = id;
-      console.log(modalList)
 
-      if (isModalExist(modalId)) {
+      //  i have removed the if condidtion due to stale issue beacuse we are storing a compoent in memory that migh create a stale issue 
+      // if (isModalExist(modalId)) {              
         setModalList(state => state.filter(modal => modal.id !== modalId));
-      }
+      // }
+      
     },
     [modalList],
   );
