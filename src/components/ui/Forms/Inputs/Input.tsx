@@ -30,7 +30,7 @@ const Input = ({placeholder, label, className, style, secret, onChange, icon, ..
         )}
 
         <TextInput
-          className={twMerge('border-[1.5px] border-greyish-100 border-l-0 rounded-2xl rounded-l-none  p-3 flex-1 placeholder:text-greyish-100 bg-white shadow-sm group-focus:border-theme', className)}
+          className={twMerge('border-[1.5px] border-greyish-100 border-l-0 rounded-2xl rounded-l-none p-3 flex-1 placeholder:text-greyish-100 bg-white shadow-sm group-focus:border-theme', className)}
           style={[{borderRadius: 5}, style]}
           placeholder={placeholder || ''}
           onChangeText={onChange}
@@ -48,13 +48,5 @@ const Input = ({placeholder, label, className, style, secret, onChange, icon, ..
   );
 };
 
-Input.TextError = ({message}: {message: string}) => {
-  return (
-    <View className="flex-row items-center">
-      <Icon name="circle" size={8} color="red" style={{marginRight: 6}} />
-      <Text className="text-red-600 text-sm">{message}</Text>
-    </View>
-  );
-};
 
 export default Input;

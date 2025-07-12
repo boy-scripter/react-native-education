@@ -1,6 +1,4 @@
 import { errorToast } from '@components/Toast/Toast.config';
-import { useStorage } from '@hooks/useStorage.hook';
-import { AuthenticatedUser, REMEMBER_ME } from '@myTypes/auth';
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query"
 import { GRAPHQL_BASE_URL } from "@env"
@@ -10,8 +8,6 @@ import { selectAuth } from '@store/auth/auth.selector';
 import { logout, setAccessToken } from '@store/auth/auth.slice';
 import { DocumentNode } from 'graphql';
 
-
-const { getItem } = useStorage();
 const mutex = new Mutex()
 const REFRESH_TOKEN_DOCUMENT = `
 mutation RefreshToken($token: String!) {
@@ -71,7 +67,6 @@ export const finalBaseQuery: BaseQueryType = async (args, api, extraOptions: Ext
           variables: { token: refresh_token }
         }, api, { skipToast: true });
         
-        console.log('ia m here', refreshResult)
         // Assuming the access_token is returned under refreshResult.data.refreshToken
         const newAccessToken = (refreshResult?.data as any)?.refreshToken?.access_token;
         if (!newAccessToken) throw new Error("Failed to refresh access token");

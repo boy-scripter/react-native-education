@@ -1,16 +1,19 @@
 import {Text, View} from 'react-native';
 import {InputProps} from './Input';
 import {twMerge} from 'tailwind-merge';
-import Button from './Button';
+import Button from '../../Button';
 import React from 'react';
 
 type RadioInputProps = {
   options: Options[];
   value?: string;
   onChange?: (val: string) => void;
-  renderItem?: (item: Options, selected: boolean) => React.FC<{ 
-    onPress: () => void; 
-    className?: string
+  renderItem?: (
+    item: Options,
+    selected: boolean,
+  ) => React.FC<{
+    onPress: () => void;
+    className?: string;
   }>;
   className?: string;
   itemClassName?: string;
@@ -23,7 +26,7 @@ interface Options {
   icon?: string;
 }
 
-export const RadioInput = ({options, value, onChange, renderItem, label, className, itemClassName, activeClassName = 'bg-theme'}: RadioInputProps) => {
+export default function RadioInput({options, value, onChange, renderItem, label, className, itemClassName, activeClassName = 'bg-theme'}: RadioInputProps) {
   return (
     <View className="w-full">
       {label && <Text className="text-theme  font-semibold text-lg mb-2">{label}</Text>}
@@ -55,4 +58,4 @@ export const RadioInput = ({options, value, onChange, renderItem, label, classNa
       </View>
     </View>
   );
-};
+}

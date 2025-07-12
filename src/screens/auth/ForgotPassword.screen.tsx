@@ -2,10 +2,10 @@ import {AuthStackParamList} from '@/types/navigation/authstack/authstack.interfa
 import {navigate, useRouteEffect} from '@/hooks/useNavigation.hook';
 import TopImageLayout from '@components/layouts/TopImage.Layout';
 import Button from '@components/ui/Button';
-import SplitInput from '@components/ui/SplitInput';
+import SplitInput from '@/components/ui/Forms/Inputs/SplitInput';
 import React, {useState, useRef} from 'react';
 import {Text, View} from 'react-native';
-import {FormInput} from '@/components/ui/Forms/FormInput';
+import {FormInput} from '@/components/ui/Forms/FormField';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {errorToast, successToast} from '@/components/Toast/Toast.config';

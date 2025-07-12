@@ -16,10 +16,11 @@ export type ButtonProps = {
   icon?: string; // Icon to be displayed on the button
   iconPosition?: 'left' | 'right';
   iconColor?: string;
+  iconSize?: number;
   loadingMode?: boolean;
 } & PressableProps;
 
-const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassName, disabled, label, loadingMode = true,iconColor = '#fff', position = 'right', icon, iconPosition = 'left', ...props}) => {
+const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassName, disabled, label, loadingMode = true, iconSize = 20, iconColor = '#fff', position = 'right', icon, iconPosition = 'left', ...props}) => {
   const [isLoading, setIsLoading] = useState(false);
   const isDisabled = isLoading || disabled;
 
@@ -56,13 +57,13 @@ const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassN
       )}
 
       {/* Icon */}
-      {!isLoading && icon && iconPosition === 'left' && <Icon size={20} color={iconColor} name={icon}></Icon>}
+      {!isLoading && icon && iconPosition === 'left' && <Icon size={iconSize} color={iconColor}  name={icon}></Icon>}
 
       {/* Label or Loader */}
       {isLoading ? <Loader /> : !!label && <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{label}</Text>}
 
       {/* Icon */}
-      {!isLoading && icon && iconPosition === 'right' && <Icon size={20} color="#fff" name={icon}></Icon>}
+      {!isLoading && icon && iconPosition === 'right' && <Icon size={iconSize} color="#fff"  name={icon}></Icon>}
 
       {/* Extra children (e.g. countdown, badge) */}
       {position === 'right' && children && (

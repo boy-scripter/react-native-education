@@ -1,10 +1,10 @@
 import Button from '@components/ui/Button';
-import CheckBox from '@components/ui/CheckBox';
+import CheckBox from '@/components/ui/Forms/Inputs/CheckBox';
 import {View, Text} from 'react-native';
 import {navigate, resetRoot} from '@hooks/useNavigation.hook';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {FormInput} from './ui/Forms/FormInput';
+import {FormInput} from './ui/Forms/FormField';
 import {selectRememberMe} from '@/store/auth/auth.selector';
 import {useLoginWithEmailMutation} from '@store/auth/endpoints';
 import {useAppDispatch, useRootState} from '@/store/store';
