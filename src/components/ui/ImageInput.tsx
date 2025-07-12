@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Image, ImageResizeMode } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
-import { twMerge } from 'tailwind-merge';
+import {View, Image, ImageResizeMode} from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {twMerge} from 'tailwind-merge';
 
-import Img, { ImgProps } from './Img';
-import { ButtonProps } from './Button';
-import { InputProps } from './Input';
+import Img, {ImgProps} from './Img';
+import {ButtonProps} from './Button';
+import {InputProps} from './Input';
 import Button from './Button'; // assuming you have a Button component
 
 type ImageInputProps = Pick<InputProps, 'onChange' | 'value' | 'className' | 'icon'> &
@@ -24,7 +24,7 @@ const ImageInput: React.FC<ImageInputProps> = ({
   textClassName,
   onChange,
   fallbackUri,
-  icon,
+  icon = 'camera',
   imageClassName,
   resizeMode = 'cover', // default resize mode
 }) => {
@@ -38,28 +38,22 @@ const ImageInput: React.FC<ImageInputProps> = ({
       const uri = result.assets[0].uri;
       if (uri && onChange) {
         onChange(uri);
-      } 
+      }
     }
   };
 
   const finalImage = value || fallbackUri || '';
+  
 
   return (
     <View className={twMerge('relative w-28 h-28', className)}>
-      <Image
-        source={{ uri: finalImage }}
-        resizeMode={resizeMode}
-        className={twMerge('w-full h-full bg-greyish-100/30 border-2 rounded-3xl border-theme', imageClassName)}
-      />
+      <Image source={{uri: finalImage}} resizeMode={resizeMode} className={twMerge('w-full h-full bg-greyish-100/30 border-2 rounded-3xl border-theme', imageClassName)} />
 
       <View className="absolute inset-0 justify-center items-center bg-greyish-100/30 rounded-3xl">
         <Button
-          className={buttonClassName}
-          textClassName={textClassName}
-          onPress={handleOnPress}
-          icon={icon}
-          label={label}
-        />
+         loadingMode={false} 
+        className={buttonClassName}
+         textClassName={textClassName} onPress={handleOnPress} icon={icon} label={label} />
       </View>
     </View>
   );

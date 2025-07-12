@@ -13,12 +13,13 @@ export type ButtonProps = {
   className?: string;
   textClassName?: string;
   disabled?: boolean;
-  icon? : string; // Icon to be displayed on the button
+  icon?: string; // Icon to be displayed on the button
   iconPosition?: 'left' | 'right';
-  iconColor?: string; 
+  iconColor?: string;
+  loadingMode?: boolean;
 } & PressableProps;
 
-const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassName, disabled, label, iconColor = '#fff', position = 'right' , icon , iconPosition = 'left',...props}) => {
+const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassName, disabled, label, loadingMode = true,iconColor = '#fff', position = 'right', icon, iconPosition = 'left', ...props}) => {
   const [isLoading, setIsLoading] = useState(false);
   const isDisabled = isLoading || disabled;
 
@@ -28,7 +29,7 @@ const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassN
     const result = onPress(event);
 
     // Check if result is a Promise
-    if (result && typeof result.then === 'function') {
+    if (result && typeof result.then === 'function' && loadingMode) {
       try {
         setIsLoading(true);
         await result;
@@ -47,36 +48,28 @@ const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassN
       {...props}>
       <LinearGradient colors={['rgba(255, 255, 255, 0.317)', 'transparent']} start={{x: 0.5, y: 0}} end={{x: 0.5, y: 0.5}} style={StyleSheet.absoluteFillObject} />
 
-        {/* Extra children (e.g. countdown, badge) */}
-        { position === 'left' && children && (
-          <View style={{display: !isLoading ? 'flex' : 'none'}} className="mx-2 flex-row items-center">{children}</View>
-        )}
+      {/* Extra children (e.g. countdown, badge) */}
+      {position === 'left' && children && (
+        <View style={{display: !isLoading ? 'flex' : 'none'}} className="mx-2 flex-row items-center">
+          {children}
+        </View>
+      )}
 
-        {/* Icon */}
-        {!isLoading && icon && iconPosition === 'left' && (
-          <Icon size={20} color={iconColor} name={icon} ></Icon>
-        )}
+      {/* Icon */}
+      {!isLoading && icon && iconPosition === 'left' && <Icon size={20} color={iconColor} name={icon}></Icon>}
 
-        {/* Label or Loader */}
-        {isLoading ? (
-          <Loader />
-        ) : (
-          !!label && (
-            <Text className={twMerge('text-white font-interBold text-center', textClassName)}>
-              {label}
-            </Text>
-          )
-        )}
+      {/* Label or Loader */}
+      {isLoading ? <Loader /> : !!label && <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{label}</Text>}
 
-        {/* Icon */}
-        {!isLoading && icon && iconPosition === 'right' && (
-          <Icon size={20} color="#fff" name={icon} ></Icon>
-        )}
+      {/* Icon */}
+      {!isLoading && icon && iconPosition === 'right' && <Icon size={20} color="#fff" name={icon}></Icon>}
 
-        {/* Extra children (e.g. countdown, badge) */}
-        { position === 'right' && children && (
-          <View style={{display: !isLoading ? 'flex' : 'none'}} className="mx-2 flex-row items-center">{children}</View>
-        )}
+      {/* Extra children (e.g. countdown, badge) */}
+      {position === 'right' && children && (
+        <View style={{display: !isLoading ? 'flex' : 'none'}} className="mx-2 flex-row items-center">
+          {children}
+        </View>
+      )}
     </Pressable>
   );
 };
