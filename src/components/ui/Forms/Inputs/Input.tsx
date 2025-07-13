@@ -20,8 +20,8 @@ const Input = ({placeholder, label, className, style, secret, onChange, icon, ..
   const [hidden, setHidden] = useState(false);
 
   return (
-    <View>
-      {label && <Text className="py-1 px-1 mb-1 text-theme">{label}</Text>}
+    <View >
+      {label && <Text className="py-1 px-1 text-theme">{label}</Text>}
       <View className="flex-row group ">
         {icon && (
           <View className="bg-greyish-100/20 border-[1.5px] border-greyish-100 border-r-0 px-2.5 items-center justify-center rounded-l-lg group-focus:border-theme">

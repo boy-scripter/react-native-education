@@ -23,10 +23,10 @@ export function withFormFieldWrapper<PWithoutControlled>(Component: React.Compon
         control={control}
         name={name}
         render={({field: {onChange, value}, fieldState: {error}}) => (
-          <>
-            <Component {...(rest as PWithoutControlled)} value={value} onChange={onChange} />
+          <View>
+            <Component  {...(rest as PWithoutControlled)} value={value} onChange={onChange} />
             {error?.message && <TextError message={error.message} />}
-          </>
+          </View>
         )}
       />
     );
@@ -35,7 +35,7 @@ export function withFormFieldWrapper<PWithoutControlled>(Component: React.Compon
 
 const TextError = ({message}: {message: string}) => {
   return (
-    <View className="flex-row items-center">
+    <View className="flex-row px-1 mt-1 items-center">
       <Text className="text-red-600 text-sm">{message}</Text>
     </View>
   );

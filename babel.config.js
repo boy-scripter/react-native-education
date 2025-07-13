@@ -26,7 +26,7 @@ module.exports = {
           '@components': './src/components',
           '@constant': './src/constant',
           '@screens': './src/screens',
-          '@utils': './src/utils',
+          '@util': './src/utils',
           '@hooks': './src/hooks',
           '@styles': './src/styles',
           '@navigation': './src/navigation',
