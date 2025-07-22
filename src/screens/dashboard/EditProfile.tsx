@@ -61,7 +61,7 @@ const EditProfileScreen = () => {
             control={control}
             name="gender"
             value="female"
-            itemClassName="flex-col flex-1"
+            itemClassName="flex-col flex-1 py-4"
             options={[
               {label: 'Male', value: 'male', icon: 'gender-male'},
               {label: 'Female', value: 'female', icon: 'gender-female'},

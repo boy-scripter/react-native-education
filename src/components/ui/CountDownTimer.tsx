@@ -49,7 +49,6 @@ const CountdownTimer = forwardRef<CountdownTimerRef, CountdownTimerProps>(({dura
         currentDuration.current = newDuration;
         const newTime = calculateTime(newDuration);
         restart(newTime, autoStart);
-        console.log(newDuration, currentDuration.current)
       },
     })
   );

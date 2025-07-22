@@ -5,16 +5,17 @@ import Button from '@components/ui/Button';
 import SplitInput from '@/components/ui/Forms/Inputs/SplitInput';
 import React, {useState, useRef} from 'react';
 import {Text, View} from 'react-native';
-import {FormInput} from '@/components/ui/Forms/FormField';
+// import {FormInput} from '@/components/ui/Forms/FormField';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {errorToast, successToast} from '@/components/Toast/Toast.config';
 import {useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation, useValidateOtpMutation} from '@store/auth/endpoints';
 import {StepsAnimation} from '@/animation/StepsAnimation';
 import CountdownTimer, {CountdownTimerRef} from '@/components/ui/CountDownTimer';
-
-
 import z from 'zod';
+import { FormInput } from '@/components/ui/Forms';
+
+
 
 const Step1Schema = z.object({
   email: z.string({required_error: 'Email is required'}).email('Enter a valid email address'),
@@ -31,6 +32,10 @@ const Step3Schema = z
     path: ['confirmPassword'],
   });
 type Step3SchemaType = z.infer<typeof Step3Schema>;
+
+
+
+
 
 const ForgotPasswordScreen = () => {
   const [setNewPassword] = useSetNewResetPasswordMutation();
@@ -68,7 +73,6 @@ const ForgotPasswordScreen = () => {
   const onRequestReset = async ({email}: Step1SchemaType) => {
     const data = await sendOtp({email}).unwrap();
     successToast({text1: 'OTP sent to your email'});
-    console.log(countDownRef.current);
     countDownRef.current?.restart(data.sendForgotPasswordCode.retry_after);
     setStep(2);
   };
