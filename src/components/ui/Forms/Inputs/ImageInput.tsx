@@ -8,6 +8,7 @@ import {ButtonProps} from '../../Button';
 import {InputProps} from './Input';
 import Button from '../../Button'; // assuming you have a Button component
 import {File} from '@/util/zod';
+import {ensurePermission} from '@/utils/permission';
 
 type ImageInputProps = Pick<InputProps, 'value' | 'className' | 'icon'> &
   Pick<ImgProps, 'fallbackUri'> &
@@ -31,6 +32,7 @@ const ImageInput: React.FC<ImageInputProps> = ({
   resizeMode = 'cover', // default resize mode
 }) => {
   const handleOnPress = async () => {
+    await ensurePermission('image');
     const result = await launchImageLibrary({
       mediaType: 'photo',
       selectionLimit: 1,
