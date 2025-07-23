@@ -13,6 +13,8 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
+  JSONObject: { input: any; output: any; }
 };
 
 export type AuthResponse = {
@@ -20,6 +22,36 @@ export type AuthResponse = {
   access_token: Scalars['String']['output'];
   refresh_token: Scalars['String']['output'];
   user: User;
+};
+
+export type Category = {
+  __typename?: 'Category';
+  _id: Scalars['ID']['output'];
+  color?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type CreateCategoryDto = {
+  color?: InputMaybe<Scalars['String']['input']>;
+  image?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
+/** Gender options */
+export enum GenderEnum {
+  Female = 'FEMALE',
+  Male = 'MALE',
+  Other = 'OTHER'
+}
+
+export type InitiateUploadResponse = {
+  __typename?: 'InitiateUploadResponse';
+  signedData: Scalars['JSONObject']['output'];
+  uploadId: Scalars['String']['output'];
 };
 
 export type LoginDto = {
@@ -34,13 +66,33 @@ export type MessageResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createCategory: Category;
+  deleteCategory: Category;
+  initiateUpload: InitiateUploadResponse;
   loginWithEmail: AuthResponse;
   loginWithGoogle: AuthResponse;
+  profileUpdate: User;
   refreshToken: RefreshTokenResponse;
   sendForgotPasswordCode: SendOtpResponse;
   setNewResetPassword: MessageResponse;
   signup: User;
+  updateCategory: Category;
   validateOtp: ValidateOtpResponse;
+};
+
+
+export type MutationCreateCategoryArgs = {
+  input: CreateCategoryDto;
+};
+
+
+export type MutationDeleteCategoryArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationInitiateUploadArgs = {
+  input: UploadDto;
 };
 
 
@@ -51,6 +103,11 @@ export type MutationLoginWithEmailArgs = {
 
 export type MutationLoginWithGoogleArgs = {
   idToken: Scalars['String']['input'];
+};
+
+
+export type MutationProfileUpdateArgs = {
+  input: UpdateProfileDto;
 };
 
 
@@ -74,14 +131,26 @@ export type MutationSignupArgs = {
 };
 
 
+export type MutationUpdateCategoryArgs = {
+  input: UpdateCategoryDto;
+};
+
+
 export type MutationValidateOtpArgs = {
   input: ResetPasswordDto;
 };
 
 export type Query = {
   __typename?: 'Query';
+  categories: Array<Category>;
+  category: Category;
   getHello: Scalars['String']['output'];
-  me: User;
+  profile: User;
+};
+
+
+export type QueryCategoryArgs = {
+  id: Scalars['ID']['input'];
 };
 
 export type RefreshTokenResponse = {
@@ -112,12 +181,33 @@ export type SignUpDto = {
   password: Scalars['String']['input'];
 };
 
+export type UpdateCategoryDto = {
+  _id?: InputMaybe<Scalars['String']['input']>;
+  color?: InputMaybe<Scalars['String']['input']>;
+  image?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateProfileDto = {
+  avatar?: InputMaybe<Scalars['String']['input']>;
+  dob?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<GenderEnum>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UploadDto = {
+  contentType: Scalars['String']['input'];
+  mediaCode: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
 export type User = {
   __typename?: 'User';
   _id: Scalars['ID']['output'];
-  active: Scalars['Boolean']['output'];
   avatar?: Maybe<Scalars['String']['output']>;
+  dob?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
+  gender?: Maybe<GenderEnum>;
   name: Scalars['String']['output'];
 };
 
@@ -146,14 +236,14 @@ export type LoginWithGoogleMutationVariables = Exact<{
 }>;
 
 
-export type LoginWithGoogleMutation = { __typename?: 'Mutation', loginWithGoogle: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', name: string, email: string, _id: string, active: boolean, avatar?: string | null } } };
+export type LoginWithGoogleMutation = { __typename?: 'Mutation', loginWithGoogle: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', name: string, email: string, _id: string, avatar?: string | null } } };
 
 export type LoginWithEmailMutationVariables = Exact<{
   input: LoginDto;
 }>;
 
 
-export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string, active: boolean, avatar?: string | null } } };
+export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string, avatar?: string | null } } };
 
 export type SetNewResetPasswordMutationVariables = Exact<{
   input: SetNewPasswordDto;
@@ -167,12 +257,12 @@ export type SignupMutationVariables = Exact<{
 }>;
 
 
-export type SignupMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', name: string, email: string, avatar?: string | null, active: boolean, _id: string } };
+export type SignupMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', name: string, email: string, avatar?: string | null, _id: string } };
 
-export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserQuery = { __typename?: 'Query', me: { __typename?: 'User', name: string, email: string, avatar?: string | null, active: boolean, _id: string } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', name: string, email: string, avatar?: string | null, _id: string } };
 
 
 export const SendForgotPasswordCodeDocument = `
@@ -200,7 +290,6 @@ export const LoginWithGoogleDocument = `
       name
       email
       _id
-      active
       avatar
     }
   }
@@ -215,7 +304,6 @@ export const LoginWithEmailDocument = `
       _id
       name
       email
-      active
       avatar
     }
   }
@@ -234,18 +322,16 @@ export const SignupDocument = `
     name
     email
     avatar
-    active
     _id
   }
 }
     `;
-export const UserDocument = `
-    query User {
-  me {
+export const ProfileDocument = `
+    query Profile {
+  profile {
     name
     email
     avatar
-    active
     _id
   }
 }
@@ -271,12 +357,12 @@ const injectedRtkApi = baseApi.injectEndpoints({
     Signup: build.mutation<SignupMutation, SignupMutationVariables>({
       query: (variables) => ({ document: SignupDocument, variables })
     }),
-    User: build.query<UserQuery, UserQueryVariables | void>({
-      query: (variables) => ({ document: UserDocument, variables })
+    Profile: build.query<ProfileQuery, ProfileQueryVariables | void>({
+      query: (variables) => ({ document: ProfileDocument, variables })
     }),
   }),
 });
 
 export { injectedRtkApi as api };
-export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useSetNewResetPasswordMutation, useSignupMutation, useUserQuery, useLazyUserQuery } = injectedRtkApi;
+export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useSetNewResetPasswordMutation, useSignupMutation, useProfileQuery, useLazyProfileQuery } = injectedRtkApi;
 

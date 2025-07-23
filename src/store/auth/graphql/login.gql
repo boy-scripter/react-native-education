@@ -7,7 +7,7 @@ mutation LoginWithEmail($input: LoginDto!) {
       _id
       name
       email
-      active
+      
       avatar
     }
   }

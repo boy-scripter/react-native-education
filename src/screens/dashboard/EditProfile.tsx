@@ -1,13 +1,12 @@
+import {FormDatePickerInput, FormRadioInput, FormImageInput, FormInput} from '@/components/ui/Forms';
 import TopImageLayout from '@/components/layouts/TopImage.Layout';
 import Button from '@/components/ui/Button';
 import {selectUser} from '@/store/auth/auth.selector';
 import {useRootState} from '@/store/store';
 import {ScrollView, View} from 'react-native';
-import {FormDatePickerInput, FormRadioInput, FormImageInput, FormInput} from '@/components/ui/Forms';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {fileSchema} from '@/util/zod';
-import React from 'react';
 import {DateTime} from 'luxon';
 import z from 'zod';
 
@@ -31,18 +30,20 @@ const profileSchema = z.object({
     .pattern(/^image\/(heic|png|jpeg|jpg)$/)
     .size(1024 * 1024 * 1)
     .single()
-    .optional()
+    .optional(),
 });
 type profileSchemaType = z.infer<typeof profileSchema>;
 
 const EditProfileScreen = () => {
   const user = useRootState(selectUser);
+
   const {control, handleSubmit} = useForm<profileSchemaType>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       // gender: user?.gender || undefined,
       // dateOfBirth: user?.dateOfBirth ? new Date(user.dateOfBirth) : undefined,
       // avatar: user?.avatar || '',
+      // email: user.email,
     },
   });
 

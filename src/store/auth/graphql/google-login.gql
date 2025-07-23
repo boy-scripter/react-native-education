@@ -6,7 +6,6 @@ mutation LoginWithGoogle($idToken: String!) {
       name
       email
       _id
-      active
       avatar
     }
   }

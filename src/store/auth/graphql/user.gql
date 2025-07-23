@@ -1,11 +1,8 @@
-query User {
-  me {
-  
-      name
-      email
-      avatar
-      active
-      _id
-    
+query Profile {
+  profile {
+    name
+    email
+    avatar
+    _id
   }
 }

@@ -8,15 +8,16 @@ import {ButtonProps} from '../../Button';
 import {InputProps} from './Input';
 import Button from '../../Button'; // assuming you have a Button component
 import {File} from '@/util/zod';
-import {ensurePermission} from '@/utils/permission';
+import {ensurePermission} from '@/util/permission';
 
-type ImageInputProps = Pick<InputProps, 'value' | 'className' | 'icon'> &
+type ImageInputProps = Pick<InputProps, 'className' | 'icon'> &
   Pick<ImgProps, 'fallbackUri'> &
   Pick<ButtonProps, 'textClassName' | 'label'> & {
     buttonClassName?: string;
     imageClassName?: string;
     onChange?: (arg1: File) => any;
     resizeMode?: ImageResizeMode;
+    value?: File | string;
   };
 
 const ImageInput: React.FC<ImageInputProps> = ({
@@ -32,6 +33,7 @@ const ImageInput: React.FC<ImageInputProps> = ({
   resizeMode = 'cover', // default resize mode
 }) => {
   const handleOnPress = async () => {
+    
     await ensurePermission('image');
     const result = await launchImageLibrary({
       mediaType: 'photo',
@@ -54,7 +56,12 @@ const ImageInput: React.FC<ImageInputProps> = ({
     }
   };
 
-  const finalImage = value || fallbackUri || '';
+  let finalImage: string = '';
+  if (value instanceof File && value.uri) {
+    finalImage = value.uri;
+  } else {
+    finalImage = (value as string) || fallbackUri || '';
+  }
 
   return (
     <View className={twMerge('relative w-28 h-28', className)}>

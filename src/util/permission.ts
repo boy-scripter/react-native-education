@@ -6,7 +6,7 @@ const PLATFORM_VERSION = Number(Platform.Version);
 
 
 export function getPermission(purpose: PermissionPurpose): Permission {
-    console.log()
+
     switch (purpose) {
         case 'camera':
             return Platform.OS === 'ios'
@@ -54,7 +54,7 @@ export async function ensurePermission(
 ): Promise<boolean> {
     try {
         const PERMISSION_REQUESTED = getPermission(permission)
-        console.log(PERMISSION_REQUESTED)
+
         const status: PermissionStatus = await check(PERMISSION_REQUESTED);
 
         switch (status) {

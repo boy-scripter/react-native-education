@@ -9,7 +9,7 @@
       "@components/*": ["./src/components/*"],
       "@screens/*": ["./src/screens/*"],
       "@store/*": ["./src/store/*"],
-      "@util/*": ["src/util/*"],
+      "@util/*": ["./src/util/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@animation/*": ["./src/animation/*"],
       "@myTypes/*": ["./src/types/*"],

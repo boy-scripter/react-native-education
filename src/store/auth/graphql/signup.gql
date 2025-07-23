@@ -3,7 +3,7 @@ mutation Signup($input: SignUpDto!) {
     name
     email
     avatar
-    active
+    
     _id
   }   
 }
