@@ -11,3 +11,4 @@ generates:
       importBaseApiFrom: '@baseApi'
       importBaseApiAlternateName: 'baseApi'
       exportHooks: true
+      enumsAsConst: true

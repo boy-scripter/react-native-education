@@ -77,15 +77,14 @@ export const authSlice = createSlice({
     );
 
     builder.addMatcher(
-      api.endpoints.User.matchFulfilled,
+      api.endpoints.Profile.matchFulfilled,
       (state, { payload }) => {
 
-        const user = payload.me;
+        const user = payload.profile;
         state.user = {
           _id: user._id,
           name: user.name,
           email: user.email,
-          active: user.active,
           avatar: user.avatar || fallbackAvatar,
         };
         

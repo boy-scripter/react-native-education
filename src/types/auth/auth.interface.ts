@@ -2,7 +2,6 @@
 export interface User {
   _id: string;
   email: string;
-  active: boolean
   name: string
   avatar?: string
 }

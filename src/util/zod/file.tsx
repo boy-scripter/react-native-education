@@ -1,4 +1,8 @@
-import {z, ZodObject, ZodRawShape} from 'zod';
+import { z, ZodObject, ZodRawShape } from 'zod';
+
+// ----------------------
+// Custom File Class
+// ----------------------
 
 export class File {
   name: string;
@@ -6,12 +10,13 @@ export class File {
   size: number;
   uri?: string;
 
-  constructor(params: {name: string; type: string; size: number; uri: string}) {
+  constructor(params: { name: string; type: string; size: number; uri: string }) {
     this.name = params.name;
     this.type = params.type;
     this.size = params.size;
     this.uri = params.uri;
   }
+
   isImage(): boolean {
     return this.type.startsWith('image/');
   }
@@ -24,7 +29,20 @@ export class File {
   getSizeInMB(): number {
     return this.size / 1024 / 1024;
   }
+
+  toJSON() {
+    return {
+      name: this.name,
+      type: this.type,
+      size: this.size,
+      uri: this.uri,
+    };
+  }
 }
+
+// ----------------------
+// Constraints Class
+// ----------------------
 
 class FileConstraints {
   _type: string[] | null;
@@ -32,16 +50,20 @@ class FileConstraints {
   _pattern: RegExp | null;
 
   constructor() {
-    this._type = ['image/jpeg', 'image/png']; // defaults
+    this._type = ['image/jpeg', 'image/png']; // default types
     this._size = 5 * 1024 * 1024; // default 5MB
-    this._pattern = null; // default 5MB
+    this._pattern = null;
   }
 }
+
+// ----------------------
+// Schema Builder
+// ----------------------
 
 class FileSchemaBuilder {
   private readonly constraints: FileConstraints;
 
-  constructor(constraints?: FileConstraints) {
+  constructor() {
     this.constraints = new FileConstraints();
   }
 
@@ -51,7 +73,7 @@ class FileSchemaBuilder {
   }
 
   pattern(regex: RegExp): this {
-    this.constraints._pattern = new RegExp(regex);
+    this.constraints._pattern = regex;
     return this;
   }
 
@@ -69,17 +91,28 @@ class FileSchemaBuilder {
       name: z.string().min(1, 'File name is required'),
       type: z.string().refine(
         val => {
-          const typeMatch = this.constraints._type ? this.constraints._type.includes(val) : true;
-          const patternMatch = this.constraints._pattern ? this.constraints._pattern.test(val) : true;
-          console.log(typeMatch,patternMatch)
-          return typeMatch && patternMatch ;
+          const typeMatch = this.constraints._type
+            ? this.constraints._type.includes(val)
+            : true;
+
+          const patternMatch = this.constraints._pattern
+            ? this.constraints._pattern.test(val)
+            : true;
+
+          return typeMatch && patternMatch;
         },
-        {message: `Unsupported file type`},
+        { message: `Unsupported file type` }
       ),
-      size: z.number().max(this.constraints._size, {message: `File must be under ${this.constraints._size / 1024 / 1024}MB`}),
-      uri: z.string().url('Unable to read files').optional(),
-    })
+      size: z.number().max(this.constraints._size, {
+        message: `File must be under ${this.constraints._size / 1024 / 1024}MB`,
+      }),
+      uri: z.string().url('Invalid file URI').optional(),
+    });
   }
 }
+
+// ----------------------
+// Exported Factory
+// ----------------------
 
 export const fileSchema = () => new FileSchemaBuilder();

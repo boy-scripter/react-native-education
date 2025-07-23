@@ -3,7 +3,7 @@ import { api } from "@/graphql/generated";
 export const authApi = api.enhanceEndpoints({
     addTagTypes: ['auth'],
     endpoints: {
-        User: {
+        Profile: {
             extraOptions: {
                 skipToast: true,
             },
@@ -11,4 +11,4 @@ export const authApi = api.enhanceEndpoints({
     },
 });
 
-export const { useUserQuery, useLazyUserQuery, useLoginWithEmailMutation, useLoginWithGoogleMutation, useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation, useRefreshTokenMutation, useSignupMutation, useValidateOtpMutation } = authApi;
+export const { useProfileUpdateMutation,useProfileQuery, useLazyProfileQuery, useLoginWithEmailMutation, useLoginWithGoogleMutation, useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation, useSignupMutation, useValidateOtpMutation } = authApi;

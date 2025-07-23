@@ -245,6 +245,13 @@ export type LoginWithEmailMutationVariables = Exact<{
 
 export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string, avatar?: string | null } } };
 
+export type ProfileUpdateMutationVariables = Exact<{
+  input: UpdateProfileDto;
+}>;
+
+
+export type ProfileUpdateMutation = { __typename?: 'Mutation', profileUpdate: { __typename?: 'User', name: string, gender?: GenderEnum | null, email: string, dob?: string | null, avatar?: string | null, _id: string } };
+
 export type SetNewResetPasswordMutationVariables = Exact<{
   input: SetNewPasswordDto;
 }>;
@@ -263,6 +270,13 @@ export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', name: string, email: string, avatar?: string | null, _id: string } };
+
+export type InitiateUploadMutationVariables = Exact<{
+  input: UploadDto;
+}>;
+
+
+export type InitiateUploadMutation = { __typename?: 'Mutation', initiateUpload: { __typename?: 'InitiateUploadResponse', uploadId: string, signedData: any } };
 
 
 export const SendForgotPasswordCodeDocument = `
@@ -309,6 +323,18 @@ export const LoginWithEmailDocument = `
   }
 }
     `;
+export const ProfileUpdateDocument = `
+    mutation ProfileUpdate($input: UpdateProfileDto!) {
+  profileUpdate(input: $input) {
+    name
+    gender
+    email
+    dob
+    avatar
+    _id
+  }
+}
+    `;
 export const SetNewResetPasswordDocument = `
     mutation SetNewResetPassword($input: SetNewPasswordDto!) {
   setNewResetPassword(input: $input) {
@@ -336,6 +362,14 @@ export const ProfileDocument = `
   }
 }
     `;
+export const InitiateUploadDocument = `
+    mutation InitiateUpload($input: UploadDto!) {
+  initiateUpload(input: $input) {
+    uploadId
+    signedData
+  }
+}
+    `;
 
 const injectedRtkApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -351,6 +385,9 @@ const injectedRtkApi = baseApi.injectEndpoints({
     LoginWithEmail: build.mutation<LoginWithEmailMutation, LoginWithEmailMutationVariables>({
       query: (variables) => ({ document: LoginWithEmailDocument, variables })
     }),
+    ProfileUpdate: build.mutation<ProfileUpdateMutation, ProfileUpdateMutationVariables>({
+      query: (variables) => ({ document: ProfileUpdateDocument, variables })
+    }),
     SetNewResetPassword: build.mutation<SetNewResetPasswordMutation, SetNewResetPasswordMutationVariables>({
       query: (variables) => ({ document: SetNewResetPasswordDocument, variables })
     }),
@@ -360,9 +397,12 @@ const injectedRtkApi = baseApi.injectEndpoints({
     Profile: build.query<ProfileQuery, ProfileQueryVariables | void>({
       query: (variables) => ({ document: ProfileDocument, variables })
     }),
+    InitiateUpload: build.mutation<InitiateUploadMutation, InitiateUploadMutationVariables>({
+      query: (variables) => ({ document: InitiateUploadDocument, variables })
+    }),
   }),
 });
 
 export { injectedRtkApi as api };
-export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useSetNewResetPasswordMutation, useSignupMutation, useProfileQuery, useLazyProfileQuery } = injectedRtkApi;
+export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useProfileUpdateMutation, useSetNewResetPasswordMutation, useSignupMutation, useProfileQuery, useLazyProfileQuery, useInitiateUploadMutation } = injectedRtkApi;
 

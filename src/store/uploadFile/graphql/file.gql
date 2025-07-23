@@ -1,0 +1,6 @@
+mutation InitiateUpload($input: UploadDto!) {
+  initiateUpload(input: $input) {
+    uploadId
+    signedData
+  }
+}

@@ -1,0 +1,10 @@
+mutation ProfileUpdate($input: UpdateProfileDto!) {
+  profileUpdate(input: $input) {
+    name
+    gender
+    email
+    dob
+    avatar
+    _id
+  }
+}

@@ -17,6 +17,7 @@ mutation RefreshToken($token: String!) {
   }
 }
 `;
+
 const baseQuery = graphqlRequestBaseQuery({
   url: GRAPHQL_BASE_URL,
   prepareHeaders: (headers, { getState }) => {
@@ -66,7 +67,7 @@ export const finalBaseQuery: BaseQueryType = async (args, api, extraOptions: Ext
           document: REFRESH_TOKEN_DOCUMENT,
           variables: { token: refresh_token }
         }, api, { skipToast: true });
-        
+
         // Assuming the access_token is returned under refreshResult.data.refreshToken
         const newAccessToken = (refreshResult?.data as any)?.refreshToken?.access_token;
         if (!newAccessToken) throw new Error("Failed to refresh access token");
