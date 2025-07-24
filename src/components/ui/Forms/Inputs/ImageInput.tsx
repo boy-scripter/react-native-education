@@ -18,11 +18,13 @@ type ImageInputProps = Pick<InputProps, 'className' | 'icon'> &
     onChange?: (arg1: File) => any;
     resizeMode?: ImageResizeMode;
     value?: File | string;
+    mediaCode: 'PROFILE_IMAGE';
   };
 
 const ImageInput: React.FC<ImageInputProps> = ({
   value,
   label,
+  mediaCode,
   className,
   buttonClassName,
   textClassName,
@@ -33,7 +35,6 @@ const ImageInput: React.FC<ImageInputProps> = ({
   resizeMode = 'cover', // default resize mode
 }) => {
   const handleOnPress = async () => {
-    
     await ensurePermission('image');
     const result = await launchImageLibrary({
       mediaType: 'photo',
@@ -48,6 +49,7 @@ const ImageInput: React.FC<ImageInputProps> = ({
           name: asset.fileName,
           type: asset.type,
           size: asset.fileSize,
+          metadata: {mediaCode},
         });
         onChange(file);
       } else {

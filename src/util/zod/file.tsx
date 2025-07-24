@@ -1,4 +1,4 @@
-import { z, ZodObject, ZodRawShape } from 'zod';
+import {z, ZodObject, ZodRawShape} from 'zod';
 
 // ----------------------
 // Custom File Class
@@ -9,12 +9,14 @@ export class File {
   type: string;
   size: number;
   uri?: string;
+  metadata?: Record<string, any>;
 
-  constructor(params: { name: string; type: string; size: number; uri: string }) {
+  constructor(params: {name: string; type: string; size: number; uri: string; metadata?: Record<string, any>}) {
     this.name = params.name;
     this.type = params.type;
     this.size = params.size;
     this.uri = params.uri;
+    this.metadata = params.metadata;
   }
 
   isImage(): boolean {
@@ -91,17 +93,13 @@ class FileSchemaBuilder {
       name: z.string().min(1, 'File name is required'),
       type: z.string().refine(
         val => {
-          const typeMatch = this.constraints._type
-            ? this.constraints._type.includes(val)
-            : true;
+          const typeMatch = this.constraints._type ? this.constraints._type.includes(val) : true;
 
-          const patternMatch = this.constraints._pattern
-            ? this.constraints._pattern.test(val)
-            : true;
+          const patternMatch = this.constraints._pattern ? this.constraints._pattern.test(val) : true;
 
           return typeMatch && patternMatch;
         },
-        { message: `Unsupported file type` }
+        {message: `Unsupported file type`},
       ),
       size: z.number().max(this.constraints._size, {
         message: `File must be under ${this.constraints._size / 1024 / 1024}MB`,

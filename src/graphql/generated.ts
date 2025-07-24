@@ -42,12 +42,13 @@ export type CreateCategoryDto = {
 };
 
 /** Gender options */
-export enum GenderEnum {
-  Female = 'FEMALE',
-  Male = 'MALE',
-  Other = 'OTHER'
-}
+export const GenderEnum = {
+  Female: 'FEMALE',
+  Male: 'MALE',
+  Other: 'OTHER'
+} as const;
 
+export type GenderEnum = typeof GenderEnum[keyof typeof GenderEnum];
 export type InitiateUploadResponse = {
   __typename?: 'InitiateUploadResponse';
   signedData: Scalars['JSONObject']['output'];

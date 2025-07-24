@@ -1,4 +1,4 @@
-import {FormDatePickerInput, FormRadioInput, FormInput} from '@/components/ui/Forms';
+import {FormDatePickerInput, FormRadioInput, FormInput, FormImageInput} from '@/components/ui/Forms';
 import TopImageLayout from '@/components/layouts/TopImage.Layout';
 import Button from '@/components/ui/Button';
 import {selectUser} from '@/store/auth/auth.selector';
@@ -8,7 +8,7 @@ import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {fileSchema} from '@/util/zod';
 import {DateTime} from 'luxon';
-import {withFileResolver} from '@/hooks/withFileResolver.hook';
+import {useFileResolver} from '@/hooks/useFileResolver.hook';
 import {useProfileUpdateMutation} from '@/store/auth/endpoints';
 import {GenderEnum} from '@/graphql/generated';
 import z from 'zod';
@@ -43,9 +43,12 @@ const profileSchema = z.object({
 type profileSchemaType = z.infer<typeof profileSchema>;
 
 const EditProfileScreen = () => {
-  const [profileUpdate] = useProfileUpdateMutation();
-  const user = useRootState(selectUser);
+  const [profileUpdate] = useFileResolver({
+    mutation: useProfileUpdateMutation,
+    pathKeys: ['image'],
+  });
 
+  const user = useRootState(selectUser);
   const {control, handleSubmit} = useForm<profileSchemaType>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -57,15 +60,14 @@ const EditProfileScreen = () => {
   });
 
   async function handleSaveProfile(schema: profileSchemaType) {
-    const data = await withFileResolver(schema, 'name');
-    await profileUpdate({input: data}).unwrap();
+    await profileUpdate({input: schema})
   }
 
   return (
     <TopImageLayout title="Edit Your Profile" description="Update your personal information below" lottie={require('@assets/lottie/profile.json')}>
       <ScrollView className="" contentContainerStyle={{flexGrow: 1}}>
         <View className="flex-1  gap-6 pt-4 pb-2">
-          {/* <FormImageInput control={control} name="avatar" className="mx-auto" /> */}
+          <FormImageInput control={control} name="avatar" className="mx-auto" mediaCode="PROFILE_IMAGE" />
           <FormInput control={control} name="name" icon="account" placeholder="Your Nickname" />
           <FormInput control={control} name="email" icon="email-outline" editable={false} placeholder="Email" />
           <FormRadioInput
