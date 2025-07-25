@@ -13,9 +13,7 @@ import {useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation, useVa
 import {StepsAnimation} from '@/animation/StepsAnimation';
 import CountdownTimer, {CountdownTimerRef} from '@/components/ui/CountDownTimer';
 import z from 'zod';
-import { FormInput } from '@/components/ui/Forms';
-
-
+import {FormInput} from '@/components/ui/Forms';
 
 const Step1Schema = z.object({
   email: z.string({required_error: 'Email is required'}).email('Enter a valid email address'),
@@ -32,10 +30,6 @@ const Step3Schema = z
     path: ['confirmPassword'],
   });
 type Step3SchemaType = z.infer<typeof Step3Schema>;
-
-
-
-
 
 const ForgotPasswordScreen = () => {
   const [setNewPassword] = useSetNewResetPasswordMutation();
@@ -70,12 +64,14 @@ const ForgotPasswordScreen = () => {
     resolver: zodResolver(Step3Schema),
   });
 
+
   const onRequestReset = async ({email}: Step1SchemaType) => {
     const data = await sendOtp({email}).unwrap();
     successToast({text1: 'OTP sent to your email'});
     countDownRef.current?.restart(data.sendForgotPasswordCode.retry_after);
     setStep(2);
   };
+
 
   const onVerifyOtp = async () => {
     const email = step1Values().email;
@@ -90,21 +86,22 @@ const ForgotPasswordScreen = () => {
     setStep(3);
   };
 
+
   const onSetNewPassword = async ({password}: Step3SchemaType) => {
     await setNewPassword({input: {token: resetToken.current, password}}).unwrap();
     successToast({text1: 'Password has been reset'});
     navigate('AuthStack', {screen: 'LoginAndSignup', params: {mode: 'login'}});
   };
 
-  return ( 
-    <TopImageLayout lottie={require('@assets/lottie/forgot.json')} >
-      <StepsAnimation className='mt-4' step={step}>
+  return (
+    <TopImageLayout lottie={require('@assets/lottie/forgot.json')}>
+      <StepsAnimation className="mt-4" step={step}>
         {
           <>
             <Text className="text-2xl font-bold mb-2">Enter Email</Text>
             <Text className="text-base mb-5 text-greyish-100">Enter your email address below to receive a password OTP.</Text>
-            <FormInput control={step1Control} className="h-12 px-3 mb-2" placeholder="Email Address" keyboardType="email-address" name="email" />
-            <Button icon="email-outline" label="Reset Password" onPress={handleStep1Submit(onRequestReset)} className="mt-4"></Button>
+            <FormInput control={step1Control}  icon='email-outline' placeholder="Email Address" keyboardType="email-address" name="email" />
+            <Button icon="lock-reset" label="Reset Password" onPress={handleStep1Submit(onRequestReset)} className="mt-4"></Button>
           </>
         }
 
@@ -112,13 +109,15 @@ const ForgotPasswordScreen = () => {
           <>
             <Text className="text-2xl font-bold mb-4">Enter OTP</Text>
             <Text className="text-base text-greyish-100">We have sent an OTP to your email. Please enter it below to verify.</Text>
-            <SplitInput inputClassName="text-xl w-14" onSplitChange={data => (otp.current = data)} className="mt-5 flex justify-center" count={6} />
+            <SplitInput inputClassName="text-xl w-14" onSplitChange={v => (otp.current = v)} className="mt-5 flex justify-center" count={6} />
             <View className="mt-5 gap-3">
-              <Button icon='refresh' className="flex-grow" disabled={countdownRunning} label="Resend OTP ?" position="right" onPress={handleStep1Submit(onRequestReset)}>
+              <Button icon="refresh" className="flex-grow" disabled={countdownRunning} label="Resend OTP ?" position="right" onPress={handleStep1Submit(onRequestReset)}>
                 <CountdownTimer onChange={setCountdownRunning} textClassName="text-white" ref={countDownRef} />
               </Button>
-              <Button icon='shield-check-outline' className="flex-grow" label="Verify OTP" onPress={onVerifyOtp} />
-              <Text className="mt-2 text-theme font-interBold text-center" onPress={() => setStep(1)}>Entered wrong email ? </Text>
+              <Button icon="shield-check-outline" className="flex-grow" label="Verify OTP" onPress={onVerifyOtp} />
+              <Text className="mt-2 text-theme  rounded-sm font-interBold text-center" onPress={() => setStep(1)}>
+                Entered wrong email ?
+              </Text>
             </View>
           </>
         }
@@ -129,7 +128,7 @@ const ForgotPasswordScreen = () => {
             <Text className="text-base mb-2 text-greyish-100">Enter your new password below to reset your account password.</Text>
             <FormInput control={step3Control} name="password" className="mb-5" placeholder="New Password" />
             <FormInput control={step3Control} name="confirmPassword" placeholder="Confirm Password" />
-            <Button icon='check-circle-outline' label="Set New Password" className="mt-4" onPress={handleStep3Submit(onSetNewPassword)} />
+            <Button icon="check-circle-outline" label="Set New Password" className="mt-4" onPress={handleStep3Submit(onSetNewPassword)} />
           </>
         }
       </StepsAnimation>

@@ -1,9 +1,12 @@
+import { GenderEnum } from "@/graphql/generated";
 
 export interface User {
   _id: string;
   email: string;
   name: string
   avatar?: string
+  gender?:  GenderEnum
+  dob?: string
 }
 
 export interface AuthenticatedUser {

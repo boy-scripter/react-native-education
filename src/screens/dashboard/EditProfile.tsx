@@ -45,22 +45,24 @@ type profileSchemaType = z.infer<typeof profileSchema>;
 const EditProfileScreen = () => {
   const [profileUpdate] = useFileResolver({
     mutation: useProfileUpdateMutation,
-    pathKeys: ['image'],
+    pathKeys: ['avatar'] as const,
   });
 
   const user = useRootState(selectUser);
   const {control, handleSubmit} = useForm<profileSchemaType>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      // gender: user?.gender || undefined,
-      // dateOfBirth: user?.dateOfBirth ? new Date(user.dateOfBirth) : undefined,
-      // avatar: user?.avatar || '',
-      // email: user.email,
+      gender: user?.gender,
+      avatar: user?.avatar,
+      email: user.email,
+      dob: user?.dob,
     },
   });
 
   async function handleSaveProfile(schema: profileSchemaType) {
-    await profileUpdate({input: schema})
+    console.log('file')
+    const data = await profileUpdate({input: schema});
+   console.log(data.profileUpdate)
   }
 
   return (
@@ -73,7 +75,7 @@ const EditProfileScreen = () => {
           <FormRadioInput
             control={control}
             name="gender"
-            value="FEMALE"
+            value={GenderEnum.Female}
             itemClassName="flex-col flex-1 py-4"
             options={[
               {label: 'Male', value: GenderEnum.Male, icon: 'gender-male'},

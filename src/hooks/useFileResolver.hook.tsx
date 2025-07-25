@@ -1,41 +1,92 @@
-import {InitiateUploadMutation, UploadDto, useInitiateUploadMutation} from '@/graphql/generated';
+import {InitiateUploadMutation, useInitiateUploadMutation} from '@/graphql/generated';
 import {File} from '@/util/zod';
 import {TypedUseMutation} from '@reduxjs/toolkit/query/react';
+import {useState} from 'react';
 
-type Props<ResultType, QueryType> = {
+type Props<ResultType, QueryType, Keys> = {
   mutation: TypedUseMutation<ResultType, QueryType, any>;
-  pathKeys: string[];
+  pathKeys: Keys;
 };
 
-type Override<T, R> = Omit<T, keyof R> & R;
+interface FileLike {
+  type: string;
+  name: string;
+  size: number;
+  uri?: string;
+}
 
-export function useFileResolver<ResultType, QueryType extends Record<string, any>>({mutation, pathKeys}: Props<ResultType, QueryType>) {
+type ReplaceType<T, P> = {
+  [K in keyof T]: K extends P ? string | FileLike : T[K] extends object ? ReplaceType<T[K], P> : T[K];
+};
+
+export function useFileResolver<
+  ResultType,
+  QueryType extends Record<string, any>,
+  Keys extends string[]
+>({
+  mutation,
+  pathKeys,
+}: Props<ResultType, QueryType, Keys>): [
+  (args: ReplaceType<QueryType, Keys[number]>) => Promise<ResultType>,
+  {
+    isLoading: boolean;
+    isError: boolean;
+    error: any;
+    // Optional: include more from mutationState like data, reset, etc.
+  }
+] {
   const [initiateUpload] = useInitiateUploadMutation();
   const [trigger, mutationState] = mutation();
 
-  const wrappedTrigger = async <T extends QueryType['input']>(args: {input: T & {[P in (typeof pathKeys)[number]]: any}}) => {
-    let input = {...args.input};
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<Error | null>(null);
+  
+  type TransformedInput = ReplaceType<QueryType, Keys[number]>;
+  
+  const wrappedTrigger = async (
+    args: TransformedInput
+  ): Promise<ResultType> => {
+    let input = args.input; //fix here
 
-    const eligibleForUploads = Object.entries(input).filter(([key, value]) => pathKeys.includes(key)) as [string, File][]; // Now typed correctly
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const eligibleForUploads = Object.entries(input).filter(([key]) =>
+        pathKeys.includes(key)
+      ) as [string, File][];
 
-    for (const [key, file] of eligibleForUploads) {
-      const data = await initiateUpload({
-        input: {
-          name: file.name,
-          mediaCode: (file as any)?.metadata?.mediaCode,
-          contentType: file.type,
-        },
-      }).unwrap();
+      for (const [key, file] of eligibleForUploads) {
+    
+        const data = await initiateUpload({
+          input: {
+            name: file.name,
+            mediaCode: (file as any)?.metadata?.mediaCode,
+            contentType: file.type,
+          },
+        }).unwrap();
 
-      await fileUploadToS3(data, file);
-      input = {...input, [key]: data.initiateUpload.uploadId};
+        await fileUploadToS3(data, file);
+        input = { ...input, [key]: data.initiateUpload.uploadId };
+      }
+
+      return await trigger({ input } as any).unwrap();
+    } catch (err) {
+      setUploadError(err as Error);
+      throw err;
+    } finally {
+      setUploading(false);
     }
-
-    return trigger({input} as any);
   };
 
-  return [wrappedTrigger, mutationState] as const;
+  const combinedState = {
+    isLoading: uploading || mutationState.isLoading,
+    isError: !!uploadError || mutationState.isError,
+    error: uploadError ?? mutationState.error,
+  };
+
+  return [wrappedTrigger, combinedState];
 }
+
 
 async function fileUploadToS3(arg: InitiateUploadMutation, file: File) {
   const {uploadId, signedData} = arg.initiateUpload;

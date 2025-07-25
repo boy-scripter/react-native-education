@@ -44,7 +44,7 @@ export default function HomeScreen() {
           <Text>Let's Make this Day Productive</Text>
         </View>
         <View>
-          <Img onPress={() => navigate('DashboardStack', {screen: 'EditProfile'})} className="w-16 h-16 rounded-full" source={user.avatar!} />
+          <Img onPress={() => navigate('DashboardStack', {screen: 'EditProfile'})} className="w-16 h-16 rounded-full overflow-hidden" source={user.avatar} />
         </View>
       </View>
 

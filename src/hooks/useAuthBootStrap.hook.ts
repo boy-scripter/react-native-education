@@ -1,12 +1,15 @@
 import { useEffect } from 'react';
-import { useLazyUserQuery } from '@store/auth/endpoints';
+import { useLazyProfileQuery } from '@store/auth/endpoints';
 import { useRootState } from '@/store/store';
-import {  selectIsAuthenticated } from '@/store/auth/auth.selector';
+import { selectIsAuthenticated, selectRememberMe } from '@/store/auth/auth.selector';
 
 export function useAuthBootstrap() {
 
-  const isAuthenticated = useRootState(selectIsAuthenticated);
-  const [userQuery] = useLazyUserQuery()
+  const authenticated = useRootState(selectIsAuthenticated);
+  const rememberMe = useRootState(selectRememberMe);
+  const isAuthenticated = authenticated && rememberMe
+
+  const [userQuery] = useLazyProfileQuery()
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -14,5 +17,5 @@ export function useAuthBootstrap() {
     }
   }, [])
 
-  return isAuthenticated || false;
+  return (isAuthenticated) || false;
 }

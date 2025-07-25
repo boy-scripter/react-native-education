@@ -1,13 +1,11 @@
 import React, {useRef} from 'react';
-import {View, TextInput} from 'react-native';
+import {View, TextInput, TextInputKeyPressEventData, NativeSyntheticEvent} from 'react-native';
 import {twMerge} from 'tailwind-merge';
-import Input from './Input';
 
 interface SplitInputProps {
   onSplitChange: (value: string) => void;
   count: number;
   className?: string;
-  size?: string;
   inputClassName?: string;
 }
 
@@ -15,40 +13,59 @@ const SplitInput: React.FC<SplitInputProps> = ({count, className, inputClassName
   const inputRefs = useRef<Array<TextInput | null>>([]);
   const values = useRef<string[]>(Array(count).fill(''));
 
-  const handlePaste = () => {
-    
-  };
-
   const handleChange = (text: string, index: number) => {
-    values.current[index] = text;
+
+    const chars = text.split('').slice(0,6);
+    for (let i = 0; i < chars.length && index + i < count; i++) {
+      values.current[index + i] = chars[i];
+      const ref = inputRefs.current[index + i];
+      ref?.setNativeProps({text: chars[i]});
+    }
+
     onSplitChange(values.current.join(''));
-    // Auto-focus next input if current has text
-    if (text && index < count - 1) {
-      inputRefs.current[index + 1]?.focus();
+
+    const nextIndex = index + chars.length;
+    if (nextIndex < count) {
+      inputRefs.current[nextIndex]?.focus();
     }
   };
 
-  const handleKeyPress = (e: any, index: number) => {
-    if (e.nativeEvent.key === 'Backspace' && !values.current[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+  const handleKeyPress = (e: NativeSyntheticEvent<TextInputKeyPressEventData>, index: number) => {
+    if (e.nativeEvent.key === 'Backspace') {
+      if (values.current[index]) {
+        values.current[index] = '';
+        onSplitChange(values.current.join(''));
+        return;
+      }
+      if (index > 0) {
+        inputRefs.current[index - 1]?.focus();
+      }
     }
   };
 
   return (
-    <View className={twMerge('flex-row gap-2', className)}>
+    <View className={twMerge('flex-row mb-2 gap-2', className)}>
       {Array.from({length: count}).map((_, index) => (
-        <Input
+        <TextInput
           key={index}
-          ref={el => {
-            inputRefs.current[index] = el;
-          }}
+          ref={ref => (inputRefs.current[index] = ref)}
           keyboardType="numeric"
-          onChange={text => handleChange(text, index)}
+          maxLength={count} // to support paste of multiple digits
+          onChangeText={text => handleChange(text, index)}
           onKeyPress={e => handleKeyPress(e, index)}
-          maxLength={1}
-          max={9}
-          placeholder="0"
-          className={twMerge('border border-greyish-100 font-interBold p-2 px-4 w-12 aspect-square rounded text-center', inputClassName)}
+          placeholder="-"
+          style={{
+            borderColor: '#e0e0e0',
+            borderWidth: 1,
+            paddingVertical: 8,
+            paddingHorizontal: 16,
+            width: 48,
+            aspectRatio: 1,
+            borderRadius: 6,
+            textAlign: 'center',
+            fontWeight: 'bold',
+          }}
+          className={twMerge(inputClassName)}
         />
       ))}
     </View>

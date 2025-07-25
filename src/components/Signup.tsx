@@ -1,10 +1,10 @@
 import Button from '@components/ui/Button';
 import {View} from 'react-native';
-import {FormInput} from '@/components/ui/Forms/FormField';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {successToast} from './Toast/Toast.config';
 import {useSignupMutation} from '@store/auth/endpoints';
+import { FormInput } from './ui/Forms';
 import z from 'zod';
 
 export const SignUpSchema = z.object({

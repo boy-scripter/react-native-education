@@ -17,7 +17,7 @@ interface TopImageLayoutProps {
 
 const TopImageLayout = ({image, lottie, title, description, children, containerClassName}: TopImageLayoutProps) => {
   return (
-    <View className="flex-1 py-2 bg-theme">
+    <View className="flex-1 border py-2 bg-theme">
       {canGoBack() && (
         <View onTouchEnd={goBack} className="absolute z-10 top-5 left-5 rounded-full bg-white p-2">
           <Text>
@@ -28,7 +28,7 @@ const TopImageLayout = ({image, lottie, title, description, children, containerC
 
       {/* Render Lottie or Image based on which prop is passed */}
       {lottie && (
-        <View className="h-48 px-5 justify-end  overflow-hidden">
+        <View className="h-56 px-5 justify-end  overflow-hidden">
           <LottieView source={lottie} autoPlay loop resizeMode="contain" style={{width: '100%', height: '100%'}} />
         </View>
       )}

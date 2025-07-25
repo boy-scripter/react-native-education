@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {forwardRef, useState} from 'react';
 import {View, TextInput, Text, TextInputProps, Pressable} from 'react-native';
 import {twMerge} from 'tailwind-merge';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,7 +16,8 @@ export type InputProps = {
   secret?: boolean;
 } & Pick<TextInputProps, 'keyboardType' | 'editable' | 'pointerEvents'>;
 
-const Input = ({placeholder, label, className, style, secret, onChange, icon, ...props}: InputProps) => {
+const Input = forwardRef<TextInput, InputProps>(
+  ({ placeholder, label, className, style, secret, onChange, icon, ...props }, ref) => {
   const [hidden, setHidden] = useState(false);
 
   return (
@@ -46,7 +47,7 @@ const Input = ({placeholder, label, className, style, secret, onChange, icon, ..
       </View>
     </View>
   );
-};
+});
 
 
 export default Input;

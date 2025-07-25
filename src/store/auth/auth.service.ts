@@ -1,6 +1,9 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { errorToast } from '@components/Toast/Toast.config';
+import { AuthenticatedUser, AuthState, REMEMBER_ME } from '@/types/auth';
+import { useStorage } from '@/hooks/useStorage.hook';
 
+const { removeItem, setItem, getItem } = useStorage()
 
 export async function goWithGoogle() {
     let idToken
@@ -19,3 +22,8 @@ export async function goWithGoogle() {
 }
 
 
+
+export function setDataLocally(newData: AuthState) {
+    const oldData = getItem<AuthenticatedUser>(REMEMBER_ME);
+    setItem(REMEMBER_ME, { ...oldData, ...newData });
+}

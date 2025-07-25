@@ -5,6 +5,7 @@ import { useStorage } from "@/hooks/useStorage.hook";
 import { AuthenticatedUser } from '@myTypes/auth'
 import { navigate } from "@/hooks/useNavigation.hook";
 import fallbackAvatar from '@assets/images/profile.png'
+import { setDataLocally } from "./auth.service";
 
 const { removeItem, setItem, getItem } = useStorage()
 
@@ -22,13 +23,13 @@ function applyAuthState(state: Draft<AuthState>, payload: AuthResponse) {
   state.user = {
     ...payload.user,
     avatar: payload.user.avatar || fallbackAvatar,
+    dob: undefined,
+    gender: undefined,
   };
   state.access_token = payload.access_token;
   state.refresh_token = payload.refresh_token;
   state.isAuthenticated = true;
-
-  if (state.remember_me) setItem(REMEMBER_ME, state);
-
+  setDataLocally({ ...state })
 }
 
 export const authSlice = createSlice({
@@ -37,26 +38,23 @@ export const authSlice = createSlice({
   reducers: {
 
     logout: (state) => {
-      removeItem(REMEMBER_ME);
       state.access_token = null;
       state.refresh_token = null;
       state.user = null;
       state.isAuthenticated = false;
       state.remember_me = false;
       navigate('AuthStack')
+      removeItem(REMEMBER_ME);
     },
 
     setAccessToken: (state, action: PayloadAction<string | null>) => {
       state.access_token = action.payload;
-
-      if (state.remember_me) {
-        const oldData = getItem<AuthenticatedUser>(REMEMBER_ME)
-        setItem(REMEMBER_ME, { ...oldData, access_token: action.payload });
-      }
+      setDataLocally({ ...state })
     },
 
     setRememberMe: (state, action: PayloadAction<boolean>) => {
       state.remember_me = action.payload;
+      setDataLocally({ ...state })
     },
 
   },
@@ -79,20 +77,11 @@ export const authSlice = createSlice({
     builder.addMatcher(
       api.endpoints.Profile.matchFulfilled,
       (state, { payload }) => {
-
-        const user = payload.profile;
         state.user = {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          avatar: user.avatar || fallbackAvatar,
+          ...payload.profile,
+          avatar: payload.profile.avatar || fallbackAvatar,
         };
-        
-        if (state.remember_me) {
-          const oldData = getItem<AuthenticatedUser>(REMEMBER_ME);
-          setItem(REMEMBER_ME, { ...oldData, user: state.user });
-        }
-
+        setDataLocally({ ...state })
       }
     );
 

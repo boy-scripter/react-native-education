@@ -21,6 +21,23 @@ type ImageInputProps = Pick<InputProps, 'className' | 'icon'> &
     mediaCode: 'PROFILE_IMAGE';
   };
 
+const isValidUrl = (value: string): boolean => {
+  return /^https?:\/\/.+\.(png|jpe?g|gif|bmp|webp|svg|tiff?)$/i.test(value);
+};
+
+function imageOverloading(finalSource?: string | number | File) {
+  let imageSource: any = undefined;
+
+  if (typeof finalSource === 'string' && isValidUrl(finalSource)) {
+    imageSource = {uri: finalSource};
+  } else if (typeof finalSource === 'number') {
+    imageSource = finalSource;
+  } else if (typeof finalSource === 'object' && finalSource !== null && 'uri' in finalSource && typeof finalSource.uri === 'string') {
+    imageSource = {uri: finalSource.uri};
+  }
+  return imageSource
+}
+
 const ImageInput: React.FC<ImageInputProps> = ({
   value,
   label,
@@ -51,6 +68,7 @@ const ImageInput: React.FC<ImageInputProps> = ({
           size: asset.fileSize,
           metadata: {mediaCode},
         });
+        console.log(file)
         onChange(file);
       } else {
         throw new Error('Image selection failed: Missing one or more required asset parameters.');
@@ -58,16 +76,12 @@ const ImageInput: React.FC<ImageInputProps> = ({
     }
   };
 
-  let finalImage: string = '';
-  if (value instanceof File && value.uri) {
-    finalImage = value.uri;
-  } else {
-    finalImage = (value as string) || fallbackUri || '';
-  }
+  // If finalSource is a valid URL string → wrap with { uri }, else pass directly
+  const finalImage = imageOverloading(value)
 
   return (
     <View className={twMerge('relative w-28 h-28', className)}>
-      <Image source={{uri: finalImage}} resizeMode={resizeMode} className={twMerge('w-full h-full bg-greyish-100/30 border-2 rounded-3xl border-theme', imageClassName)} />
+      <Image source={finalImage} resizeMode={resizeMode} className={twMerge('w-full h-full bg-greyish-100/30 border-2 rounded-3xl border-theme', imageClassName)} />
 
       <View className="absolute inset-0 justify-center items-center bg-greyish/30 rounded-3xl">
         <Button loadingMode={false} className={twMerge('p-1 px-2 bg-theme/70', buttonClassName)} textClassName={textClassName} onPress={handleOnPress} icon={icon} iconSize={16} label={label} />

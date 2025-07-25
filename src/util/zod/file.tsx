@@ -1,4 +1,4 @@
-import {z, ZodObject, ZodRawShape} from 'zod';
+import {z, ZodEffects, ZodNumber, ZodObject, ZodOptional, ZodString} from 'zod';
 
 // ----------------------
 // Custom File Class
@@ -88,7 +88,12 @@ class FileSchemaBuilder {
     return z.array(this.single());
   }
 
-  single(): ZodObject<ZodRawShape> {
+  single(): ZodObject<{
+    name: ZodString;
+    type: ZodEffects<ZodString, string, string>;
+    size: ZodNumber;
+    uri: ZodOptional<ZodString>;
+  }> {
     return z.object({
       name: z.string().min(1, 'File name is required'),
       type: z.string().refine(
