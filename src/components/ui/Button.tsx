@@ -44,7 +44,7 @@ const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassN
     <Pressable
       onPress={handlePress}
       disabled={isDisabled}
-      className={twMerge('bg-theme border-theme overflow-hidden p-2 py-3 rounded-lg flex-row gap-2 items-center justify-center', isDisabled && 'opacity-50', className)}
+      className={twMerge('bg-theme border-theme overflow-hidden p-2 py-3  rounded-lg flex-row gap-2 items-center justify-center', isDisabled && 'opacity-50', className)}
       style={{borderWidth: 1}}
       {...props}>
       <LinearGradient colors={['rgba(255, 255, 255, 0.317)', 'transparent']} start={{x: 0.5, y: 0}} end={{x: 0.5, y: 0.5}} style={StyleSheet.absoluteFillObject} />

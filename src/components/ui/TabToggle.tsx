@@ -48,13 +48,13 @@ export default function Tab({children, defaultTab, sliderClassName, onChange, cl
   const {containerRef, sliderPosition, currentTab, activateSliderTab} = useTabContextCreator({defaultTab, onChange});
   return (
     <TabContext.Provider value={{activateSliderTab, containerRef, currentTab, sliderPosition}}>
-      <View className={twMerge('p-1 bg-[#F5F6F9] w-4/5 mx-auto', className)} style={{borderRadius: 8}}>
+      <View className={twMerge('p-1.5 bg-[#F5F6F9] w-4/5 mx-auto', className)} style={{borderRadius: 8}}>
         <View ref={containerRef} className={twMerge('relative overflow-hidden flex-row gap-2', sliderClassName)}>
           <MotiView
             animate={{translateX: sliderPosition.x, width: sliderPosition.width}}
             transition={{type: 'spring', damping: 15, stiffness: 200}}
             style={{borderRadius: 6}}
-            className="slider absolute bg-white h-full top-0 left-0"
+            className="slider absolute  bg-white h-full top-0 left-0"
           />
           {children}
         </View>

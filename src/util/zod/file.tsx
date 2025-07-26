@@ -5,18 +5,18 @@ import {z, ZodEffects, ZodNumber, ZodObject, ZodOptional, ZodString} from 'zod';
 // ----------------------
 
 export class File {
-  name: string;
-  type: string;
-  size: number;
-  uri?: string;
-  metadata?: Record<string, any>;
+  public name: string;
+  public type: string;
+  public size: number;
+  public uri: string;
+  public mediaCode?: string;
 
-  constructor(params: {name: string; type: string; size: number; uri: string; metadata?: Record<string, any>}) {
-    this.name = params.name;
-    this.type = params.type;
-    this.size = params.size;
-    this.uri = params.uri;
-    this.metadata = params.metadata;
+  constructor({name, type, size, uri, mediaCode}: {name: string; type: string; size: number; uri: string; mediaCode?: string}) {
+    this.name = name;
+    this.type = type;
+    this.size = size;
+    this.uri = uri;
+    this.mediaCode = mediaCode;
   }
 
   isImage(): boolean {
@@ -92,7 +92,7 @@ class FileSchemaBuilder {
     name: ZodString;
     type: ZodEffects<ZodString, string, string>;
     size: ZodNumber;
-    uri: ZodOptional<ZodString>;
+    uri: ZodString;
   }> {
     return z.object({
       name: z.string().min(1, 'File name is required'),
@@ -109,7 +109,8 @@ class FileSchemaBuilder {
       size: z.number().max(this.constraints._size, {
         message: `File must be under ${this.constraints._size / 1024 / 1024}MB`,
       }),
-      uri: z.string().url('Invalid file URI').optional(),
+      uri: z.string().url('Invalid file URI'),
+      mediaCode: z.string().optional(),
     });
   }
 }

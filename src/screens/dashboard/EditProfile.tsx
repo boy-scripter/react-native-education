@@ -6,11 +6,12 @@ import {useRootState} from '@/store/store';
 import {ScrollView, View} from 'react-native';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {fileSchema} from '@/util/zod';
+import {File, fileSchema, getDirtyValues} from '@/util/zod';
 import {DateTime} from 'luxon';
 import {useFileResolver} from '@/hooks/useFileResolver.hook';
 import {useProfileUpdateMutation} from '@/store/auth/endpoints';
 import {GenderEnum} from '@/graphql/generated';
+import ProfileImage from '@assets/images/profile.png';
 import z from 'zod';
 
 const profileSchema = z.object({
@@ -30,15 +31,10 @@ const profileSchema = z.object({
     )
     .optional(),
 
-  avatar: z
-    .union([
-      fileSchema()
-        .pattern(/^image\/(heic|png|jpeg|jpg)$/)
-        .size(1024 * 1024 * 1)
-        .single(),
-      z.string().url(),
-    ])
-    .optional(),
+  avatar: fileSchema()
+    .pattern(/^image\/(heic|png|jpeg|jpg)$/)
+    .size(1024 * 1024 * 1)
+    .single(),
 });
 type profileSchemaType = z.infer<typeof profileSchema>;
 
@@ -49,27 +45,38 @@ const EditProfileScreen = () => {
   });
 
   const user = useRootState(selectUser);
-  const {control, handleSubmit} = useForm<profileSchemaType>({
+  const {control, handleSubmit, formState, getValues} = useForm<profileSchemaType>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
+      name: user.name,
       gender: user?.gender,
-      avatar: user?.avatar,
+      avatar: user?.avatar ? new File({uri: user?.avatar}) : undefined,
       email: user.email,
       dob: user?.dob,
     },
   });
 
-  async function handleSaveProfile(schema: profileSchemaType) {
-    console.log('file')
-    const data = await profileUpdate({input: schema});
-   console.log(data.profileUpdate)
+  async function handleSaveProfile(values: profileSchemaType) {
+    console.log('Dirty Fields:', formState.dirtyFields);
+
+    const currentValues = getValues(); // ← get current values from form
+    const changedData = getDirtyValues(values, formState.dirtyFields);
+
+    console.log('Changed Data:', changedData);
+
+    if (Object.keys(changedData).length === 0) {
+      console.log('No fields were changed.');
+      return;
+    }
+
+    await profileUpdate({input: changedData});
   }
 
   return (
     <TopImageLayout title="Edit Your Profile" description="Update your personal information below" lottie={require('@assets/lottie/profile.json')}>
-      <ScrollView className="" contentContainerStyle={{flexGrow: 1}}>
-        <View className="flex-1  gap-6 pt-4 pb-2">
-          <FormImageInput control={control} name="avatar" className="mx-auto" mediaCode="PROFILE_IMAGE" />
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        <View className="flex-1 gap-6 pt-4 pb-2">
+          <FormImageInput fallbackUri={ProfileImage} control={control} name="avatar" className="mx-auto" mediaCode="PROFILE_IMAGE" />
           <FormInput control={control} name="name" icon="account" placeholder="Your Nickname" />
           <FormInput control={control} name="email" icon="email-outline" editable={false} placeholder="Email" />
           <FormRadioInput

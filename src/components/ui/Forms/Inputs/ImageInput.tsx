@@ -2,13 +2,13 @@ import React from 'react';
 import {View, Image, ImageResizeMode} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {twMerge} from 'tailwind-merge';
-
 import {ImgProps} from '../../Img';
 import {ButtonProps} from '../../Button';
 import {InputProps} from './Input';
 import Button from '../../Button'; // assuming you have a Button component
-import {File} from '@/util/zod';
 import {ensurePermission} from '@/util/permission';
+import {imageOverloading} from '@/util/imageHelper';
+import {File} from '@/util/zod';
 
 type ImageInputProps = Pick<InputProps, 'className' | 'icon'> &
   Pick<ImgProps, 'fallbackUri'> &
@@ -17,26 +17,10 @@ type ImageInputProps = Pick<InputProps, 'className' | 'icon'> &
     imageClassName?: string;
     onChange?: (arg1: File) => any;
     resizeMode?: ImageResizeMode;
-    value?: File | string;
+    value?: File | string | number;
+    selectionLimit?: number;
     mediaCode: 'PROFILE_IMAGE';
   };
-
-const isValidUrl = (value: string): boolean => {
-  return /^https?:\/\/.+\.(png|jpe?g|gif|bmp|webp|svg|tiff?)$/i.test(value);
-};
-
-function imageOverloading(finalSource?: string | number | File) {
-  let imageSource: any = undefined;
-
-  if (typeof finalSource === 'string' && isValidUrl(finalSource)) {
-    imageSource = {uri: finalSource};
-  } else if (typeof finalSource === 'number') {
-    imageSource = finalSource;
-  } else if (typeof finalSource === 'object' && finalSource !== null && 'uri' in finalSource && typeof finalSource.uri === 'string') {
-    imageSource = {uri: finalSource.uri};
-  }
-  return imageSource
-}
 
 const ImageInput: React.FC<ImageInputProps> = ({
   value,
@@ -46,8 +30,9 @@ const ImageInput: React.FC<ImageInputProps> = ({
   buttonClassName,
   textClassName,
   onChange,
-  fallbackUri,
   imageClassName,
+  fallbackUri,
+  selectionLimit = 1,
   icon = 'camera',
   resizeMode = 'cover', // default resize mode
 }) => {
@@ -55,7 +40,7 @@ const ImageInput: React.FC<ImageInputProps> = ({
     await ensurePermission('image');
     const result = await launchImageLibrary({
       mediaType: 'photo',
-      selectionLimit: 1,
+      selectionLimit,
     });
 
     if (result.assets && result.assets.length > 0) {
@@ -66,9 +51,8 @@ const ImageInput: React.FC<ImageInputProps> = ({
           name: asset.fileName,
           type: asset.type,
           size: asset.fileSize,
-          metadata: {mediaCode},
+          mediaCode: mediaCode,
         });
-        console.log(file)
         onChange(file);
       } else {
         throw new Error('Image selection failed: Missing one or more required asset parameters.');
@@ -77,7 +61,7 @@ const ImageInput: React.FC<ImageInputProps> = ({
   };
 
   // If finalSource is a valid URL string → wrap with { uri }, else pass directly
-  const finalImage = imageOverloading(value)
+  const finalImage = imageOverloading(value) || fallbackUri;
 
   return (
     <View className={twMerge('relative w-28 h-28', className)}>
