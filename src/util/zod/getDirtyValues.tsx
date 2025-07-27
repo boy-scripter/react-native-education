@@ -1,17 +1,14 @@
-import {FieldValues} from 'react-hook-form';
-
 export function getDirtyValues(values: any, dirtyFields: any): any {
-  if (!dirtyFields) return {};
+  const dirtyValues: any = {};
 
-  return Object.entries(dirtyFields).reduce((acc, [key, isDirty]) => {
-    if (isDirty === true) {
-      acc[key] = values[key]; // ✅ use from `values`
-    } else if (typeof isDirty === 'object' && values[key] !== undefined) {
-      const nested = getDirtyValues(values[key], isDirty);
-      if (Object.keys(nested).length > 0) {
-        acc[key] = nested;
-      }
+  for (const key in dirtyFields) {
+    if (dirtyFields[key] === true) {
+      dirtyValues[key] = values[key];
+    } else if (typeof dirtyFields[key] === 'object' && values[key]) {
+      // Recursively get nested dirty values
+      dirtyValues[key] = getDirtyValues(values[key], dirtyFields[key]);
     }
-    return acc;
-  }, {} as any);
+  }
+
+  return dirtyValues;
 }

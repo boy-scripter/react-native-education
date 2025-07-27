@@ -1,17 +1,17 @@
-import {z, ZodEffects, ZodNumber, ZodObject, ZodOptional, ZodString} from 'zod';
+import { z, ZodEffects, ZodNumber, ZodObject, ZodOptional, ZodString } from 'zod';
 
 // ----------------------
 // Custom File Class
 // ----------------------
 
 export class File {
-  public name: string;
-  public type: string;
-  public size: number;
   public uri: string;
+  public name: string;
+  public size: number;
+  public type?: string;
   public mediaCode?: string;
 
-  constructor({name, type, size, uri, mediaCode}: {name: string; type: string; size: number; uri: string; mediaCode?: string}) {
+  constructor({ name, type, size, uri, mediaCode }: { name: string; type: string; size: number; uri: string; mediaCode?: string }) {
     this.name = name;
     this.type = type;
     this.size = size;
@@ -19,9 +19,6 @@ export class File {
     this.mediaCode = mediaCode;
   }
 
-  isImage(): boolean {
-    return this.type.startsWith('image/');
-  }
 
   getExtension(): string | null {
     const match = this.name.match(/\.(\w+)$/);
@@ -40,83 +37,79 @@ export class File {
       uri: this.uri,
     };
   }
-}
 
-// ----------------------
-// Constraints Class
-// ----------------------
-
-class FileConstraints {
-  _type: string[] | null;
-  _size: number;
-  _pattern: RegExp | null;
-
-  constructor() {
-    this._type = ['image/jpeg', 'image/png']; // default types
-    this._size = 5 * 1024 * 1024; // default 5MB
-    this._pattern = null;
+  toURL() {
+    return this.uri
   }
 }
+
+
 
 // ----------------------
 // Schema Builder
 // ----------------------
 
 class FileSchemaBuilder {
-  private readonly constraints: FileConstraints;
+  private maxSize = 5 * 1024 * 1024;
+  private maxFilesCount: number | null = 1;
+  private mimeType: string[] = [];
+  private extensionPattern: RegExp | null = null;
 
-  constructor() {
-    this.constraints = new FileConstraints();
-  }
-
-  type(acceptedTypes: string[]): this {
-    this.constraints._type = acceptedTypes;
+  setMaxSize(size: number) {
+    this.maxSize = size;
     return this;
   }
 
-  pattern(regex: RegExp): this {
-    this.constraints._pattern = regex;
+  mime(types: string[]) {
+    this.mimeType = types;
     return this;
   }
 
-  size(maxBytes: number): this {
-    this.constraints._size = maxBytes;
+  maxFiles(count: number) {
+    this.maxFilesCount = count;
     return this;
   }
 
-  array() {
-    return z.array(this.single());
+  patternExtension(regex: RegExp) {
+    this.extensionPattern = regex;
+    return this;
   }
 
-  single(): ZodObject<{
-    name: ZodString;
-    type: ZodEffects<ZodString, string, string>;
-    size: ZodNumber;
-    uri: ZodString;
-  }> {
-    return z.object({
-      name: z.string().min(1, 'File name is required'),
-      type: z.string().refine(
-        val => {
-          const typeMatch = this.constraints._type ? this.constraints._type.includes(val) : true;
+  private getFileExtension(filename: string): string {
+    const parts = filename.split('.');
+    return parts.length > 1 ? parts.pop()!.toLowerCase() : '';
+  }
 
-          const patternMatch = this.constraints._pattern ? this.constraints._pattern.test(val) : true;
+  build() {
+    const baseFileSchema = z
+      .instanceof(File)
+      .refine((file) => file.size <= this.maxSize, {
+        message: `File size must be less than ${this.maxSize / 1024 / 1024}MB`,
+      })
+      .refine((file) => {
+        return (
+          this.mimeType.length === 0 || (file.type && this.mimeType.includes(file.type))
+        );
+      }, {
+        message: `File type must be one of: ${this.mimeType.join(', ')}`,
+      })
+      .refine((file) => {
+        if (!this.extensionPattern) return true;
+        const ext = this.getFileExtension(file.name);
+        return this.extensionPattern.test(ext);
+      }, {
+        message: `File extension does not match the required pattern`,
+      });
 
-          return typeMatch && patternMatch;
-        },
-        {message: `Unsupported file type`},
-      ),
-      size: z.number().max(this.constraints._size, {
-        message: `File must be under ${this.constraints._size / 1024 / 1024}MB`,
-      }),
-      uri: z.string().url('Invalid file URI'),
-      mediaCode: z.string().optional(),
-    });
+    if (this.maxFilesCount && this.maxFilesCount > 1) {
+      return z.array(baseFileSchema).refine((files) => files.length <= this.maxFilesCount!, {
+        message: `You can upload up to ${this.maxFiles} files.`,
+      });
+    }
+
+    return baseFileSchema;
   }
 }
 
-// ----------------------
-// Exported Factory
-// ----------------------
-
 export const fileSchema = () => new FileSchemaBuilder();
+

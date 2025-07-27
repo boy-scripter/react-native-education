@@ -1,6 +1,6 @@
 import { baseApi } from '@baseApi';
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
+export type Maybe<T> = T | undefined;
+export type InputMaybe<T> = T | undefined;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -237,21 +237,21 @@ export type LoginWithGoogleMutationVariables = Exact<{
 }>;
 
 
-export type LoginWithGoogleMutation = { __typename?: 'Mutation', loginWithGoogle: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', name: string, email: string, _id: string, avatar?: string | null } } };
+export type LoginWithGoogleMutation = { __typename?: 'Mutation', loginWithGoogle: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', name: string, email: string, _id: string, avatar?: string | undefined } } };
 
 export type LoginWithEmailMutationVariables = Exact<{
   input: LoginDto;
 }>;
 
 
-export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string, avatar?: string | null } } };
+export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string, avatar?: string | undefined } } };
 
 export type ProfileUpdateMutationVariables = Exact<{
   input: UpdateProfileDto;
 }>;
 
 
-export type ProfileUpdateMutation = { __typename?: 'Mutation', profileUpdate: { __typename?: 'User', name: string, gender?: GenderEnum | null, email: string, dob?: string | null, avatar?: string | null, _id: string } };
+export type ProfileUpdateMutation = { __typename?: 'Mutation', profileUpdate: { __typename?: 'User', name: string, gender?: GenderEnum | undefined, email: string, dob?: string | undefined, avatar?: string | undefined, _id: string } };
 
 export type SetNewResetPasswordMutationVariables = Exact<{
   input: SetNewPasswordDto;
@@ -265,12 +265,12 @@ export type SignupMutationVariables = Exact<{
 }>;
 
 
-export type SignupMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', name: string, email: string, avatar?: string | null, _id: string } };
+export type SignupMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', name: string, email: string, avatar?: string | undefined, _id: string } };
 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', name: string, email: string, avatar?: string | null, _id: string } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', name: string, email: string, avatar?: string | undefined, _id: string } };
 
 export type InitiateUploadMutationVariables = Exact<{
   input: UploadDto;

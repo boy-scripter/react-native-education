@@ -12,3 +12,4 @@ generates:
       importBaseApiAlternateName: 'baseApi'
       exportHooks: true
       enumsAsConst: true
+      maybeValue: T | undefined

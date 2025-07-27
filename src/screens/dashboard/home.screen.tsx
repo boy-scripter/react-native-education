@@ -72,7 +72,7 @@ export default function HomeScreen() {
         </View>
         <View>
           <Img fallbackUri={ProfileImage} onPress={() => navigate('DashboardStack', {screen: 'EditProfile'})} className="w-16 h-16 rounded-lg overflow-hidden" source={user.avatar} />
-        </View>
+       </View>
       </View>
 
       <RankingAndLeaderboard />
@@ -84,6 +84,7 @@ export default function HomeScreen() {
           ))}
         </View>
       </View>
+
     </ScrollView>
   );
 }
@@ -123,6 +124,7 @@ export function RankingAndLeaderboard() {
     </>
   );
 }
+
 
 interface QuizCardProps {
   name: string;
