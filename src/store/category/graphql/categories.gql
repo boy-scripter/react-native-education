@@ -1,0 +1,9 @@
+query Categories {
+  categories {
+    _id
+    color
+    image
+    name
+    slug
+  }
+}

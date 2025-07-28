@@ -1,0 +1,23 @@
+query Pdfs($limit: Int!, $page: Int!) {
+  pdfs(limit: $limit, page: $page) {
+    docs {
+      url
+      title
+      category {
+        _id
+        color
+        image
+        name
+        slug
+      }
+    }
+    totalDocs
+    totalPages
+    prevPage
+    page
+    nextPage
+    limit
+    hasNextPage
+    hasPrevPage
+  }
+}

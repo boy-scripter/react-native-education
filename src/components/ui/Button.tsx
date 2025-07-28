@@ -20,7 +20,21 @@ export type ButtonProps = {
   loadingMode?: boolean;
 } & PressableProps;
 
-const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassName, disabled, label, loadingMode = true, iconSize = 20, iconColor = '#fff', position = 'right', icon, iconPosition = 'left', ...props}) => {
+const Button: React.FC<ButtonProps> = ({
+  children,
+  onPress,
+  className,
+  textClassName,
+  disabled,
+  label,
+  loadingMode = true,
+  iconSize = 20,
+  icon,
+  iconColor = '#fff',
+  position = 'right',
+  iconPosition = 'left',
+  ...props
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const isDisabled = isLoading || disabled;
 
@@ -30,7 +44,7 @@ const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassN
     const result = onPress(event);
 
     // Check if result is a Promise
-    if (result && typeof result.then === 'function' && loadingMode) {
+    if (result && loadingMode && typeof result.then === 'function') {
       try {
         setIsLoading(true);
         await result;
@@ -39,6 +53,22 @@ const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassN
       }
     }
   };
+
+  const isLabel = !!label && !isLoading;
+
+  const LeftContent = () => (
+    <View className="flex-row items-center gap-2">
+      {icon && iconPosition === 'left' && !isLoading && <Icon name={icon} size={iconSize} color={iconColor} />}
+      {position === 'left' && children}
+    </View>
+  );
+
+  const RightContent = () => (
+    <View className="flex-row items-center gap-2">
+      {position === 'right' && children}
+      {icon && iconPosition === 'right' && !isLoading && <Icon name={icon} size={iconSize} color={iconColor} />}
+    </View>
+  );
 
   return (
     <Pressable
@@ -49,27 +79,14 @@ const Button: React.FC<ButtonProps> = ({children, onPress, className, textClassN
       {...props}>
       <LinearGradient colors={['rgba(255, 255, 255, 0.317)', 'transparent']} start={{x: 0.5, y: 0}} end={{x: 0.5, y: 0.5}} style={StyleSheet.absoluteFillObject} />
 
-      {/* Extra children (e.g. countdown, badge) */}
-      {position === 'left' && children && (
-        <View style={{display: !isLoading ? 'flex' : 'none'}} className="mx-2 flex-row items-center">
-          {children}
-        </View>
-      )}
-
-      {/* Icon */}
-      {!isLoading && icon && iconPosition === 'left' && <Icon size={iconSize} color={iconColor}  name={icon}></Icon>}
-
-      {/* Label or Loader */}
-      {isLoading ? <Loader /> : !!label && <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{label}</Text>}
-
-      {/* Icon */}
-      {!isLoading && icon && iconPosition === 'right' && <Icon size={iconSize} color="#fff"  name={icon}></Icon>}
-
-      {/* Extra children (e.g. countdown, badge) */}
-      {position === 'right' && children && (
-        <View style={{display: !isLoading ? 'flex' : 'none'}} className="mx-2 flex-row items-center">
-          {children}
-        </View>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <LeftContent />
+          {isLabel && <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{label}</Text>}
+          <RightContent />
+        </>
       )}
     </Pressable>
   );

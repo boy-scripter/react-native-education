@@ -6,7 +6,7 @@ import { useRootState } from '@/store/store';
 import { ScrollView, View } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { File, fileSchema, getDirtyValues } from '@/util/zod';
+import {  fileSchema, getDirtyValues } from '@/util/zod';
 import { DateTime } from 'luxon';
 import { useFileResolver } from '@/hooks/useFileResolver.hook';
 import { useProfileUpdateMutation } from '@/store/auth/endpoints';
@@ -39,6 +39,7 @@ const profileSchema = z.object({
 type profileSchemaType = z.infer<typeof profileSchema>;
 
 const EditProfileScreen = () => {
+  
   const [profileUpdate] = useFileResolver({
     mutation: useProfileUpdateMutation,
     pathKeys: ['avatar'] as const,

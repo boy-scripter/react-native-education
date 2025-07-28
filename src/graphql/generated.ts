@@ -141,17 +141,53 @@ export type MutationValidateOtpArgs = {
   input: ResetPasswordDto;
 };
 
+export type PaginatedPdfResponse = {
+  __typename?: 'PaginatedPdfResponse';
+  docs: Array<Pdf>;
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPrevPage: Scalars['Boolean']['output'];
+  limit: Scalars['Int']['output'];
+  nextPage?: Maybe<Scalars['Int']['output']>;
+  page: Scalars['Int']['output'];
+  prevPage?: Maybe<Scalars['Int']['output']>;
+  totalDocs: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type Pdf = {
+  __typename?: 'Pdf';
+  _id: Scalars['ID']['output'];
+  category: Category;
+  createdAt: Scalars['DateTime']['output'];
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  url: Scalars['String']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   categories: Array<Category>;
   category: Category;
+  findById: Pdf;
   getHello: Scalars['String']['output'];
+  pdfs: PaginatedPdfResponse;
   profile: User;
 };
 
 
 export type QueryCategoryArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryFindByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryPdfsArgs = {
+  limit?: Scalars['Int']['input'];
+  page?: Scalars['Int']['input'];
 };
 
 export type RefreshTokenResponse = {
@@ -206,7 +242,7 @@ export type User = {
   __typename?: 'User';
   _id: Scalars['ID']['output'];
   avatar?: Maybe<Scalars['String']['output']>;
-  dob?: Maybe<Scalars['String']['output']>;
+  dob?: Maybe<Scalars['DateTime']['output']>;
   email: Scalars['String']['output'];
   gender?: Maybe<GenderEnum>;
   name: Scalars['String']['output'];
@@ -251,7 +287,7 @@ export type ProfileUpdateMutationVariables = Exact<{
 }>;
 
 
-export type ProfileUpdateMutation = { __typename?: 'Mutation', profileUpdate: { __typename?: 'User', name: string, gender?: GenderEnum | undefined, email: string, dob?: string | undefined, avatar?: string | undefined, _id: string } };
+export type ProfileUpdateMutation = { __typename?: 'Mutation', profileUpdate: { __typename?: 'User', name: string, gender?: GenderEnum | undefined, email: string, dob?: any | undefined, avatar?: string | undefined, _id: string } };
 
 export type SetNewResetPasswordMutationVariables = Exact<{
   input: SetNewPasswordDto;
@@ -271,6 +307,19 @@ export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', name: string, email: string, avatar?: string | undefined, _id: string } };
+
+export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'Category', _id: string, color?: string | undefined, image?: string | undefined, name: string, slug: string }> };
+
+export type PdfsQueryVariables = Exact<{
+  limit: Scalars['Int']['input'];
+  page: Scalars['Int']['input'];
+}>;
+
+
+export type PdfsQuery = { __typename?: 'Query', pdfs: { __typename?: 'PaginatedPdfResponse', totalDocs: number, totalPages: number, prevPage?: number | undefined, page: number, nextPage?: number | undefined, limit: number, hasNextPage: boolean, hasPrevPage: boolean, docs: Array<{ __typename?: 'Pdf', url: string, title: string, category: { __typename?: 'Category', _id: string, color?: string | undefined, image?: string | undefined, name: string, slug: string } }> } };
 
 export type InitiateUploadMutationVariables = Exact<{
   input: UploadDto;
@@ -363,6 +412,42 @@ export const ProfileDocument = `
   }
 }
     `;
+export const CategoriesDocument = `
+    query Categories {
+  categories {
+    _id
+    color
+    image
+    name
+    slug
+  }
+}
+    `;
+export const PdfsDocument = `
+    query Pdfs($limit: Int!, $page: Int!) {
+  pdfs(limit: $limit, page: $page) {
+    docs {
+      url
+      title
+      category {
+        _id
+        color
+        image
+        name
+        slug
+      }
+    }
+    totalDocs
+    totalPages
+    prevPage
+    page
+    nextPage
+    limit
+    hasNextPage
+    hasPrevPage
+  }
+}
+    `;
 export const InitiateUploadDocument = `
     mutation InitiateUpload($input: UploadDto!) {
   initiateUpload(input: $input) {
@@ -398,6 +483,12 @@ const injectedRtkApi = baseApi.injectEndpoints({
     Profile: build.query<ProfileQuery, ProfileQueryVariables | void>({
       query: (variables) => ({ document: ProfileDocument, variables })
     }),
+    Categories: build.query<CategoriesQuery, CategoriesQueryVariables | void>({
+      query: (variables) => ({ document: CategoriesDocument, variables })
+    }),
+    Pdfs: build.query<PdfsQuery, PdfsQueryVariables>({
+      query: (variables) => ({ document: PdfsDocument, variables })
+    }),
     InitiateUpload: build.mutation<InitiateUploadMutation, InitiateUploadMutationVariables>({
       query: (variables) => ({ document: InitiateUploadDocument, variables })
     }),
@@ -405,5 +496,5 @@ const injectedRtkApi = baseApi.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useProfileUpdateMutation, useSetNewResetPasswordMutation, useSignupMutation, useProfileQuery, useLazyProfileQuery, useInitiateUploadMutation } = injectedRtkApi;
+export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useProfileUpdateMutation, useSetNewResetPasswordMutation, useSignupMutation, useProfileQuery, useLazyProfileQuery, useCategoriesQuery, useLazyCategoriesQuery, usePdfsQuery, useLazyPdfsQuery, useInitiateUploadMutation } = injectedRtkApi;
 

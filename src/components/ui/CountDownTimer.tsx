@@ -20,9 +20,9 @@ export type CountdownTimerRef = {
 const CountdownTimer = forwardRef<CountdownTimerRef, CountdownTimerProps>(({duration = 0, textClassName, autoStart = false, onExpire , onChange}, ref) => {
   const currentDuration = useRef(duration) ;
 
-  const calculateTime = (secondsFromNow: number) => {
+  const calculateTime = (seconds: number) => {
     const time = new Date();
-    time.setSeconds(time.getSeconds() + secondsFromNow);
+    time.setSeconds(time.getSeconds() + seconds);
     return time;
   };
 
@@ -36,18 +36,16 @@ const CountdownTimer = forwardRef<CountdownTimerRef, CountdownTimerProps>(({dura
     if(typeof onChange === 'function'){
       onChange(isRunning);
     }
-
   }, [isRunning]);
 
-  // Expose methods to parent  
   useImperativeHandle(
     ref,
     () => ({
       start,
       pause,
-      restart: (newDuration: number, autoStart = true) => {
-        currentDuration.current = newDuration;
-        const newTime = calculateTime(newDuration);
+      restart: (durationInSeconds: number, autoStart = true) => {
+        currentDuration.current = durationInSeconds;
+        const newTime = calculateTime(durationInSeconds);
         restart(newTime, autoStart);
       },
     })
