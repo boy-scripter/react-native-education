@@ -54,18 +54,18 @@ const Button: React.FC<ButtonProps> = ({
     }
   };
 
-  const isLabel = !!label && !isLoading;
+  const isLabel = !!label ;
 
   const LeftContent = () => (
     <View className="flex-row items-center gap-2">
       {icon && iconPosition === 'left' && !isLoading && <Icon name={icon} size={iconSize} color={iconColor} />}
-      {position === 'left' && children}
+      <View style={{display: isLoading ? 'none' : 'flex'}}>{position === 'left' && children}</View>
     </View>
   );
 
   const RightContent = () => (
     <View className="flex-row items-center gap-2">
-      {position === 'right' && children}
+      <View style={{display: isLoading ? 'none' : 'flex'}}>{position === 'right' && children}</View>
       {icon && iconPosition === 'right' && !isLoading && <Icon name={icon} size={iconSize} color={iconColor} />}
     </View>
   );
@@ -79,14 +79,27 @@ const Button: React.FC<ButtonProps> = ({
       {...props}>
       <LinearGradient colors={['rgba(255, 255, 255, 0.317)', 'transparent']} start={{x: 0.5, y: 0}} end={{x: 0.5, y: 0.5}} style={StyleSheet.absoluteFillObject} />
 
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <LeftContent />
-          {isLabel && <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{label}</Text>}
-          <RightContent />
-        </>
+  {/* Extra children (e.g. countdown, badge) */}
+      {position === 'left' && children && (
+        <View style={{display: !isLoading ? 'flex' : 'none'}} className=" flex-row items-center">
+          {children}
+        </View>
+      )}
+
+      {/* Icon */}
+      {!isLoading && icon && iconPosition === 'left' && <Icon size={iconSize} color={iconColor}  name={icon}></Icon>}
+
+      {/* Label or Loader */}
+      {isLoading ? <Loader /> : isLabel && <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{label}</Text>}
+
+      {/* Icon */}
+      {!isLoading && icon && iconPosition === 'right' && <Icon size={iconSize} color="#fff"  name={icon}></Icon>}
+
+      {/* Extra children (e.g. countdown, badge) */}
+      {position === 'right' && children && (
+        <View style={{display: !isLoading ? 'flex' : 'none'}} className=" flex-row items-center">
+          {children}
+        </View>
       )}
     </Pressable>
   );
