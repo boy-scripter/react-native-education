@@ -82,7 +82,7 @@ class FileSchemaBuilder {
 
   build() {
     const baseFileSchema = z
-      .instanceof(File)
+      .instanceof(File , { message : 'Invalid file'})
       .refine((file) => file.size <= this.maxSize, {
         message: `File size must be less than ${this.maxSize / 1024 / 1024}MB`,
       })

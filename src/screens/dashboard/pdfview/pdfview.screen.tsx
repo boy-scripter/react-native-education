@@ -24,14 +24,6 @@ const PdfViewScreen = () => {
     console.log(`PDF URL: ${url}`);
   };
 
-
-  function loadNextData(){
-
-
-
-
-  }
-
   return (
     <TopImageLayout containerClassName="p-0" image="@assets/images/forgot.png" title="Available PDFs" description="Browse and view the available PDF documents below.">
       <ScrollView className="flex-1 px-6 pt-6 pb-5 bg-white">

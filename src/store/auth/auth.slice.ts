@@ -58,6 +58,7 @@ export const authSlice = createSlice({
     });
 
     builder.addMatcher(api.endpoints.ProfileUpdate.matchFulfilled, (state, {payload}) => {
+      console.log('profile updated', payload)
       state.user = {
         ...payload.profileUpdate,
       };

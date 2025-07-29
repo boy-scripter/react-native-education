@@ -34,7 +34,7 @@ const ForgotPasswordScreen = () => {
   const [validateOtp] = useValidateOtpMutation();
   const [sendOtp] = useSendForgotPasswordCodeMutation();
 
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const [btnDisable, setBtnDisable] = useState(false);
 
   const countDownRef = useRef<CountdownTimerRef>(null);
@@ -49,9 +49,6 @@ const ForgotPasswordScreen = () => {
     getValues: step1Values,
   } = useForm({
     resolver: zodResolver(Step1Schema),
-    defaultValues: {
-      email: 'test@gmail.com',
-    },
   });
 
   const {handleSubmit: handleStep3Submit, control: step3Control} = useForm({
@@ -61,7 +58,7 @@ const ForgotPasswordScreen = () => {
   const onRequestReset = async ({email}: Step1SchemaType) => {
     const data = await sendOtp({email}).unwrap();
     successToast({text1: 'OTP sent to your email'});
-    countDownRef.current?.restart(data.sendForgotPasswordCode.retry_after / 1000);
+    countDownRef.current?.restart(data.sendForgotPasswordCode.retry_after);
     setStep(2);
   };
 
@@ -102,7 +99,7 @@ const ForgotPasswordScreen = () => {
             <Text className="text-base text-greyish-100">We have sent an OTP to your email. Please enter it below to verify.</Text>
             <SplitInput inputClassName="text-xl w-14" onSplitChange={v => (otp.current = v)} className="mt-5 flex justify-center" count={6} />
             <View className="mt-5 gap-3">
-              <Button icon="refresh" className="flex-grow " disabled={btnDisable} label="Resend OTP  ?" position='right' onPress={handleStep1Submit(onRequestReset)}>
+              <Button icon="refresh" className="flex-grow " disabled={btnDisable} label="Resend OTP  ?" position="right" onPress={handleStep1Submit(onRequestReset)}>
                 <CountdownTimer onChange={setBtnDisable} textClassName="text-white" ref={countDownRef} />
               </Button>
               <Button icon="shield-check-outline" className="flex-grow" label="Verify OTP" onPress={onVerifyOtp} />

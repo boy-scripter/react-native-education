@@ -2,7 +2,6 @@
 import React from 'react';
 import {Controller, Control, FieldValues, Path} from 'react-hook-form';
 import {Text, View} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Props required for controlled input behavior:
 type ControlledFieldProps = {
@@ -14,17 +13,18 @@ type FormFieldProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
   errorMessage?: string;
+  containerClass?: string;
 };
 
 export function withFormFieldWrapper<PWithoutControlled>(Component: React.ComponentType<PWithoutControlled & ControlledFieldProps>) {
-  return function WrappedField<T extends FieldValues>({control, name, errorMessage, ...rest}: FormFieldProps<T> & PWithoutControlled) {
+  return function WrappedField<T extends FieldValues>({control, containerClass, name, errorMessage, ...rest}: FormFieldProps<T> & PWithoutControlled) {
     return (
       <Controller
         control={control}
         name={name}
         render={({field: {onChange, value}, fieldState: {error}}) => (
-          <View>
-            <Component  {...(rest as PWithoutControlled)} value={value} onChange={onChange} />
+          <View className={containerClass}>
+            <Component {...(rest as PWithoutControlled)} value={value} onChange={onChange} />
             {error?.message && <TextError message={error.message} />}
           </View>
         )}
