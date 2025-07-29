@@ -1,7 +1,7 @@
 import { errorToast } from '@components/Toast/Toast.config';
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query"
-import { GRAPHQL_BASE_URL } from "@env"
+import { API_URL } from "@env"
 import { Mutex } from 'async-mutex'
 import { RootState } from '@store/store';
 import { selectAuth } from '@store/auth/auth.selector';
@@ -19,7 +19,7 @@ mutation RefreshToken($token: String!) {
 `;
 
 const baseQuery = graphqlRequestBaseQuery({
-  url: GRAPHQL_BASE_URL,
+  url: API_URL,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.access_token;
     if (token) headers.set('Authorization', `Bearer ${token}`);
