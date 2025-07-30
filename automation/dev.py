@@ -93,9 +93,9 @@ print(f"📝 [green]Wrote API_URL to {ENV_PATH}[/green]")
 
 # --- Start Metro ---
 print("\n⚛️  [yellow]Starting Metro Bundler...[/yellow]")
-subprocess.Popen("npm run start -- --reset-cache", cwd=APP_DIR, shell=True)
+subprocess.Popen(["cmd.exe", "/c", "start", "cmd.exe", "/k", "npm run start -- --reset-cache"],cwd=APP_DIR)
 
-# --- Start Genymotion ---
+
 # --- Start Genymotion ---
 if "Genymotion" in mode:
     print("\n📱 [magenta]Starting Genymotion VM...[/magenta]")
