@@ -49,7 +49,6 @@ export function useFileResolver<ResultType, QueryType extends Record<string, any
       const eligibleForUploads = Object.entries(input).filter(([key]) => pathKeys.includes(key)) as [string, File][];
 
       for (const [key, file] of eligibleForUploads) {
-        
         if (!file.mediaCode) {
           errorToast({text1: 'media code was nto present when uploading'});
           throw new Error('media code was nto present when uploading');
@@ -58,7 +57,7 @@ export function useFileResolver<ResultType, QueryType extends Record<string, any
         const data = await initiateUpload({
           input: {
             name: file.name,
-            contentType: file.type,
+            contentType: file.type || '*',
             mediaCode: file.mediaCode,
           },
         }).unwrap();
@@ -100,9 +99,9 @@ async function fileUploadToS3(arg: InitiateUploadMutation, file: File) {
   return fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': file.type,
+      'Content-Type': 'multipart/form-data',
       ...headers,
     },
     body: formData,
-  });
+  }).then(console.log);
 }

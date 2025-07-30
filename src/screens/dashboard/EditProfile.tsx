@@ -21,16 +21,17 @@ const profileSchema = z.object({
   gender: z.enum(['MALE', 'OTHER', 'FEMALE']).nullable().optional(),
   dob: z
     .string()
-    .refine(val => DateTime.fromISO(val).isValid, {message: 'Invalid Date'})
     .refine(
       val => {
-        const dob = DateTime.fromISO(val);
-        const age = DateTime.now().diff(dob, 'years').years;
+        const age = DateTime.now().diff(DateTime.fromISO(val), 'years').years;
         return age >= 18;
       },
-      {message: 'You must be at least 18 years old'},
+      {
+        message: 'You must be at least 18 years old',
+      },
     )
-    .nullable().optional(),
+    .nullable()
+    .optional(),
 
   avatar: z
     .union([
@@ -41,12 +42,12 @@ const profileSchema = z.object({
         .build(),
       z.string().url(),
     ])
-    .nullable().optional(),
+    .nullable()
+    .optional(),
 });
 type profileSchemaType = z.infer<typeof profileSchema>;
 
 const EditProfileScreen = () => {
-
   const [profileUpdate] = useFileResolver({
     mutation: useProfileUpdateMutation,
     pathKeys: ['avatar'] as const,
@@ -63,11 +64,10 @@ const EditProfileScreen = () => {
       dob: user.dob,
     },
   });
+  const {dirtyFields} = formState;
 
   async function handleSaveProfile(values: profileSchemaType) {
-    const changedData = getDirtyValues(values, formState.dirtyFields);
-   console.log(changedData)
-    // await profileUpdate({input: changedData});
+    await profileUpdate({input: getDirtyValues(values, dirtyFields)});
     successToast({text1: 'Profile Updated'});
   }
 

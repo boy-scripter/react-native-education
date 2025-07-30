@@ -1,11 +1,11 @@
-import {createSlice, Draft, PayloadAction} from '@reduxjs/toolkit';
-import {AuthState, REMEMBER_ME} from '@myTypes/auth';
-import {api, AuthResponse} from '@/graphql/generated';
-import {useStorage} from '@/hooks/useStorage.hook';
-import {navigate} from '@/hooks/useNavigation.hook';
-import {setDataLocally} from './auth.service';
+import { createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
+import { AuthState, REMEMBER_ME } from '@myTypes/auth';
+import { api, AuthResponse } from '@/graphql/generated';
+import { useStorage } from '@/hooks/useStorage.hook';
+import { navigate } from '@/hooks/useNavigation.hook';
+import { setDataLocally } from './auth.service';
 
-const {removeItem, getItem} = useStorage();
+const { removeItem, getItem } = useStorage();
 
 const authState = getItem<AuthState>(REMEMBER_ME);
 const initialState = {
@@ -33,36 +33,38 @@ export const authSlice = createSlice({
 
     setAccessToken: (state, action: PayloadAction<string | null>) => {
       state.access_token = action.payload;
-      setDataLocally({...state});
+      setDataLocally({ ...state });
     },
 
     setRememberMe: (state, action: PayloadAction<boolean>) => {
       state.remember_me = action.payload;
-      setDataLocally({...state});
+      setDataLocally({ ...state });
     },
   },
   extraReducers: builder => {
-    builder.addMatcher(api.endpoints.LoginWithEmail.matchFulfilled, (state, {payload}) => {
-      applyAuthState(state, payload.loginWithEmail);
-    });
+    builder.addMatcher(
+      api.endpoints.LoginWithEmail.matchFulfilled,
+      (state, { payload }) => {
+        applyAuthState(state, payload.loginWithEmail);
+      });
 
-    builder.addMatcher(api.endpoints.LoginWithGoogle.matchFulfilled, (state, {payload}) => {
+    builder.addMatcher(api.endpoints.LoginWithGoogle.matchFulfilled, (state, { payload }) => {
       applyAuthState(state, payload.loginWithGoogle);
     });
 
-    builder.addMatcher(api.endpoints.Profile.matchFulfilled, (state, {payload}) => {
+    builder.addMatcher(api.endpoints.Profile.matchFulfilled, (state, { payload }) => {
       state.user = {
         ...payload.profile,
       };
-      setDataLocally({...state});
+      setDataLocally({ ...state });
     });
 
-    builder.addMatcher(api.endpoints.ProfileUpdate.matchFulfilled, (state, {payload}) => {
+    builder.addMatcher(api.endpoints.ProfileUpdate.matchFulfilled, (state, { payload }) => {
       console.log('profile updated', payload)
       state.user = {
         ...payload.profileUpdate,
       };
-      setDataLocally({...state});
+      setDataLocally({ ...state });
     });
 
   },
@@ -72,13 +74,13 @@ export const authSlice = createSlice({
 function applyAuthState(state: Draft<AuthState>, payload: AuthResponse) {
   state.user = {
     ...payload.user,
-    avatar: payload.user.avatar ,
+    avatar: payload.user.avatar,
   };
   state.access_token = payload.access_token;
   state.refresh_token = payload.refresh_token;
   state.isAuthenticated = true;
-  setDataLocally({...state});
+  setDataLocally({ ...state });
 }
 
-export const {logout, setRememberMe, setAccessToken} = authSlice.actions;
+export const { logout, setRememberMe, setAccessToken } = authSlice.actions;
 export default authSlice.reducer;
