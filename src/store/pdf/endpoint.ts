@@ -1,6 +1,6 @@
+import {api} from '@/graphql/generated';
 
-import { api } from "@/graphql/generated";
+export const pdfApi = api;
 
-export const pdfApi = api
-
-export const { usePdfsQuery, useLazyPdfsQuery } = pdfApi;
+export const {useLazyGetPdfsQuery, useGetPdfsQuery} = pdfApi;
+export type {PaginatedPdfResponse , Pdf} from '@/graphql/generated';

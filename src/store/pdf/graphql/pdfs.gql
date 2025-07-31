@@ -1,15 +1,11 @@
-query Pdfs($limit: Int!, $page: Int!) {
-  pdfs(limit: $limit, page: $page) {
+query GetPdfs($page: Int!, $limit: Int!, $filter: FilterDto) {
+  pdfs(page: $page, limit: $limit, filter: $filter) {
     docs {
+      _id
       url
       title
-      category {
-        _id
-        color
-        image
-        name
-        slug
-      }
+      createdAt
+      updatedAt
     }
     totalDocs
     totalPages

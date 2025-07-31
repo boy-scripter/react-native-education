@@ -27,10 +27,11 @@ export type AuthResponse = {
 export type Category = {
   __typename?: 'Category';
   _id: Scalars['ID']['output'];
-  color?: Maybe<Scalars['String']['output']>;
+  color: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
-  image?: Maybe<Scalars['String']['output']>;
+  image: Scalars['String']['output'];
   name: Scalars['String']['output'];
+  questionCount: Scalars['Int']['output'];
   slug: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
@@ -39,6 +40,10 @@ export type CreateCategoryDto = {
   color?: InputMaybe<Scalars['String']['input']>;
   image?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
+};
+
+export type FilterDto = {
+  category?: InputMaybe<Scalars['ID']['input']>;
 };
 
 /** Gender options */
@@ -186,6 +191,7 @@ export type QueryFindByIdArgs = {
 
 
 export type QueryPdfsArgs = {
+  filter?: FilterDto;
   limit?: Scalars['Int']['input'];
   page?: Scalars['Int']['input'];
 };
@@ -227,7 +233,7 @@ export type UpdateCategoryDto = {
 
 export type UpdateProfileDto = {
   avatar?: InputMaybe<Scalars['String']['input']>;
-  dob?: InputMaybe<Scalars['String']['input']>;
+  dob?: InputMaybe<Scalars['DateTime']['input']>;
   gender?: InputMaybe<GenderEnum>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -311,15 +317,16 @@ export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User
 export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'Category', _id: string, color?: string | undefined, image?: string | undefined, name: string, slug: string }> };
+export type CategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'Category', _id: string, color: string, image: string, name: string, slug: string, questionCount: number }> };
 
-export type PdfsQueryVariables = Exact<{
-  limit: Scalars['Int']['input'];
+export type GetPdfsQueryVariables = Exact<{
   page: Scalars['Int']['input'];
+  limit: Scalars['Int']['input'];
+  filter?: InputMaybe<FilterDto>;
 }>;
 
 
-export type PdfsQuery = { __typename?: 'Query', pdfs: { __typename?: 'PaginatedPdfResponse', totalDocs: number, totalPages: number, prevPage?: number | undefined, page: number, nextPage?: number | undefined, limit: number, hasNextPage: boolean, hasPrevPage: boolean, docs: Array<{ __typename?: 'Pdf', url: string, title: string, category: { __typename?: 'Category', _id: string, color?: string | undefined, image?: string | undefined, name: string, slug: string } }> } };
+export type GetPdfsQuery = { __typename?: 'Query', pdfs: { __typename?: 'PaginatedPdfResponse', totalDocs: number, totalPages: number, prevPage?: number | undefined, page: number, nextPage?: number | undefined, limit: number, hasNextPage: boolean, hasPrevPage: boolean, docs: Array<{ __typename?: 'Pdf', _id: string, url: string, title: string, createdAt: any, updatedAt: any }> } };
 
 export type InitiateUploadMutationVariables = Exact<{
   input: UploadDto;
@@ -420,22 +427,19 @@ export const CategoriesDocument = `
     image
     name
     slug
+    questionCount
   }
 }
     `;
-export const PdfsDocument = `
-    query Pdfs($limit: Int!, $page: Int!) {
-  pdfs(limit: $limit, page: $page) {
+export const GetPdfsDocument = `
+    query GetPdfs($page: Int!, $limit: Int!, $filter: FilterDto) {
+  pdfs(page: $page, limit: $limit, filter: $filter) {
     docs {
+      _id
       url
       title
-      category {
-        _id
-        color
-        image
-        name
-        slug
-      }
+      createdAt
+      updatedAt
     }
     totalDocs
     totalPages
@@ -486,8 +490,8 @@ const injectedRtkApi = baseApi.injectEndpoints({
     Categories: build.query<CategoriesQuery, CategoriesQueryVariables | void>({
       query: (variables) => ({ document: CategoriesDocument, variables })
     }),
-    Pdfs: build.query<PdfsQuery, PdfsQueryVariables>({
-      query: (variables) => ({ document: PdfsDocument, variables })
+    GetPdfs: build.query<GetPdfsQuery, GetPdfsQueryVariables>({
+      query: (variables) => ({ document: GetPdfsDocument, variables })
     }),
     InitiateUpload: build.mutation<InitiateUploadMutation, InitiateUploadMutationVariables>({
       query: (variables) => ({ document: InitiateUploadDocument, variables })
@@ -496,5 +500,5 @@ const injectedRtkApi = baseApi.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useProfileUpdateMutation, useSetNewResetPasswordMutation, useSignupMutation, useProfileQuery, useLazyProfileQuery, useCategoriesQuery, useLazyCategoriesQuery, usePdfsQuery, useLazyPdfsQuery, useInitiateUploadMutation } = injectedRtkApi;
+export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useProfileUpdateMutation, useSetNewResetPasswordMutation, useSignupMutation, useProfileQuery, useLazyProfileQuery, useCategoriesQuery, useLazyCategoriesQuery, useGetPdfsQuery, useLazyGetPdfsQuery, useInitiateUploadMutation } = injectedRtkApi;
 
