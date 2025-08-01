@@ -13,7 +13,7 @@ export default function PdfViewScreen() {
   const route = useRoute<RouteProp<DashboardStackParamList, 'PdfShow'>>();
   const {category} = route.params;
   const {
-    pagintedPdf: {docs: pdfList, hasNextPage, fetchPage, page ,totalDocs},
+    pagintedPdf: {docs: pdfList, hasNextPage, fetchPage, page, totalDocs},
     onInitialPageRender,
   } = usePdfFacade();
 
@@ -27,11 +27,11 @@ export default function PdfViewScreen() {
   return (
     <TopImageLayout image="@assets/lottie/profile.json" title="Available PDFs" description="Browse and view the available PDF documents below.">
       <LoadingManager asyncFunction={() => onInitialPageRender(category)}>
-        {!!totalDocs ? (
+        {totalDocs ? (
           <FlatList
             data={pdfList}
             keyExtractor={item => item._id}
-            contentContainerStyle={{paddingHorizontal: 24, paddingTop: 24, paddingBottom: 20}}
+            contentContainerClassName="p-6"
             onEndReached={() => {
               fetchPage(page + 1, 10);
             }}
@@ -59,7 +59,7 @@ export default function PdfViewScreen() {
 function PdfNotAvailable() {
   return (
     <View className="flex-1 w-full items-center justify-center">
-      <Text className='text-xl text-theme font-bold'>PDF Not Available</Text>
+      <Text className="text-xl text-theme font-bold">PDF Not Available</Text>
     </View>
   );
 }

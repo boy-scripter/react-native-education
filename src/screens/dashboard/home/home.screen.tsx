@@ -4,15 +4,19 @@ import {AuthenticatedUser} from '@/types/auth';
 import {navigate} from '@hooks/useNavigation.hook';
 import {Text, View, ScrollView} from 'react-native';
 import {RankingAndLeaderboard} from './components/ratingandview';
-import {QuizCardComponent} from './components/categorycard';
+
 import {LoadingManager, Pulse} from '@/components/LoadingManger';
 import {useHomeFacade} from './home.facade';
 import Img from '@/components/ui/Img';
 import ProfileImage from '@assets/images/profile.png';
+import { CategoryCardComponent } from './components/categorycard';
+
 
 export default function HomeScreen() {
   const {categories, onInitialPageRender} = useHomeFacade();
   const user = useRootState(selectUser) as unknown as AuthenticatedUser['user'];
+
+
 
   return (
     <LoadingManager skeleton={<SkeletonLoading />} asyncFunction={onInitialPageRender}>
@@ -26,13 +30,11 @@ export default function HomeScreen() {
             <Img fallbackUri={ProfileImage} onPress={() => navigate('DashboardStack', {screen: 'EditProfile'})} className="w-16 h-16 rounded-lg overflow-hidden" source={user.avatar} />
           </View>
         </View>
-
         <RankingAndLeaderboard />
-
         <View className="py-6">
           <View className="flex-col gap-4">
-            {categories.map((currentObject) => (
-              <QuizCardComponent key={currentObject._id} {...currentObject} />
+            {categories.map(currentObject => (
+              <CategoryCardComponent key={currentObject._id} {...currentObject} />
             ))}
           </View>
         </View>

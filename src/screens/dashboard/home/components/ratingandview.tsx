@@ -8,6 +8,14 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 export function RankingAndLeaderboard() {
+
+    function handlePdfPress(url: string = 'https://icseindia.org/document/sample.pdf') {
+      navigate('DashboardStack', {
+        screen: 'PdfView',
+        params: {url},
+      });
+    }
+
   return (
     <>
       <View className="mt-5 w-full mx-auto rounded-3xl  py-4">
@@ -36,7 +44,7 @@ export function RankingAndLeaderboard() {
         </View>
       </View>
       {/* checdk learborad button */}
-      <Button onPress={() => navigate('AuthStack', {screen: 'LoginAndSignup'})} label="Check Leaderboard" className="flex-row mt-1 items-center">
+      <Button onPress={() => handlePdfPress()} label="Check Leaderboard" className="flex-row mt-1 items-center">
         <Icon name="trophy-outline" size={30} color={'yellow'} />
       </Button>
     </>

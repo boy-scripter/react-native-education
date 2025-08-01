@@ -12,8 +12,8 @@ interface QuizCardProps {
   color: string;
 }
 
-export function QuizCardComponent({image, _id, name, color, questionCount}: QuizCardProps) {
-  const {open, close} = useModal();
+export function CategoryCardComponent({image, _id, name, color, questionCount}: QuizCardProps) {
+  const {open} = useModal();
   const overlayColor = color + '80'; // appending '80' for ~50% opacity in hex
 
   function handleOnPlay() {
@@ -43,7 +43,7 @@ export function QuizCardComponent({image, _id, name, color, questionCount}: Quiz
         <View className="flex-col gap-2">
           <Button onPress={handleOnPlay} icon="play" label="Play" iconSize={18} className="px-3 py-1 rounded-lg" iconPosition="left" style={{backgroundColor: color}} />
           <Button
-            onPress={() => navigate('DashboardStack', {screen: 'PdfView', params: {category: _id}})}
+            onPress={() => navigate('DashboardStack', {screen: 'PdfShow', params: {category: _id}})}
             icon="file-pdf-box"
             label="Learn"
             iconSize={18}
@@ -64,9 +64,9 @@ function QuizInstuctionModel() {
       <Text className="text-greyish-100 mb-2">2. Select the best answer from the options provided.</Text>
       <Text className="text-greyish-100 mb-2">3. You can skip questions and return to them later.</Text>
       <Text className="text-greyish-100 mb-2">4. Submit your answers before the timer runs out.</Text>
-      <View>
-        <Button label="Start Quiz" className="mt-4" onPress={() => navigate('quiz')} />
-        <Button label="Start Quiz" className="mt-4" onPress={() => navigate('quiz')} />
+      <View className="flex-row gap-2">
+        <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => navigate('quiz')} />
+        <Button label="Start Quiz" className="mt-4 flex-1 bg-green-600 border-green-600" onPress={() => navigate('quiz')} />
       </View>
     </>
   );

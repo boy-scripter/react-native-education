@@ -3,7 +3,7 @@ import TopImageLayout from '@/components/layouts/TopImage.Layout';
 import Button from '@/components/ui/Button';
 import {selectUser} from '@/store/auth/auth.selector';
 import {useRootState} from '@/store/store';
-import {ScrollView, View} from 'react-native';
+import { View} from 'react-native';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {fileSchema, getDirtyValues} from '@/util/zod';

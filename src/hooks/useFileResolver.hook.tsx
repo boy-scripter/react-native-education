@@ -1,7 +1,7 @@
-import {errorToast} from '@/components/Toast/Toast.config';
 import {InitiateUploadMutation, useInitiateUploadMutation} from '@/graphql/generated';
-import {File} from '@/util/zod';
+import {errorToast} from '@/components/Toast/Toast.config';
 import {TypedUseMutation} from '@reduxjs/toolkit/query/react';
+import {File} from '@/util/zod';
 import {useState} from 'react';
 
 type Props<ResultType, QueryType, Keys> = {
