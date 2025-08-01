@@ -73,7 +73,7 @@ const EditProfileScreen = () => {
 
   return (
     <TopImageLayout title="Edit Your Profile" description="Update your personal information below" lottie={require('@assets/lottie/profile.json')}>
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      {/* <ScrollView contentContainerStyle={{flexGrow: 1}}> */}
         <View className="flex-1 gap-6 pt-4 pb-2">
           <FormImageInput fallbackUri={ProfileImage} containerClass="mx-auto text-center" control={control} name="avatar" mediaCode="PROFILE_IMAGE" />
           <FormInput control={control} name="name" icon="account" placeholder="Your Nickname" />
@@ -92,7 +92,7 @@ const EditProfileScreen = () => {
           <FormDatePickerInput control={control} name="dob" label="Date Of Birth" />
           <Button label="Save" onPress={handleSubmit(handleSaveProfile)} className="mt-auto mb-2" icon="content-save" />
         </View>
-      </ScrollView>
+      {/* </ScrollView> */}
     </TopImageLayout>
   );
 };

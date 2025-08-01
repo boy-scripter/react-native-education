@@ -1,6 +1,7 @@
-import React, { createContext, ReactNode, useCallback, useContext, useState} from 'react';
+import React, {createContext, ReactNode, useCallback, useContext, useState} from 'react';
 import {UIModalComponent} from './Modal';
 import {nanoid} from 'nanoid/non-secure';
+import { View } from 'react-native';
 
 interface ModalStructure {
   id: string;
@@ -15,31 +16,30 @@ const useModalContextCreator = () => {
 
   const getModalId = () => nanoid();
 
-  const isModalExist = useCallback((id: string) => {
-    return modalList.some(modalsConfig => modalsConfig.id === id);
-  }, [modalList]);
-
-  const open = useCallback(
-    (component: React.FC<any>, title?: string) => {
-      const modalId = getModalId();
-
-      if (!isModalExist(modalId)) {
-        setModalList(state => [...state, {id: modalId, title, component}]);
-      }
-      return modalId;
+  const isModalExist = useCallback(
+    (id: string) => {
+      return modalList.some(modalsConfig => modalsConfig.id === id);
     },
-    [],
+    [modalList],
   );
+
+  const open = useCallback((component: React.FC<any>, title?: string) => {
+    const modalId = getModalId();
+
+    if (!isModalExist(modalId)) {
+      setModalList(state => [...state, {id: modalId, title, component}]);
+    }
+    return modalId;
+  }, []);
 
   const close = useCallback(
     (id: string) => {
       const modalId = id;
 
-      //  i have removed the if condidtion due to stale issue beacuse we are storing a compoent in memory that migh create a stale issue 
-      // if (isModalExist(modalId)) {              
-        setModalList(state => state.filter(modal => modal.id !== modalId));
+      //  i have removed the if condidtion due to stale issue beacuse we are storing a compoent in memory that migh create a stale issue
+      // if (isModalExist(modalId)) {
+      setModalList(state => state.filter(modal => modal.id !== modalId));
       // }
-      
     },
     [modalList],
   );
@@ -71,7 +71,9 @@ const ModalProvider = ({children}: {children: ReactNode}) => {
   return (
     <ModalContext.Provider value={{open, close, modalList, isModalExist}}>
       {children}
-      <ModalRenderer></ModalRenderer>
+      <View>
+        <ModalRenderer></ModalRenderer>
+      </View>
     </ModalContext.Provider>
   );
 };
