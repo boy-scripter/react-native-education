@@ -1,12 +1,12 @@
 import { createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
 import { AuthState, REMEMBER_ME } from '@myTypes/auth';
-import { api, AuthResponse } from '@/graphql/generated';
+import { authApi, AuthResponse } from '@/store/auth/endpoints';
 import { useStorage } from '@/hooks/useStorage.hook';
 import { navigate } from '@/hooks/useNavigation.hook';
 import { setDataLocally } from './auth.service';
 
-const { removeItem, getItem } = useStorage();
 
+const { removeItem, getItem } = useStorage();
 const authState = getItem<AuthState>(REMEMBER_ME);
 const initialState = {
   user: authState?.user || null,
@@ -42,25 +42,25 @@ export const authSlice = createSlice({
     },
   },
   extraReducers: builder => {
+
     builder.addMatcher(
-      api.endpoints.LoginWithEmail.matchFulfilled,
+      authApi.endpoints.LoginWithEmail.matchFulfilled,
       (state, { payload }) => {
         applyAuthState(state, payload.loginWithEmail);
       });
 
-    builder.addMatcher(api.endpoints.LoginWithGoogle.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(authApi.endpoints.LoginWithGoogle.matchFulfilled, (state, { payload }) => {
       applyAuthState(state, payload.loginWithGoogle);
     });
 
-    builder.addMatcher(api.endpoints.Profile.matchFulfilled, (state, { payload }) => {
+    builder.addMatcher(authApi.endpoints.Profile.matchFulfilled, (state, { payload }) => {
       state.user = {
         ...payload.profile,
       };
       setDataLocally({ ...state });
     });
 
-    builder.addMatcher(api.endpoints.ProfileUpdate.matchFulfilled, (state, { payload }) => {
-      console.log('profile updated', payload)
+    builder.addMatcher(authApi.endpoints.ProfileUpdate.matchFulfilled, (state, { payload }) => {
       state.user = {
         ...payload.profileUpdate,
       };

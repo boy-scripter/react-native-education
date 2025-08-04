@@ -7,15 +7,15 @@ export function useAuthBootstrap() {
 
   const authenticated = useRootState(selectIsAuthenticated);
   const rememberMe = useRootState(selectRememberMe);
-  const isAuthenticated = authenticated && rememberMe
+  const isAuthenticated = authenticated && rememberMe;
 
-  const [userQuery] = useLazyProfileQuery()
+  const [userQuery] = useLazyProfileQuery();
 
   useEffect(() => {
     if (isAuthenticated) {
-      userQuery()
+      userQuery();
     }
-  }, [])
+  }, []);
 
   return (isAuthenticated) || false;
 }

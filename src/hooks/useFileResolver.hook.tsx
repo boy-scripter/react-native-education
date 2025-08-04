@@ -85,23 +85,49 @@ export function useFileResolver<ResultType, QueryType extends Record<string, any
 }
 
 async function fileUploadToS3(arg: InitiateUploadMutation, file: File) {
-  const {uploadId, signedData} = arg.initiateUpload;
-  const {url, ...headers} = signedData;
+  const { uploadId, signedData } = arg.initiateUpload;
+  const { url, fields } = signedData;
 
   const formData = new FormData();
-
+  
+  // Add all the signed fields from S3 first (order matters!)
+  // Common fields include: key, bucket, X-Amz-Algorithm, X-Amz-Credential, X-Amz-Date, Policy, X-Amz-Signature
+  if (fields) {
+    Object.entries(fields).forEach(([key, value]) => {
+      formData.append(key, String(value));
+    });
+  }
+  
+  // Add the file last - the field name must match what's in the policy (usually 'file')
   formData.append('file', {
-    uri: file.uri,
-    type: file.type,
+    uri: file.uri ,
     name: file.name,
+    type: file.type,
+    size: file.size
   } as any);
 
-  return fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      ...headers,
-    },
-    body: formData,
-  }).then(console.log);
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+      // No headers needed - FormData handles Content-Type automatically
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('S3 Error Response:', errorText);
+      throw new Error(`Upload failed: ${response.status} ${response.statusText} - ${errorText}`);
+    }
+
+    // S3 usually returns 204 No Content on success
+    return {
+      success: true,
+      uploadId,
+      status: response.status,
+      location: response.headers.get('Location') || `${url}/${fields?.key || file.name}`,
+    };
+  } catch (error) {
+    console.error('S3 upload error:', error);
+    throw error;
+  }
 }

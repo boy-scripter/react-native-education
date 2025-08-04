@@ -1,4 +1,4 @@
-import { api } from "@/graphql/generated";
+import { api } from '@/graphql/generated';
 
 export const authApi = api.enhanceEndpoints({
     addTagTypes: ['auth'],
@@ -12,3 +12,4 @@ export const authApi = api.enhanceEndpoints({
 });
 
 export const { useProfileUpdateMutation,useProfileQuery, useLazyProfileQuery, useLoginWithEmailMutation, useLoginWithGoogleMutation, useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation, useSignupMutation, useValidateOtpMutation } = authApi;
+export type { AuthResponse } from '@/graphql/generated';
