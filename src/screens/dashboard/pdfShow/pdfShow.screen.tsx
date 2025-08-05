@@ -25,7 +25,7 @@ export default function PdfViewScreen() {
   }
 
   return (
-    <TopImageLayout image="@assets/lottie/profile.json" title="Available PDFs" description="Browse and view the available PDF documents below.">
+    <TopImageLayout lottie={require('@assets/lottie/profile.json')} title="Available PDFs" description="Browse and view the available PDF documents below.">
       <LoadingManager asyncFunction={() => onInitialPageRender(category)}>
         {totalDocs ? (
           <FlatList

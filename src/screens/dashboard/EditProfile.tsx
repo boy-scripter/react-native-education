@@ -14,6 +14,8 @@ import {GenderEnum} from '@/graphql/generated';
 import ProfileImage from '@assets/images/profile.png';
 import {successToast} from '@/components/Toast/Toast.config';
 import z from 'zod';
+import { useStorage } from '@/hooks';
+import { REMEMBER_ME } from '@/types/auth';
 
 const profileSchema = z.object({
   name: z.string({required_error: 'Name is required'}),
@@ -53,15 +55,18 @@ const EditProfileScreen = () => {
     pathKeys: ['avatar'] as const,
   });
 
+  const { getItem } = useStorage();
   const user = useRootState(selectUser);
+  console.log('user', user , getItem(REMEMBER_ME));
+
   const {control, handleSubmit, formState} = useForm<profileSchemaType>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       name: user.name,
-      gender: user.gender,
       avatar: user.avatar,
       email: user.email,
-      dob: user.dob,
+      gender: user?.gender,
+      dob: user?.dob,
     },
   });
   const {dirtyFields} = formState;
@@ -73,7 +78,6 @@ const EditProfileScreen = () => {
 
   return (
     <TopImageLayout title="Edit Your Profile" description="Update your personal information below" lottie={require('@assets/lottie/profile.json')}>
-      {/* <ScrollView contentContainerStyle={{flexGrow: 1}}> */}
         <View className="flex-1 gap-6 pt-4 pb-2">
           <FormImageInput fallbackUri={ProfileImage} containerClass="mx-auto text-center" control={control} name="avatar" mediaCode="PROFILE_IMAGE" />
           <FormInput control={control} name="name" icon="account" placeholder="Your Nickname" />
@@ -92,7 +96,6 @@ const EditProfileScreen = () => {
           <FormDatePickerInput control={control} name="dob" label="Date Of Birth" />
           <Button label="Save" onPress={handleSubmit(handleSaveProfile)} className="mt-auto mb-2" icon="content-save" />
         </View>
-      {/* </ScrollView> */}
     </TopImageLayout>
   );
 };

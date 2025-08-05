@@ -57,7 +57,7 @@ export type GenderEnum = typeof GenderEnum[keyof typeof GenderEnum];
 export type InitiateUploadResponse = {
   __typename?: 'InitiateUploadResponse';
   signedData: Scalars['JSONObject']['output'];
-  uploadId: Scalars['String']['output'];
+  uploadId: Scalars['ID']['output'];
 };
 
 export type LoginDto = {
@@ -312,7 +312,7 @@ export type SignupMutation = { __typename?: 'Mutation', signup: { __typename?: '
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', name: string, email: string, avatar?: string | undefined, _id: string } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', name: string, email: string, avatar?: string | undefined, _id: string, gender?: GenderEnum | undefined, dob?: any | undefined } };
 
 export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -416,6 +416,8 @@ export const ProfileDocument = `
     email
     avatar
     _id
+    gender
+    dob
   }
 }
     `;

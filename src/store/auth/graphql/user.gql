@@ -4,5 +4,7 @@ query Profile {
     email
     avatar
     _id
+    gender
+    dob
   }
 }
