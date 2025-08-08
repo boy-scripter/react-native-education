@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {View, Text} from 'react-native';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import { navigate } from '@hooks/useNavigation.hook';

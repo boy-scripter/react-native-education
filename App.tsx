@@ -5,6 +5,7 @@ import './global.css';
 import {setupAdditionalConfig} from './additionalConfig';
 import {ReduxStore} from '@/store/store';
 import {UIToast} from '@/components/Toast/Toast.config';
+import NetworkListener from '@/components/Network/NetworkListener';
 import 'react-native-devsettings';
 
 
@@ -19,6 +20,7 @@ export default function App() {
         </ModalProvider>
     
       <UIToast />
+      <NetworkListener></NetworkListener>
     </ReduxStore>
   );
 }
