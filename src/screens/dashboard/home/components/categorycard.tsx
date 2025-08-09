@@ -17,7 +17,7 @@ export function CategoryCardComponent({image, _id, name, color, questionCount}: 
   const overlayColor = color + '80'; // appending '80' for ~50% opacity in hex
 
   function handleOnPlay() {
-    open(QuizInstuctionModel, 'Read Instuction Carefully');
+    const id = open(() => <QuizInstuctionModel modalId={id}></QuizInstuctionModel>, 'Read Instuction Carefully');
   }
 
   return (
@@ -57,16 +57,20 @@ export function CategoryCardComponent({image, _id, name, color, questionCount}: 
   );
 }
 
-function QuizInstuctionModel() {
+function QuizInstuctionModel({modalId}: {modalId: string}) {
+  const {close} = useModal();
+
   return (
     <>
-      <Text className="text-greyish-100 mb-2">1. Read each question carefully.</Text>
-      <Text className="text-greyish-100 mb-2">2. Select the best answer from the options provided.</Text>
-      <Text className="text-greyish-100 mb-2">3. You can skip questions and return to them later.</Text>
-      <Text className="text-greyish-100 mb-2">4. Submit your answers before the timer runs out.</Text>
-      <View className="flex-row gap-2">
-        <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => navigate('quiz')} />
-        <Button label="Start Quiz" className="mt-4 flex-1 bg-green-600 border-green-600" onPress={() => navigate('quiz')} />
+      <View className="px-2">
+        <Text className="text-greyish-100 mb-2">1. Read each question carefully.</Text>
+        <Text className="text-greyish-100 mb-2">2. Select the best answer from the options provided.</Text>
+        <Text className="text-greyish-100 mb-2">3. You can skip questions and return to them later.</Text>
+        <Text className="text-greyish-100 mb-2">4. Submit your answers before the timer runs out.</Text>
+        <View className="flex-row gap-2">
+          <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => close(modalId)} />
+          <Button label="Start Quiz" className="mt-4 flex-1 bg-green-600 border-green-600" onPress={() => navigate('quiz')} />
+        </View>
       </View>
     </>
   );

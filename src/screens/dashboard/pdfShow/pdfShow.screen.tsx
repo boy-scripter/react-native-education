@@ -13,7 +13,14 @@ export default function PdfViewScreen() {
   const route = useRoute<RouteProp<DashboardStackParamList, 'PdfShow'>>();
   const {category} = route.params;
   const {
-    pagintedPdf: {docs: pdfList, hasNextPage, fetchPage, page, totalDocs},
+    pagintedPdf: {
+      docs: pdfList,
+      hasNextPage,
+      fetchPage,
+      page,
+      totalDocs,
+      loading, // make sure your hook returns this
+    },
     onInitialPageRender,
   } = usePdfFacade();
 
@@ -25,20 +32,22 @@ export default function PdfViewScreen() {
   }
 
   return (
-    <TopImageLayout lottie={require('@assets/lottie/profile.json')} title="Available PDFs" description="Browse and view the available PDF documents below.">
-      <LoadingManager asyncFunction={() => onInitialPageRender(category)}>
+    <TopImageLayout lottie={require('@assets/lottie/profile.json')} title="Available PDFs"  description="Browse and view the available PDF documents below.">
+      <LoadingManager asyncFunction={() => onInitialPageRender()}>
         {totalDocs ? (
           <FlatList
             data={pdfList}
             keyExtractor={item => item._id}
-            contentContainerClassName="p-6"
+            contentContainerClassName="p-6  px-2 gap-5 "
             onEndReached={() => {
-              fetchPage(page + 1, 10);
+              if (!loading && hasNextPage) {
+                fetchPage(page + 1, 10);
+              }
             }}
-            onEndReachedThreshold={0.3}
-            ListFooterComponent={hasNextPage ? <Loader /> : null}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={loading ? <Loader /> : !hasNextPage && pdfList.length > 0 ? <Text className="text-center text-gray-500 py-3">No more PDFs</Text> : null}
             renderItem={({item: pdf}) => (
-              <View style={{elevation: 14, borderRadius: 10}} className="bg-white shadow-slate-400 p-3 mb-5">
+              <View style={{elevation: 8, borderRadius: 10}} className="bg-white shadow-slate-400 p-3">
                 <View className="flex-row items-center justify-between">
                   <Text className="text-theme px-2 text-base font-semibold">{pdf.title}</Text>
                   <Button label="View" className="p-2 px-3" textClassName="text-sm" onPress={() => handlePdfPress(pdf.url)}>

@@ -2,6 +2,7 @@ import {MotiView} from 'moti';
 import React, {ReactNode, useState, useEffect, useCallback, JSX} from 'react';
 import Loader from '../ui/Loader';
 import { SpinnerLoader } from './SpinnerLoader';
+import { twMerge } from 'tailwind-merge';
 
 
 interface LoadingManagerProps<T = any> {
@@ -85,7 +86,7 @@ export const LoadingManager = <T = any,>({
 
   // Animated container using Moti
   return (
-    <MotiView className={className} animate={{opacity: 1}} transition={{type: 'timing', duration: 300}}>
+    <MotiView className={twMerge('flex-1',className)} animate={{opacity: 1}} transition={{type: 'timing', duration: 300}}>
       {isLoading ? (
         // Show skeletons with stagger animation
         <MotiView from={{opacity: 0}} animate={{opacity: 1}} transition={{type: 'timing', duration: 200}}>
@@ -110,7 +111,7 @@ export const LoadingManager = <T = any,>({
         </MotiView>
       ) : (
         // Show content with fade in animation
-        <MotiView from={{opacity: 0, translateY: 10}} animate={{opacity: 1, translateY: 0}} transition={{type: 'timing', duration: 400}}>
+        <MotiView className='flex-1 ' from={{opacity: 0, translateY: 10}} animate={{opacity: 1, translateY: 0}} transition={{type: 'timing', duration: 400}}>
           {typeof children === 'function' ? children(data, error, isLoading) : children}
         </MotiView>
       )}

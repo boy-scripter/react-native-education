@@ -42,10 +42,6 @@ export type CreateCategoryDto = {
   name: Scalars['String']['input'];
 };
 
-export type FilterDto = {
-  category?: InputMaybe<Scalars['ID']['input']>;
-};
-
 /** Gender options */
 export const GenderEnum = {
   Female: 'FEMALE',
@@ -57,7 +53,7 @@ export type GenderEnum = typeof GenderEnum[keyof typeof GenderEnum];
 export type InitiateUploadResponse = {
   __typename?: 'InitiateUploadResponse';
   signedData: Scalars['JSONObject']['output'];
-  uploadId: Scalars['ID']['output'];
+  uploadId: Scalars['String']['output'];
 };
 
 export type LoginDto = {
@@ -169,6 +165,10 @@ export type Pdf = {
   url: Scalars['String']['output'];
 };
 
+export type PdfFilterDto = {
+  category?: InputMaybe<Scalars['ID']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   categories: Array<Category>;
@@ -177,6 +177,7 @@ export type Query = {
   getHello: Scalars['String']['output'];
   pdfs: PaginatedPdfResponse;
   profile: User;
+  questions: Question;
 };
 
 
@@ -191,9 +192,29 @@ export type QueryFindByIdArgs = {
 
 
 export type QueryPdfsArgs = {
-  filter?: FilterDto;
+  filter?: PdfFilterDto;
   limit?: Scalars['Int']['input'];
   page?: Scalars['Int']['input'];
+};
+
+
+export type QueryQuestionsArgs = {
+  filter?: QuestionFilterDto;
+  limit?: Scalars['Int']['input'];
+  page?: Scalars['Int']['input'];
+};
+
+export type Question = {
+  __typename?: 'Question';
+  _id: Scalars['ID']['output'];
+  category: Category;
+  options: Array<Scalars['String']['output']>;
+  questionText: Scalars['String']['output'];
+  time: Scalars['Int']['output'];
+};
+
+export type QuestionFilterDto = {
+  category?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type RefreshTokenResponse = {
@@ -322,7 +343,7 @@ export type CategoriesQuery = { __typename?: 'Query', categories: Array<{ __type
 export type GetPdfsQueryVariables = Exact<{
   page: Scalars['Int']['input'];
   limit: Scalars['Int']['input'];
-  filter?: InputMaybe<FilterDto>;
+  filter?: InputMaybe<PdfFilterDto>;
 }>;
 
 
@@ -434,7 +455,7 @@ export const CategoriesDocument = `
 }
     `;
 export const GetPdfsDocument = `
-    query GetPdfs($page: Int!, $limit: Int!, $filter: FilterDto) {
+    query GetPdfs($page: Int!, $limit: Int!, $filter: PdfFilterDto) {
   pdfs(page: $page, limit: $limit, filter: $filter) {
     docs {
       _id

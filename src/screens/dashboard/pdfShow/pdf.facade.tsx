@@ -14,7 +14,7 @@ export function usePdfFacade() {
 
   const onInitialPageRender = useCallback(
     (categoryId?: string) => {
-      return pagintedPdf.fetchPage(1, 10, categoryId ? {category: categoryId} : undefined);
+      return pagintedPdf.fetchPage(1, 10, categoryId ? { category: categoryId } : undefined);
     },
     [pagintedPdf.fetchPage],
   );

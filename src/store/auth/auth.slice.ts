@@ -5,9 +5,9 @@ import { useStorage } from '@/hooks/useStorage.hook';
 import { navigate } from '@/hooks/useNavigation.hook';
 import { setDataLocally } from './auth.service';
 
-
 const { removeItem, getItem } = useStorage();
 const authState = getItem<AuthState>(REMEMBER_ME);
+
 const initialState = {
   user: authState?.user || null,
   access_token: authState?.access_token || null,
@@ -42,39 +42,50 @@ export const authSlice = createSlice({
     },
   },
   extraReducers: builder => {
-
     builder.addMatcher(
       authApi.endpoints.LoginWithEmail.matchFulfilled,
       (state, { payload }) => {
         applyAuthState(state, payload.loginWithEmail);
-      });
+      }
+    );
 
-    builder.addMatcher(authApi.endpoints.LoginWithGoogle.matchFulfilled, (state, { payload }) => {
-      applyAuthState(state, payload.loginWithGoogle);
-    });
+    builder.addMatcher(
+      authApi.endpoints.LoginWithGoogle.matchFulfilled,
+      (state, { payload }) => {
+        applyAuthState(state, payload.loginWithGoogle);
+      }
+    );
 
-    builder.addMatcher(authApi.endpoints.Profile.matchFulfilled, (state, { payload }) => {
-      state.user = {
-        ...payload.profile,
-      };
-      setDataLocally({ ...state });
-    });
+    builder.addMatcher(
+      authApi.endpoints.Profile.matchFulfilled,
+      (state, { payload }) => {
+        state.user = {
+          ...state.user, // merge with existing
+          ...payload.profile,
+        };
+        console.log(state.user)
+        setDataLocally({ ...state });
+      }
+    );
 
-    builder.addMatcher(authApi.endpoints.ProfileUpdate.matchFulfilled, (state, { payload }) => {
-      state.user = {
-        ...payload.profileUpdate,
-      };
-      setDataLocally({ ...state });
-    });
-
+    builder.addMatcher(
+      authApi.endpoints.ProfileUpdate.matchFulfilled,
+      (state, { payload }) => {
+        state.user = {
+          ...state.user, // merge with existing
+          ...payload.profileUpdate,
+        };
+        setDataLocally({ ...state });
+      }
+    );
   },
-
 });
 
 function applyAuthState(state: Draft<AuthState>, payload: AuthResponse) {
   state.user = {
+    ...state.user, // keep any old values
     ...payload.user,
-    avatar: payload.user.avatar,
+    avatar: payload.user.avatar, // explicitly ensure avatar is set
   };
   state.access_token = payload.access_token;
   state.refresh_token = payload.refresh_token;

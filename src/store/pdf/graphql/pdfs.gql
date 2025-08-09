@@ -1,4 +1,4 @@
-query GetPdfs($page: Int!, $limit: Int!, $filter: FilterDto) {
+query GetPdfs($page: Int!, $limit: Int!, $filter: PdfFilterDto) {
   pdfs(page: $page, limit: $limit, filter: $filter) {
     docs {
       _id

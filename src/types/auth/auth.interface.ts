@@ -3,26 +3,27 @@ import { GenderEnum } from "@/graphql/generated";
 export interface User {
   _id: string;
   email: string;
-  name: string
-  avatar?: string
-  gender?:  GenderEnum
-  dob?: string
+  name: string;
+  avatar?: string;
+  gender?: GenderEnum;
+  dob?: string;
 }
 
 export interface AuthenticatedUser {
   user: User;
+  access_token: string;
   refresh_token: string;
   isAuthenticated: true;
-  access_token: string;
 }
 
 export interface UnauthenticatedUser {
   user: null;
-  refresh_token: null;
   access_token: null;
+  refresh_token: null;
   isAuthenticated: false;
 }
 
+// Make AuthState always have remember_me
 export type AuthState = (AuthenticatedUser | UnauthenticatedUser) & {
-  remember_me: boolean
+  remember_me: boolean;
 };

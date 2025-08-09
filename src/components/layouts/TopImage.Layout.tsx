@@ -17,7 +17,7 @@ interface TopImageLayoutProps {
 
 const TopImageLayout = ({image, lottie, title, description, children, containerClassName}: TopImageLayoutProps) => {
   return (
-    <View className="flex-1 border py-2 bg-theme">
+    <View className=" flex-1 border py-2 bg-theme">
       {canGoBack() && (
         <View onTouchEnd={goBack} className="absolute z-10 top-5 left-5 rounded-full bg-white p-2">
           <Text>
@@ -37,7 +37,7 @@ const TopImageLayout = ({image, lottie, title, description, children, containerC
 
       {image && <ImageBackground source={{uri: image}} className="h-48 justify-end py-5 px-5" resizeMode="cover"></ImageBackground>}
 
-      <View className={twMerge('flex-1 bg-white rounded-t-3xl overflow-hidden px-5 ', containerClassName)}>
+      <View className={twMerge('flex-1 bg-white rounded-t-3xl px-5  ', containerClassName)}>
         {description && <Text className=" text-theme font-interBold text-base py-3 z-10">{description}</Text>}
         {children}
       </View>

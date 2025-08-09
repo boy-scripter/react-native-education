@@ -16,27 +16,39 @@ interface PaginatedResponse<T> {
   prevPage?: number;
 }
 
-export function usePaginatedHook<Docs, TFilter = any>({query}: PaginatedProps<TFilter, Docs>) {
+export function usePaginatedHook<Docs, TFilter = any>({
+  query,
+}: PaginatedProps<TFilter, Docs>) {
   const [data, setData] = useState<PaginatedResponse<Docs> | null>(null);
   const [loading, setLoading] = useState(false);
+  const [currentFilter, setCurrentFilter] = useState<TFilter | undefined>(undefined);
 
   const fetchPage = useCallback(
     async (page = 1, limit = 10, filter?: TFilter) => {
       setLoading(true);
       try {
-        const result = await query({page, limit, filter});
+        // If a filter is passed, update stored filter
+        if (filter !== undefined) {
+          setCurrentFilter(filter);
+        }
+        const result = await query({
+          page,
+          limit,
+          filter: filter !== undefined ? filter : currentFilter,
+        });
+
         setData(prev => {
-          if (!prev) return result;
+          if (!prev || page === 1) return result; // Reset docs on first page
           return {
             ...result,
-            docs: [...prev.docs, ...result.docs], // append new docs
+            docs: [...prev.docs, ...result.docs], // Append new docs
           };
         });
       } finally {
         setLoading(false);
       }
     },
-    [query],
+    [query, currentFilter]
   );
 
   const nextPage = useCallback(() => {
@@ -62,5 +74,6 @@ export function usePaginatedHook<Docs, TFilter = any>({query}: PaginatedProps<TF
     prevPage,
     fetchPage,
     loading,
+    currentFilter, // exposing current filter if needed
   };
 }
