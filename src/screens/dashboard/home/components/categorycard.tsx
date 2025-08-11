@@ -17,7 +17,7 @@ export function CategoryCardComponent({image, _id, name, color, questionCount}: 
   const overlayColor = color + '80'; // appending '80' for ~50% opacity in hex
 
   function handleOnPlay() {
-    const id = open(() => <QuizInstuctionModel modalId={id}></QuizInstuctionModel>, 'Read Instuction Carefully');
+    const id = open(() => <QuizInstuctionModel modalId={id} />, 'Read Instuction Carefully');
   }
 
   return (
