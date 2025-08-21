@@ -1,6 +1,6 @@
 import { createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
-import { AuthState, REMEMBER_ME } from '@myTypes/auth';
-import { authApi, AuthResponse } from '@/store/auth/endpoints';
+import { AuthState, REMEMBER_ME , AuthResponse } from '@myTypes/auth';
+import { authApi } from '@/store/auth/endpoints';
 import { useStorage } from '@/hooks/useStorage.hook';
 import { navigate } from '@/hooks/useNavigation.hook';
 import { setDataLocally } from './auth.service';

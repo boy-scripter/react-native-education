@@ -9,14 +9,11 @@ import {LoadingManager, Pulse} from '@/components/LoadingManger';
 import {useHomeFacade} from './home.facade';
 import Img from '@/components/ui/Img';
 import ProfileImage from '@assets/images/profile.png';
-import { CategoryCardComponent } from './components/categorycard';
-
+import {CategoryCardComponent} from './components/categorycard';
 
 export default function HomeScreen() {
   const {categories, onInitialPageRender} = useHomeFacade();
   const user = useRootState(selectUser) as unknown as AuthenticatedUser['user'];
-
-
 
   return (
     <LoadingManager skeleton={<SkeletonLoading />} asyncFunction={onInitialPageRender}>

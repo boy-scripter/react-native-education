@@ -1,5 +1,7 @@
 import { GenderEnum } from "@/graphql/generated";
 
+export type { AuthResponse } from '@/graphql/generated';
+
 export interface User {
   _id: string;
   email: string;

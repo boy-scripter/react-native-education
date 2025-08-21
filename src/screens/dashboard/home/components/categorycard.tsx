@@ -14,7 +14,7 @@ interface QuizCardProps {
 
 export function CategoryCardComponent({image, _id, name, color, questionCount}: QuizCardProps) {
   const {open} = useModal();
-  const overlayColor = color + '80'; // appending '80' for ~50% opacity in hex
+  const overlayColor = color + '80';
 
   function handleOnPlay() {
     const id = open(() => <QuizInstuctionModel modalId={id} />, 'Read Instuction Carefully');
@@ -69,7 +69,7 @@ function QuizInstuctionModel({modalId}: {modalId: string}) {
         <Text className="text-greyish-100 mb-2">4. Submit your answers before the timer runs out.</Text>
         <View className="flex-row gap-2">
           <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => close(modalId)} />
-          <Button label="Start Quiz" className="mt-4 flex-1 bg-green-600 border-green-600" onPress={() => navigate('quiz')} />
+          <Button label="Start Quiz" className="mt-4 flex-1 bg-green-600 border-green-600" onPress={() => navigate('DashboardStack', {screen: 'Quiz', params: {}})} />
         </View>
       </View>
     </>

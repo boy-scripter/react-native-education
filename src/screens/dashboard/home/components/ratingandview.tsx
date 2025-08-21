@@ -12,7 +12,7 @@ export function RankingAndLeaderboard() {
     function handlePdfPress(url: string = 'https://icseindia.org/document/sample.pdf') {
       navigate('DashboardStack', {
         screen: 'PdfView',
-        params: {url},
+        params: { url },
       });
     }
 

@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {Pressable, Text, PressableProps, View, GestureResponderEvent, StyleSheet} from 'react-native';
+import {Pressable, Text, GestureResponderEvent, View, StyleSheet, PressableProps} from 'react-native';
 import {twMerge} from 'tailwind-merge';
 import LinearGradient from 'react-native-linear-gradient';
 import Loader from '@components/ui/Loader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { match, P } from 'ts-pattern';
 
 export type ButtonProps = {
   label?: string;
@@ -40,10 +41,7 @@ const Button: React.FC<ButtonProps> = ({
 
   const handlePress = async (event: GestureResponderEvent) => {
     if (!onPress) return;
-
     const result = onPress(event);
-
-    // Check if result is a Promise
     if (result && loadingMode && typeof result.then === 'function') {
       try {
         setIsLoading(true);
@@ -53,54 +51,45 @@ const Button: React.FC<ButtonProps> = ({
       }
     }
   };
+const renderIcon = () =>
+  match([icon, isLoading] as const)
+    .with([P.string, false], ([iconName]) => <Icon name={iconName} size={iconSize} color={iconColor} />)
+    .otherwise(() => null);
 
-  const isLabel = !!label ;
+const renderChildren = () =>
+  match(isLoading)
+    .with(false, () => <View className="flex-row items-center">{children}</View>)
+    .otherwise(() => null);
 
-  const LeftContent = () => (
-    <View className="flex-row items-center gap-2">
-      {icon && iconPosition === 'left' && !isLoading && <Icon name={icon} size={iconSize} color={iconColor} />}
-      <View style={{display: isLoading ? 'none' : 'flex'}}>{position === 'left' && children}</View>
-    </View>
-  );
+const renderLabel = () =>
+  match([isLoading, label] as const)
+    .with([false, P.string], ([, lbl]) => (
+      <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{lbl}</Text>
+    ))
+    .otherwise(() => null);
 
-  const RightContent = () => (
-    <View className="flex-row items-center gap-2">
-      <View style={{display: isLoading ? 'none' : 'flex'}}>{position === 'right' && children}</View>
-      {icon && iconPosition === 'right' && !isLoading && <Icon name={icon} size={iconSize} color={iconColor} />}
-    </View>
-  );
+const renderLoader = () =>
+  match(isLoading)
+    .with(true, () => <Loader />)
+    .otherwise(() => null);
+
 
   return (
     <Pressable
       onPress={handlePress}
       disabled={isDisabled}
-      className={twMerge('bg-theme border-theme overflow-hidden p-2 py-3  rounded-lg flex-row gap-2 items-center justify-center', isDisabled && 'opacity-50', className)}
+      className={twMerge('bg-theme border-theme overflow-hidden p-2 py-3 rounded-lg flex-row items-center justify-center', isDisabled && 'opacity-50', className)}
       style={{borderWidth: 1}}
       {...props}>
       <LinearGradient colors={['rgba(255, 255, 255, 0.317)', 'transparent']} start={{x: 0.5, y: 0}} end={{x: 0.5, y: 0.5}} style={StyleSheet.absoluteFillObject} />
-
-  {/* Extra children (e.g. countdown, badge) */}
-      {position === 'left' && children && (
-        <View style={{display: !isLoading ? 'flex' : 'none'}} className=" flex-row items-center">
-          {children}
-        </View>
-      )}
-
-      {/* Icon */}
-      {!isLoading && icon && iconPosition === 'left' && <Icon size={iconSize} color={iconColor}  name={icon}></Icon>}
-
-      {/* Label or Loader */}
-      {isLoading ? <Loader /> : isLabel && <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{label}</Text>}
-
-      {/* Icon */}
-      {!isLoading && icon && iconPosition === 'right' && <Icon size={iconSize} color="#fff"  name={icon}></Icon>}
-
-      {/* Extra children (e.g. countdown, badge) */}
-      {position === 'right' && children && (
-        <View style={{display: !isLoading ? 'flex' : 'none'}} className=" flex-row items-center">
-          {children}
-        </View>
-      )}
+      <View className="flex-row items-center gap-2">
+        {iconPosition === 'left' && renderIcon()}
+        {position === 'left' && renderChildren()}
+        {renderLabel()}
+        {position === 'right' && renderChildren()}
+        {iconPosition === 'right' && renderIcon()}
+      </View>
+      {renderLoader()}
     </Pressable>
   );
 };

@@ -22,7 +22,7 @@ const baseQuery = graphqlRequestBaseQuery({
   url: API_URL,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.access_token;
-    if (token) {headers.set('Authorization', `Bearer ${token}`);}
+    token && headers.set('Authorization', `Bearer ${token}`);
     return headers;
   },
   customErrors: ({ response }) => {
@@ -35,19 +35,52 @@ const baseQuery = graphqlRequestBaseQuery({
 }) as BaseQueryType;
 
 
+
+const handleGeneralError = (error: any, skipToast?: boolean) => {
+  if (!error || skipToast) return;
+  const errorMessage = error.message || 'Something went wrong';
+  errorToast({ text1: errorMessage });
+};
+
+
+
+const refreshToken = async (api: any, refresh_token: string) => {
+  const release = await mutex.acquire();
+  try {
+    const refreshResult = await baseQuery({
+      document: REFRESH_TOKEN_DOCUMENT,
+      variables: { token: refresh_token },
+    }, api, { skipToast: true });
+
+    const newAccessToken = (refreshResult?.data as any)?.refreshToken?.access_token;
+    if (!newAccessToken) {
+      errorToast({ text1: 'Failed to refresh token' });
+      api.dispatch(logout());
+      return null;
+    }
+
+    api.dispatch(setAccessToken(newAccessToken));
+    return newAccessToken;
+
+  } catch {
+
+    api.dispatch(logout());
+    return null;
+
+  } finally {
+
+    release();
+
+  }
+};
+
 export const finalBaseQuery: BaseQueryType = async (args, api, extraOptions: ExtraOptions) => {
-  // Wait if there's already a token refresh in progress
   await mutex.waitForUnlock();
 
   let result = await baseQuery(args, api, extraOptions);
 
-  // Handle general errors
-  if (result.error && !(extraOptions?.skipToast) && result.error?.message.toLowerCase() !== 'unauthorized') {
-    const errorMessage = result.error?.message || 'something went wrong';
-    errorToast({ text1: errorMessage });
-  }
+  handleGeneralError(result.error, extraOptions?.skipToast);
 
-  // If token expired (401), attempt refresh
   if (result.error?.message.toLowerCase() === 'unauthorized') {
     const state = api.getState() as RootState;
     const refresh_token = selectAuth(state).refresh_token;
@@ -58,37 +91,10 @@ export const finalBaseQuery: BaseQueryType = async (args, api, extraOptions: Ext
     }
 
     if (!mutex.isLocked()) {
-
-      const release = await mutex.acquire();
-
-      try {
-
-        // Attempt to refresh the token
-        const refreshResult = await baseQuery({
-          document: REFRESH_TOKEN_DOCUMENT,
-          variables: { token: refresh_token },
-        }, api, { skipToast: true });
-
-        // Assuming the access_token is returned under refreshResult.data.refreshToken
-        const newAccessToken = (refreshResult?.data as any)?.refreshToken?.access_token;
-        if (!newAccessToken) {
-          errorToast({ text1: 'Failed to refresh token' });
-          api.dispatch(logout());
-        }
-
-        // Update the access token in the state
-        api.dispatch(setAccessToken(newAccessToken));
-        result = await baseQuery(args, api, extraOptions);
-
-      } catch {
-        api.dispatch(logout());
-      } finally {
-        release();
-      }
-
-
+      const newAccessToken = await refreshToken(api, refresh_token);
+      if (!newAccessToken) return result;
+      result = await baseQuery(args, api, extraOptions);
     } else {
-      // Wait for the ongoing refresh to finish and retry
       await mutex.waitForUnlock();
       result = await baseQuery(args, api, extraOptions);
     }
@@ -97,16 +103,13 @@ export const finalBaseQuery: BaseQueryType = async (args, api, extraOptions: Ext
   return result;
 };
 
-
-
 export const baseApi = createApi({
   baseQuery: finalBaseQuery,
   endpoints: (_) => ({}),
 });
 
-
 interface ExtraOptions {
-  skipToast?: boolean
+  skipToast?: boolean;
 }
 
-type BaseQueryType = BaseQueryFn<{ document: string | DocumentNode; variables?: any }, unknown, { message: string; status: number | undefined }, ExtraOptions>
+type BaseQueryType = BaseQueryFn<{ document: string | DocumentNode; variables?: any }, unknown, { message: string; status: number | undefined }, ExtraOptions>;
