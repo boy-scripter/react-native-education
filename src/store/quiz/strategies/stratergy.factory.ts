@@ -3,7 +3,7 @@ import { GameModeStrategy, GameModeType } from "@/types/quiz";
 import { SinglePlayerModeStrategy } from "./singleplayer.stratergy";
 
 export class GameModeFactory {
-    static createGameMode(mode: GameModeType, socket: WebSocket): GameModeStrategy {
+    static createGameMode(mode: GameModeType): GameModeStrategy {
         switch (mode) {
             case GameModeType.Single:
                 return new SinglePlayerModeStrategy();

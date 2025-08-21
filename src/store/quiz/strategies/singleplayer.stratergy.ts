@@ -2,13 +2,14 @@
 import { Socket, WebSocket } from 'socket.io-client';
 import { GameModeStrategy, GameModeType, startGameProps } from '@/types/quiz';
 import { QuizSocketService } from '../socket';
+import { AppDispatch } from '@/store/store';
 
-
-
-export class SinglePlayerModeStrategy implements GameModeStrategy {
+export class SinglePlayerModeStrategy extends GameModeStrategy {
+    private MODE = GameModeType.Single
     private socket: Socket;
 
-    constructor() {
+    constructor(private dispatcher: AppDispatch) {
+        super(dispatcher)
         this.socket = QuizSocketService
             .getInstance()
             .getSocket()
@@ -18,20 +19,19 @@ export class SinglePlayerModeStrategy implements GameModeStrategy {
         this.socket.emit('start-game', options)
     }
 
-    selectAnswer(): void {
+    submitAnswer(): void {
 
-    }
-
-    OnResult(): void {
-        
     }
 
     onNewQuestion(): void {
-        
+
     }
 
-    onState(): void {
-        
+    getGameMode() {
+        return this.MODE
     }
+
+
+
 
 }

@@ -1,28 +1,41 @@
+import { AppDispatch } from "@/store/store";
 import { GameModeType, GameStatus } from "./quiz.enum";
 import { Question } from "@/graphql/generated";
 
-
-
 export type { Question }
 
-export interface GameModeStrategy {
-  startGame(options: startGameProps): void;
-  submitAnswer(answerId: string): void;
+export abstract class GameModeStrategy {
+  /* ── constructor with injected Redux dispatcher ── */
+  constructor(protected readonly dispatch: AppDispatch) { }
 
-  // Callback-based events
-  onResult(callback: (result: any) => void): void; // result can be typed more specifically
-  onNewQuestion(callback: (question: Question) => void): void;
-  onState<T extends BaseGameState>(callback: (state: T) => void): void; // current game state
+  /* ── required API ── */
+  abstract getGameMode(): GameModeType;
+  abstract startGame(options: startGameProps): void;
+  abstract submitAnswer(answerId: string): void;
+
+  /* ── optional callback hooks (no-op by default) ── */
+  abstract onNewQuestion<TQuestion extends Question>(callback: (question: TQuestion) => void): void;
+  onResult?<TGameHistoryDoc extends GameHistoryDoc>(callback: (result: TGameHistoryDoc) => void): void;
+  onState?<TGameState extends BaseGameState>(callback: (state: TGameState) => void): void;
 }
-
 
 export interface startGameProps {
   category: string;
   mode: GameModeType
 }
 
+export interface GameHistoryDoc {
+  id: string;
+  categoryId: string;
+  startedAt: string;
+  endedAt?: string;
+  questions: string[];
+  players: string[];
+  mode: GameModeType;
+}
+
 export type Answer = {
-  c: boolean;    // correct
+  c: boolean;
   p: number;     // points
   t: number;     // time taken (ms)
   at: number;    // available time

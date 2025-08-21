@@ -87,7 +87,6 @@ export type GameHistoryBase = {
 };
 
 export const GameModeType = {
-  Onevone: 'ONEVONE',
   Single: 'SINGLE'
 } as const;
 
