@@ -15,8 +15,33 @@ export type Scalars = {
   Float: { input: number; output: number; }
   DateTime: { input: any; output: any; }
   JSONObject: { input: any; output: any; }
+  Number: { input: any; output: any; }
 };
 
+export type Answer = {
+  __typename?: 'Answer';
+  questionId: Scalars['ID']['output'];
+  selectedOption?: Maybe<AnswerType>;
+  status: AnswerStatus;
+  timeAvailable: Scalars['Number']['output'];
+  timeTaken: Scalars['Number']['output'];
+};
+
+export const AnswerStatus = {
+  Correct: 'CORRECT',
+  Incorrect: 'INCORRECT',
+  Timeout: 'TIMEOUT'
+} as const;
+
+export type AnswerStatus = typeof AnswerStatus[keyof typeof AnswerStatus];
+export const AnswerType = {
+  Option_0: 'OPTION_0',
+  Option_1: 'OPTION_1',
+  Option_2: 'OPTION_2',
+  Option_3: 'OPTION_3'
+} as const;
+
+export type AnswerType = typeof AnswerType[keyof typeof AnswerType];
 export type AuthResponse = {
   __typename?: 'AuthResponse';
   access_token: Scalars['String']['output'];
@@ -42,6 +67,38 @@ export type CreateCategoryDto = {
   name: Scalars['String']['input'];
 };
 
+export type DateRangeInput = {
+  gt: Scalars['DateTime']['input'];
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+/** Union type for different game history modes */
+export type GameHistory = SinglePlayerGame;
+
+export type GameHistoryBase = {
+  _id: Scalars['ID']['output'];
+  categoryId: Category;
+  endedAt?: Maybe<Scalars['DateTime']['output']>;
+  players: Array<Player>;
+  questions: Array<Question>;
+  startedAt: Scalars['DateTime']['output'];
+};
+
+export const GameModeType = {
+  Onevone: 'ONEVONE',
+  Single: 'SINGLE'
+} as const;
+
+export type GameModeType = typeof GameModeType[keyof typeof GameModeType];
+export const GameResult = {
+  Draw: 'DRAW',
+  Loss: 'LOSS',
+  Win: 'WIN'
+} as const;
+
+export type GameResult = typeof GameResult[keyof typeof GameResult];
 /** Gender options */
 export const GenderEnum = {
   Female: 'FEMALE',
@@ -50,10 +107,21 @@ export const GenderEnum = {
 } as const;
 
 export type GenderEnum = typeof GenderEnum[keyof typeof GenderEnum];
+export type GlobalLeaderboardFilterDto = {
+  createdAt: DateRangeInput;
+};
+
 export type InitiateUploadResponse = {
   __typename?: 'InitiateUploadResponse';
   signedData: Scalars['JSONObject']['output'];
   uploadId: Scalars['String']['output'];
+};
+
+export type Leaderboard = {
+  __typename?: 'Leaderboard';
+  rank: Scalars['Int']['output'];
+  totalPoints: Scalars['Int']['output'];
+  userId: UserSummary;
 };
 
 export type LoginDto = {
@@ -142,9 +210,35 @@ export type MutationValidateOtpArgs = {
   input: ResetPasswordDto;
 };
 
+export type PaginatedGameHistoryResponse = {
+  __typename?: 'PaginatedGameHistoryResponse';
+  docs: Array<GameHistory>;
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPrevPage: Scalars['Boolean']['output'];
+  limit: Scalars['Int']['output'];
+  nextPage?: Maybe<Scalars['Int']['output']>;
+  page: Scalars['Int']['output'];
+  prevPage?: Maybe<Scalars['Int']['output']>;
+  totalDocs: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
 export type PaginatedPdfResponse = {
   __typename?: 'PaginatedPdfResponse';
   docs: Array<Pdf>;
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPrevPage: Scalars['Boolean']['output'];
+  limit: Scalars['Int']['output'];
+  nextPage?: Maybe<Scalars['Int']['output']>;
+  page: Scalars['Int']['output'];
+  prevPage?: Maybe<Scalars['Int']['output']>;
+  totalDocs: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type PaginatedQuestionResponse = {
+  __typename?: 'PaginatedQuestionResponse';
+  docs: Array<Question>;
   hasNextPage: Scalars['Boolean']['output'];
   hasPrevPage: Scalars['Boolean']['output'];
   limit: Scalars['Int']['output'];
@@ -169,15 +263,32 @@ export type PdfFilterDto = {
   category?: InputMaybe<Scalars['ID']['input']>;
 };
 
+export type PersonalLeaderBoard = {
+  __typename?: 'PersonalLeaderBoard';
+  rank: Scalars['Int']['output'];
+  totalPoints: Scalars['Int']['output'];
+};
+
+export type Player = {
+  __typename?: 'Player';
+  _id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   categories: Array<Category>;
   category: Category;
   findById: Pdf;
+  gameHistories: PaginatedGameHistoryResponse;
+  gameHistoryById: GameHistory;
   getHello: Scalars['String']['output'];
+  globalLeaderboard: Array<Leaderboard>;
   pdfs: PaginatedPdfResponse;
+  personalLeaderboard?: Maybe<PersonalLeaderBoard>;
   profile: User;
-  questions: Question;
+  questions: PaginatedQuestionResponse;
+  refreshLeaderBoard: RefreshResponse;
 };
 
 
@@ -188,6 +299,22 @@ export type QueryCategoryArgs = {
 
 export type QueryFindByIdArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryGameHistoriesArgs = {
+  limit?: Scalars['Int']['input'];
+  page?: Scalars['Int']['input'];
+};
+
+
+export type QueryGameHistoryByIdArgs = {
+  gameId: Scalars['String']['input'];
+};
+
+
+export type QueryGlobalLeaderboardArgs = {
+  input: GlobalLeaderboardFilterDto;
 };
 
 
@@ -215,6 +342,12 @@ export type Question = {
 
 export type QuestionFilterDto = {
   category?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type RefreshResponse = {
+  __typename?: 'RefreshResponse';
+  lastRefreshAt: Scalars['String']['output'];
+  nextRefreshAt: Scalars['String']['output'];
 };
 
 export type RefreshTokenResponse = {
@@ -245,6 +378,23 @@ export type SignUpDto = {
   password: Scalars['String']['input'];
 };
 
+export type SinglePlayerGame = GameHistoryBase & {
+  __typename?: 'SinglePlayerGame';
+  _id: Scalars['ID']['output'];
+  answers: Array<Answer>;
+  categoryId: Category;
+  endedAt?: Maybe<Scalars['DateTime']['output']>;
+  mode: GameModeType;
+  players: Array<Player>;
+  questions: Array<Question>;
+  score: Scalars['Number']['output'];
+  startedAt: Scalars['DateTime']['output'];
+  status: GameResult;
+  totalCorrect: Scalars['Number']['output'];
+  totalTimeAvailable: Scalars['Number']['output'];
+  totalTimeTaken: Scalars['Number']['output'];
+};
+
 export type UpdateCategoryDto = {
   _id?: InputMaybe<Scalars['String']['input']>;
   color?: InputMaybe<Scalars['String']['input']>;
@@ -272,6 +422,12 @@ export type User = {
   dob?: Maybe<Scalars['DateTime']['output']>;
   email: Scalars['String']['output'];
   gender?: Maybe<GenderEnum>;
+  name: Scalars['String']['output'];
+};
+
+export type UserSummary = {
+  __typename?: 'UserSummary';
+  _id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
 };
 
