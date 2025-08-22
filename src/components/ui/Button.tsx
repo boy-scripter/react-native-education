@@ -4,7 +4,7 @@ import {twMerge} from 'tailwind-merge';
 import LinearGradient from 'react-native-linear-gradient';
 import Loader from '@components/ui/Loader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { match, P } from 'ts-pattern';
+import {match, P} from 'ts-pattern';
 
 export type ButtonProps = {
   label?: string;
@@ -51,28 +51,25 @@ const Button: React.FC<ButtonProps> = ({
       }
     }
   };
-const renderIcon = () =>
-  match([icon, isLoading] as const)
-    .with([P.string, false], ([iconName]) => <Icon name={iconName} size={iconSize} color={iconColor} />)
-    .otherwise(() => null);
+  const renderIcon = () =>
+    match([icon, isLoading] as const)
+      .with([P.string, false], ([iconName]) => <Icon name={iconName} size={iconSize} color={iconColor} />)
+      .otherwise(() => null);
 
-const renderChildren = () =>
-  match(isLoading)
-    .with(false, () => <View className="flex-row items-center">{children}</View>)
-    .otherwise(() => null);
+  const renderChildren = () =>
+    match(isLoading)
+      .with(false, () => <View className="flex-row items-center">{children}</View>)
+      .otherwise(() => null);
 
-const renderLabel = () =>
-  match([isLoading, label] as const)
-    .with([false, P.string], ([, lbl]) => (
-      <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{lbl}</Text>
-    ))
-    .otherwise(() => null);
+  const renderLabel = () =>
+    match([isLoading, label] as const)
+      .with([false, P.string], ([, lbl]) => <Text className={twMerge('text-white font-interBold text-center', textClassName)}>{lbl}</Text>)
+      .otherwise(() => null);
 
-const renderLoader = () =>
-  match(isLoading)
-    .with(true, () => <Loader />)
-    .otherwise(() => null);
-
+  const renderLoader = () =>
+    match(isLoading)
+      .with(true, () => <Loader />)
+      .otherwise(() => null);
 
   return (
     <Pressable

@@ -1,8 +1,8 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '@/screens/dashboard/home/home.screen';
-import PdfShowScreen from '@/screens/dashboard/pdfShow/pdfShow.screen';
-import PdfViewScreen from '@/screens/dashboard/pdfview';
+import PdfShowScreen from '@/screens/dashboard/pdf/pdfShow.screen';
+import PdfViewScreen from '@/screens/dashboard/pdf/pdfview';
 import EditProfileScreen from '@/screens/dashboard/EditProfile';
 // import QuizScreen from '@screens/dashboard/quiz.screen';
 // import LeaderBoardScreen from '@screens/dashboard/leaderboard.screen';

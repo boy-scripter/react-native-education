@@ -1,9 +1,8 @@
-
 import {View, Text} from 'react-native';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
-import { navigate } from '@hooks/useNavigation.hook';
+import {navigate} from '@hooks/useNavigation.hook';
 import Icon from 'react-native-vector-icons/AntDesign';
-import colorConstant from '@constant/color.constant';
+import AnswerBox from './components/AnswerBox';
 
 const QuizScreen: React.FC = () => {
   return (
@@ -43,9 +42,9 @@ const QuizScreen: React.FC = () => {
 
         {/* answer box starts here */}
         <View className="options gap-4 mt-5 w-full">
-          <AnswerBox />
-          <AnswerBox status='correct'/>
-          <AnswerBox status='incorrect' />
+          <AnswerBox status='correct' />
+          <AnswerBox status="correct" />
+          <AnswerBox status="incorrect" />
           <AnswerBox />
         </View>
         {/* answer box ends here */}
@@ -55,30 +54,3 @@ const QuizScreen: React.FC = () => {
 };
 
 export default QuizScreen;
-
-interface AnswerBoxProps {
-  status: 'correct' | 'incorrect' | 'idle';
-  onSelect: (option: string) => void;
-  selectedOption: string | null;
-}
-
-const AnswerBox: React.FC<AnswerBoxProps> = ({onSelect, selectedOption, status = 'idle'}) => {
-  const option = '434';
-
-  const isSelected = selectedOption === option;
-  // Hex color based on status
-  const statusHexColor = status === 'incorrect' ? '#EF4444' : status === 'correct' ? '#22C55E' : colorConstant.greyish[100]; // Tailwind greyish-100
-  const iconName = status === 'incorrect' ? 'close' : status === 'correct' ? 'check' : null;
-
-  return (
-    <View style={{borderColor: statusHexColor}} className={`p-3 pr-6 flex-row items-center justify-between border-2 rounded-xl `}>
-      <Text className={`font-interBold ${isSelected ? 'text-white' : 'text-greyish-900'}`} onPress={() => onSelect(option)}>
-        {option}
-      </Text>
-
-      <View style={{borderColor: statusHexColor, backgroundColor : statusHexColor }} className="border h-7 aspect-square rounded-full items-center justify-center overflow-hidden">
-        {iconName && <Icon name={iconName} color="white" size={19} />}
-      </View>
-    </View>
-  );
-};
