@@ -10,8 +10,8 @@ import {errorToast, successToast} from '@/components/Toast/Toast.config';
 import {useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation, useValidateOtpMutation} from '@store/auth/endpoints';
 import {StepsAnimation} from '@/animation/StepsAnimation';
 import CountdownTimer, {CountdownTimerRef} from '@/components/ui/CountDownTimer';
-import z from 'zod';
 import {FormInput} from '@/components/ui/Forms';
+import z from 'zod';
 
 const Step1Schema = z.object({
   email: z.string({required_error: 'Email is required'}).email('Enter a valid email address'),

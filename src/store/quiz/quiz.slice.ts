@@ -1,53 +1,44 @@
-// store/quizSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { GameModeType } from '@/types/quiz';
-import { GameStrategyRegistry, GameStrategyMapType } from './strategies/stratergy.map';
+// src/redux/gameSlice.ts
 
-interface QuizState {
-    strategy?: ReturnType<GameStrategyMapType[GameModeType]['strategyFactory']>;
-    mode?: GameModeType;
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { GameModeType, Question } from '@/graphql/generated';
+import { BaseGameState } from '@/types/quiz';
+
+// Define the initial state
+interface quizState {
+    currentQuestion?: Question;
+    currentMode?: GameModeType;
+    gameState?: BaseGameState; // e.g., 'loading', 'playing', 'finished'
 }
 
-const initialState: QuizState = {
-    strategy: undefined,
-    mode: undefined,
+const initialState: quizState = {
+    currentMode: undefined,
+    gameState: undefined, // Default to loading state
+    currentQuestion: undefined,
 };
 
-export const quizSlice = createSlice({
+// Create the slice
+const quizSlice = createSlice({
     name: 'quiz',
     initialState,
     reducers: {
-        // Set strategy by passing a GameModeType key
-        initiateStrategy: (state, action: PayloadAction<GameModeType>) => {
-            const entry = GameStrategyRegistry[action.payload];
-
-            if (!entry) throw new Error(`No strategy found for mode ${action.payload}`);
-
-            state.strategy = entry.strategyFactory(); // ✅ typed
-            state.mode = action.payload; // ✅ typed
+        setCurrentMode(state, action: PayloadAction<GameModeType>) {
+            state.currentMode = action.payload;
         },
-
-        // Reset strategy
-        resetStrategy: (state) => {
-            state.strategy = undefined;
-            state.mode = undefined;
+        setCurrentQuestion(state, action: PayloadAction<Question>) {
+            state.currentQuestion = action.payload;
         },
-
-        // Reset and immediately set new strategy
-        resetToNewStrategy: (state, action: PayloadAction<GameModeType>) => {
-            state.strategy = undefined;
-            state.mode = undefined;
-
-            const entry = GameStrategyRegistry[action.payload];
-            if (!entry) throw new Error(`No strategy found for mode ${action.payload}`);
-
-            state.strategy = entry.strategyFactory();
-            state.mode = action.payload;
+        setGameState(state, action: PayloadAction<BaseGameState>) {
+            state.gameState = action.payload;
+        },
+        resetGame(state) {
+            state.currentMode = undefined;
+            state.currentQuestion = undefined;
+            state.gameState = undefined;
         },
     },
 });
 
-// Export actions
-export const { initiateStrategy, resetStrategy, resetToNewStrategy } = quizSlice.actions;
-
+// Export the actions and the reducer
+export const { setCurrentMode, setCurrentQuestion, setGameState, resetGame } = quizSlice.actions;
 export default quizSlice.reducer;

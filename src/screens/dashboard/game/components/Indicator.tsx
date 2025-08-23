@@ -1,5 +1,4 @@
 import {View, Text} from 'react-native';
-import {navigate} from '@hooks/useNavigation.hook';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useModal} from '@/modals/modal.context';
 import Button from '@/components/ui/Button';
@@ -13,16 +12,7 @@ export function Indicator({handleQuit}: IndicatorProps) {
 
   const onPressIcon = () => {
     if (handleQuit) handleQuit();
-    const closeModalId = open(
-      () => (
-        (
-          <>
-            <QuitModal modalId={closeModalId}></QuitModal>
-          </>
-        ),
-        'Are you sure?'
-      ),
-    );
+    const closeModalId = open(() => <QuitModal modalId={closeModalId} />, 'Are you sure?');
   };
 
   return (
