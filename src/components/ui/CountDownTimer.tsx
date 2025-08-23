@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {View, Text} from 'react-native';
 import {useTimer} from 'react-timer-hook';
 import {twMerge} from 'tailwind-merge';
@@ -14,7 +14,6 @@ export type CountdownTimerProps = {
 
 const CountdownTimer: React.FC<CountdownTimerProps> = ({countdownDuration, isRunning: externalRunning, onTick, onComplete, textClassName, autoStart = false}) => {
   const currentDuration = useRef(countdownDuration);
-  const [key, setKey] = useState(0); // Force reset when duration changes
 
   // Helper to calculate expiry timestamp
   const calculateExpiryTime = (seconds: number) => {
@@ -29,25 +28,27 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({countdownDuration, isRun
     onExpire: onComplete,
   });
 
-  // Sync internal timer with external running state
+  // Sync external running state
   useEffect(() => {
     if (externalRunning === true && !isRunning) start();
     if (externalRunning === false && isRunning) pause();
-  }, [externalRunning]);
+  }, [externalRunning, isRunning]);
 
-  // Call onTick with remaining seconds
+  // Call onTick on every second
   useEffect(() => {
     onTick?.(minutes * 60 + seconds);
-  }, [seconds, minutes]);
+  }, [seconds, minutes, onTick]);
 
-  // Restart timer if countdownDuration changes
+  // Restart timer if duration changes
   useEffect(() => {
-    currentDuration.current = countdownDuration;
-    setKey(k => k + 1); // Re-mount to reset
+    if (currentDuration.current !== countdownDuration) {
+      currentDuration.current = countdownDuration;
+      restart(calculateExpiryTime(countdownDuration), externalRunning ?? autoStart);
+    }
   }, [countdownDuration]);
 
   return (
-    <View key={key}>
+    <View>
       <Text className={twMerge(textClassName, 'text-white font-interBold')}>
         {minutes > 0 ? String(minutes).padStart(2, '0') + ':' : ''}
         {String(seconds).padStart(2, '0')}

@@ -1,7 +1,9 @@
 import { GameModeType, GameStatus } from "./quiz.enum";
 import { AnswerType, Question } from "@/graphql/generated";
-import { ISinglePlayerStrategy, ISinglerPlayerStateType } from "@/screens/dashboard/game/stratigies/single/logic";
+import { SinglePlayerStratergy } from "@/screens/dashboard/game/strategies/single/logic";
+import { ISinglePlayerStrategy, ISinglerPlayerStateType } from "@/screens/dashboard/game/strategies/single/logic";
 import { Observer } from "@/util";
+import React, { lazy } from "react";
 
 export type { Question }
 
@@ -84,9 +86,26 @@ export interface GameStrategy {
   events: Observer<ListenEventsMap>
 }
 
+
+type ExtractByType<T extends AllGameStrategy, K extends AllGameStrategy['type']> =
+  T extends { type: K } ? T : never
+
 // all game startergy
 export type AllGameStrategy =
   | { type: typeof GameModeType.Single; strategy: ISinglePlayerStrategy; state: ISinglerPlayerStateType }
   | { type: typeof GameModeType.Single; strategy: ISinglePlayerStrategy; state: ISinglerPlayerStateType }
 
-
+export const GameRegistry:
+  {
+    [K in AllGameStrategy['type']]: {
+      screen: React.ComponentType<IStartGame>
+      result: React.ComponentType<any>
+      strategy: () => ExtractByType<AllGameStrategy, K>['strategy']
+    }
+  } = {
+  [GameModeType.Single]: {
+    screen: lazy(() => import('@/screens/dashboard/game/strategies/single/ui/game')),
+    result: lazy(() => import('@/screens/dashboard/game/strategies/single/ui/result')),
+    strategy: SinglePlayerStratergy,
+  } as const
+} 

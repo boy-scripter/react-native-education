@@ -1,7 +1,7 @@
 import {useSelector} from 'react-redux';
 import {selectGame} from '@/store/quiz/quiz.selector';
 import {AllGameStrategy, GameModeType} from '@myTypes/quiz';
-import {SinglePlayerStratergy} from '../stratigies/single/logic';
+import {SinglePlayerStratergy} from '../strategies/single/logic';
 
 const GameMapType = {
   [GameModeType.Single]: () => SinglePlayerStratergy,

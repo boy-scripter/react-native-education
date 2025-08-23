@@ -1,20 +1,16 @@
 import {imageOverloading} from '@/util/imageHelper';
+import {File} from '@/util/zod';
 import React, {useState} from 'react';
 import {Image, View} from 'react-native';
 import {twMerge} from 'tailwind-merge';
 
 export type ImgProps = {
-  source?: string | number; // supports remote (string) and local (number) images
+  source?: string | number | File; // supports remote (string) and local (number) images
   fallbackUri?: string; // optional fallback image (remote)
   className?: string; // outer container styling
   imageClassName?: string; // <Image> element styling
   resizeMode?: 'cover' | 'contain' | 'stretch' | 'center'; // how image is resized
   onPress?: () => void; // optional tap handler
-};
-
-// Check if the string is a valid remote image URL
-const isValidUrl = (value: string): boolean => {
-  return /^https?:\/\/.+\.(png|jpe?g|gif|bmp|webp|svg|tiff?)$/i.test(value);
 };
 
 const Img: React.FC<ImgProps> = ({source, fallbackUri, className, imageClassName, onPress, resizeMode = 'cover'}) => {

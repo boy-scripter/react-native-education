@@ -17,15 +17,15 @@ export type QuestionBoxProps = {
   // coundown realted
   countdownDuration: number /** Props to pass to the internal CountdownTimer component */;
   countdownAutoStart?: boolean /** Automatically start countdown when mounted */;
-  countdownRunning?: string;
   onCountdownTick?: (remainingSeconds: number) => void /** Callback triggered on each tick of the countdown */;
   onCountdownComplete?: () => void /** Callback triggered when countdown reaches zero */;
 };
 
 export const QuestionBox: React.FC<QuestionBoxProps> = ({
+  question,
+  countdownDuration,
   innerNumber = 5,
-  countdownAutoStart = false,
-  question = 'What is the most popular game throughout the world?',
+  countdownAutoStart = true,
   progressPercentage = 0,
   circleDiameter = 90,
   circleStrokeWidth = 8,
@@ -42,7 +42,7 @@ export const QuestionBox: React.FC<QuestionBoxProps> = ({
           {
             <View className="w-full flex-1 justify-center items-center bg-white">
               <Text className="font-interBold text-2xl">
-                <CountdownTimer countdownDuration={10} autoStart={countdownAutoStart} onTick={onCountdownTick} onComplete={onCountdownComplete} />
+                <CountdownTimer countdownDuration={countdownDuration} autoStart={countdownAutoStart} onTick={onCountdownTick} onComplete={onCountdownComplete} />
               </Text>
             </View>
           }

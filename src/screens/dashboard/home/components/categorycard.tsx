@@ -3,6 +3,7 @@ import Img from '@/components/ui/Img';
 import Button from '@/components/ui/Button';
 import {navigate} from '@/hooks/useNavigation.hook';
 import {useModal} from '@/modals/modal.context';
+import {GameModeType} from '@/graphql/generated';
 
 interface QuizCardProps {
   _id: string;
@@ -17,7 +18,7 @@ export function CategoryCardComponent({image, _id, name, color, questionCount}: 
   const overlayColor = color + '80';
 
   function handleOnPlay() {
-    const id = open(() => <QuizInstuctionModel modalId={id} />, 'Read Instuction Carefully');
+    const id = open(() => <QuizInstuctionModel category={_id} modalId={id} />, 'Read Instuction Carefully');
   }
 
   return (
@@ -57,7 +58,7 @@ export function CategoryCardComponent({image, _id, name, color, questionCount}: 
   );
 }
 
-function QuizInstuctionModel({modalId}: {modalId: string}) {
+function QuizInstuctionModel({modalId, category}: {modalId: string; category: string}) {
   const {close} = useModal();
 
   return (
@@ -69,7 +70,11 @@ function QuizInstuctionModel({modalId}: {modalId: string}) {
         <Text className="text-greyish-100 mb-2">4. Submit your answers before the timer runs out.</Text>
         <View className="flex-row gap-2">
           <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => close(modalId)} />
-          <Button label="Start Quiz" className="mt-4 flex-1 bg-green-600 border-green-600" onPress={() => navigate('DashboardStack', {screen: 'Quiz', params: {}})} />
+          <Button
+            label="Start Quiz"
+            className="mt-4 flex-1 bg-green-600 border-green-600"
+            onPress={() => navigate('DashboardStack', {screen: 'Quiz', params: {mode: GameModeType.Single, category}})}
+          />
         </View>
       </View>
     </>

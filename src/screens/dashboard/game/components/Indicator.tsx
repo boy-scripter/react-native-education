@@ -2,6 +2,7 @@ import {View, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useModal} from '@/modals/modal.context';
 import Button from '@/components/ui/Button';
+import {navigate} from '@/hooks';
 
 interface IndicatorProps {
   handleQuit?: () => void; // Optional callback when quitting
@@ -34,7 +35,7 @@ function QuitModal({modalId}: {modalId: string}) {
       <View className="px-2">
         <View className="flex-row gap-2">
           <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => close(modalId)} />
-          <Button label="Yes" className="mt-4 flex-1 bg-green-600 border-green-600" />
+          <Button label="Yes" className="mt-4 flex-1 bg-green-600 border-green-600" onPress={() => navigate('DashboardStack', {screen: 'Home'})} />
         </View>
       </View>
     </>
