@@ -17,14 +17,15 @@ const getContrastTextColor = (bgColor: string) => {
 };
 
 interface AnswerBoxProps {
-  status: 'correct' | 'incorrect' | 'idle' | 'skipped';
-  label: string;
-  id?: string | null;
-  onSelect?: (option: string) => void;
+  id: string; // Unique identifier for the option
+  label: string; // Display text for the option
+  status?: 'correct' | 'incorrect' | 'idle' | 'skipped'; // Optional, defaults to 'idle'
+  selectedId?: string; // Currently selected option id
+  onSelect?: (id: string) => void; // Callback when the option is selected
 }
 
-const AnswerBox: React.FC<AnswerBoxProps> = ({onSelect, selectedOption, status = 'idle', option}) => {
-  const isSelected = selectedOption === option;
+const AnswerBox: React.FC<AnswerBoxProps> = ({id, label, selectedId, status = 'idle', onSelect}) => {
+  const isSelected = selectedId === id;
 
   // ts-pattern maps status → border color, background color, icon
   const {borderColor, bgColor, iconName} = match(status)
@@ -39,8 +40,8 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({onSelect, selectedOption, status =
   return (
     <View style={{borderColor, backgroundColor: bgColor}} className="p-3 pr-6 flex-row items-center justify-between border-2 rounded-xl">
       {/* Option Text */}
-      <Text className="font-interBold" style={{color: textColor}} onPress={() => onSelect && onSelect(option)}>
-        {option}
+      <Text className="font-interBold" style={{color: textColor}} onPress={() => onSelect && onSelect(id)}>
+        {label}
       </Text>
 
       {/* Status Icon */}
