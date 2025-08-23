@@ -10,13 +10,7 @@ const QuizScreen: React.FC = () => {
   return (
     <View className="p-5 justify-start flex-1">
       {/* question status indicator starts here */}
-      <View className="flex-row mt-10 gap-6 px-2 items-center ">
-        <Icon onPress={() => navigate('result')} name="doubleright" color="black" size={18} className="border-greyish-100 bg-white border font-interBold p-2 rounded-full" />
-        <View className="p-3 px-4 border-2 flex-row items-center gap-2 border-greyish-100  rounded-3xl flex-1">
-          <View className="bg-theme rounded-xl p-1.5  flex-1"></View>
-          <Text className="text-greyish-100 font-interBold">5/10</Text>
-        </View>
-      </View>
+   
       {/* question status indicator ends here*/}
 
       {/* question and answer box */}
