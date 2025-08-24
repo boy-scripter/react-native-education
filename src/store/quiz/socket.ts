@@ -18,26 +18,23 @@ export class QuizSocketService {
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
-      auth: {
-        token: this.getAccessToken(), // send token with handshake
+      extraHeaders: {
+        Authorization: `Bearer ${this.getAccessToken()}`,
       },
     });
 
     // Successful connection
     this.socket.on('connect', () => {
       this.connected = true;
-      console.log('Socket connected');
     });
 
     // Disconnection
     this.socket.on('disconnect', () => {
       this.connected = false;
-      console.log('Socket disconnected');
     });
 
     // Handle handshake errors (like Unauthorized)
     this.socket.on('connect_error', async (err: any) => {
-      console.error('Socket connect_error:', err.message);
 
       if (!err.message?.toLowerCase().includes('unauthorized')) return;
       const handleLogout = () => store.dispatch(logout());
@@ -92,10 +89,14 @@ export class QuizSocketService {
     return selectAuth(state).access_token || null;
   }
 
+
   /** ♻️ Reconnect with a fresh token */
   private reconnectWithNewToken(newToken: string) {
     console.log('Reconnecting socket with refreshed token...');
-    this.socket.auth = { token: newToken };
+    this.socket.io.opts.extraHeaders = {
+      ...this.socket.io.opts.extraHeaders, // keep other headers if any
+      Authorization: `Bearer ${newToken}`,
+    };
     this.socket.disconnect();
     this.socket.connect();
   }

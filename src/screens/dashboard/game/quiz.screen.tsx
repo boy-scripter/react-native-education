@@ -7,7 +7,7 @@ import {JoyStickLoader} from '@/components/LoadingManger';
 import {QuizSocketService} from '@/store/quiz/socket';
 
 const Loader: React.FC<{message: string}> = ({message}) => (
-  <View className="flex-1 justify-center items-center bg-white">
+  <View className="flex-1 justify-center items-center ">
     <JoyStickLoader message={message} />
   </View>
 );
@@ -43,7 +43,7 @@ const QuizScreen: React.FC = () => {
   }, []);
 
   if (!socketConnected) {
-    return <Loader message="Socket Initializing..." />;
+    return <Loader message="Game Socket Initializing..." />;
   }
 
   return (

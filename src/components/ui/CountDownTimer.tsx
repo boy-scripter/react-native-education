@@ -49,7 +49,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({countdownDuration, isRun
 
   return (
     <View>
-      <Text className={twMerge(textClassName, 'text-white font-interBold')}>
+      <Text className={twMerge('text-white font-interBold', textClassName)}>
         {minutes > 0 ? String(minutes).padStart(2, '0') + ':' : ''}
         {String(seconds).padStart(2, '0')}
       </Text>

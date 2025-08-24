@@ -8,7 +8,6 @@ import colorConstant from '@/constant/color.constant';
 export type QuestionBoxProps = {
   question: string;
   countdownDuration: number; // dynamic from parent
-  innerNumber?: number;
   countdownAutoStart?: boolean;
   circleDiameter?: number;
   circleStrokeWidth?: number;
@@ -22,7 +21,6 @@ export type QuestionBoxProps = {
 export const QuestionBox: React.FC<QuestionBoxProps> = ({
   question,
   countdownDuration,
-  innerNumber = 5,
   countdownAutoStart = true,
   circleDiameter = 90,
   circleStrokeWidth = 8,
@@ -35,13 +33,6 @@ export const QuestionBox: React.FC<QuestionBoxProps> = ({
   const [progress, setProgress] = useState(100);
   const [key, setKey] = useState(0); // force CountdownTimer reset
 
-  // Handle countdown tick
-  const handleTick = (remainingSeconds: number) => {
-    const percentage = (remainingSeconds / countdownDuration) * 100;
-    setProgress(percentage);
-    onCountdownTick?.(remainingSeconds);
-  };
-
   // Reset when countdownDuration changes
   useEffect(() => {
     setProgress(100);
@@ -49,19 +40,26 @@ export const QuestionBox: React.FC<QuestionBoxProps> = ({
   }, [countdownDuration]);
 
   return (
-    <View className={twMerge('w-full rounded-2xl bg-white p-8', className)} style={{elevation: 14}}>
+    <View className={twMerge('w-full rounded-2xl bg-white p-8', className)} style={{elevation: 6}}>
       <View className="mx-auto p-2 bg-white rounded-full -mt-20 mb-5">
         <AnimatedCircularProgress fill={progress} size={circleDiameter} width={circleStrokeWidth} tintColor={progressFillColor} backgroundColor={progressBackgroundColor} lineCap="round">
-          <View className="w-full flex-1 justify-center items-center bg-white">
-            <Text className="font-interBold text-2xl">
-              <CountdownTimer
-                countdownDuration={countdownDuration}
-                autoStart={countdownAutoStart}
-                onTick={handleTick}
-                onComplete={onCountdownComplete}
-              />
-            </Text>
-          </View>
+          {() => (
+            <View className="w-full flex-1 justify-center items-center bg-white">
+              <Text className="font-interBold text-2xl">
+                <CountdownTimer
+                 textClassName='text-3xl text-theme'
+                  key={key} // ensures reset when duration changes
+                  countdownDuration={countdownDuration}
+                  autoStart={countdownAutoStart}
+                  onTick={remaining => {
+                    setProgress((remaining / countdownDuration) * 100);  
+                    onCountdownTick?.(remaining);
+                  }}
+                  onComplete={onCountdownComplete}
+                />
+              </Text>
+            </View>
+          )}
         </AnimatedCircularProgress>
       </View>
       <Text className="font-interBold text-xl text-theme">{question}</Text>

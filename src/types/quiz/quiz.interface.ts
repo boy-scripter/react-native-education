@@ -79,7 +79,7 @@ export interface BaseGameState {
 export interface GameStrategy {
 
   getGameMode(): GameModeType;
-  startGame<TStartGameProps extends IStartGame>(options: TStartGameProps): Promise<void>;
+  startGame<TStartGameProps extends IStartGame>(options: TStartGameProps): void;
   submitAnswer(answerId: AnswerType): void;
 
   /* ── optional callback hooks ── */
