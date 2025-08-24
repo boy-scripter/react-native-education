@@ -21,14 +21,15 @@ export const authSlice = createSlice({
   initialState: initialState as AuthState,
   reducers: {
     logout: state => {
-      state.access_token = null;
-      state.refresh_token = null;
-      state.user = null;
-      state.isAuthenticated = false;
-      state.remember_me = false;
-
-      navigate('AuthStack');
+      navigate('AuthStack', { screen: 'LoginAndSignup' });
       removeItem(REMEMBER_ME);
+
+      // state.access_token = null;
+      // state.refresh_token = null;
+      // state.user = null;
+      state.remember_me = false;
+      state.isAuthenticated = false;
+
     },
 
     setAccessToken: (state, action: PayloadAction<string | null>) => {
@@ -63,7 +64,6 @@ export const authSlice = createSlice({
           ...state.user,
           ...payload.profile,
         };
-        console.log(state.user)
         setDataLocally({ ...state });
       }
     );

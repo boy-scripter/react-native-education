@@ -2,11 +2,9 @@ import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query';
 import { API_URL } from '@env';
 import { RootState } from '@store/store';
-import { selectAuth } from '@store/auth/auth.selector';
-import { logout } from '@store/auth/auth.slice';
 import { DocumentNode } from 'graphql';
 import { errorToast } from '@components/Toast/Toast.config';
-import { refreshTokenAction, waitForMutex, isMutexLocked } from './refreshToken';
+import { refreshTokenAction, waitForMutex, isMutexLocked } from './refreshAction';
 
 const baseQuery = graphqlRequestBaseQuery({
   url: API_URL,
@@ -25,7 +23,6 @@ const baseQuery = graphqlRequestBaseQuery({
 }) as BaseQueryType;
 
 
-
 const handleGeneralError = (error: any, skipToast?: boolean) => {
   if (!error || skipToast) return;
   const errorMessage = error.message || 'Something went wrong';
@@ -33,7 +30,7 @@ const handleGeneralError = (error: any, skipToast?: boolean) => {
 };
 
 
-export const finalBaseQuery: BaseQueryType = async (args, api, extraOptions) => {
+export const reAuthBaseQuery: BaseQueryType = async (args, api, extraOptions) => {
   await waitForMutex();
 
   let result = await baseQuery(args, api, extraOptions);
@@ -41,14 +38,6 @@ export const finalBaseQuery: BaseQueryType = async (args, api, extraOptions) => 
 
   // Handle unauthorized errors
   if (result.error?.message.toLowerCase() === 'unauthorized') {
-    const state = api.getState() as RootState;
-    const refresh_token = selectAuth(state).refresh_token;
-
-    if (!refresh_token) {
-      api.dispatch(logout());
-      return result;
-    }
-
     if (!isMutexLocked()) {
       const newAccessToken = await refreshTokenAction();
       if (!newAccessToken) return result;
@@ -62,8 +51,9 @@ export const finalBaseQuery: BaseQueryType = async (args, api, extraOptions) => 
   return result;
 };
 
+
 export const baseApi = createApi({
-  baseQuery: finalBaseQuery,
+  baseQuery: reAuthBaseQuery,
   endpoints: (_) => ({}),
 });
 

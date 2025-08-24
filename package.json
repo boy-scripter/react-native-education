@@ -23,6 +23,7 @@
     "@reduxjs/toolkit": "^2.8.2",
     "@rtk-query/graphql-request-base-query": "^2.3.1",
     "async-mutex": "^0.5.0",
+    "axios": "^1.11.0",
     "graphql": "^16.11.0",
     "lodash": "^4.17.21",
     "lottie-ios": "^4.5.1",

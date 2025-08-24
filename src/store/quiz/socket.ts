@@ -1,19 +1,66 @@
-// utils/QuizSocketService.ts
 import { io, Socket } from 'socket.io-client';
 import { HOST_URL } from '@env';
+import { refreshTokenAction, isMutexLocked, waitForMutex } from '@/baseApi/refreshAction';
+import { store } from '@store/store';
+import { logout } from '@store/auth/auth.slice';
+import { selectAuth } from '../auth/auth.selector';
+
 
 export class QuizSocketService {
   private static instance: QuizSocketService;
   private socket: Socket;
+  private connected = false;
 
   private constructor() {
     this.socket = io(`${HOST_URL}/quiz`, {
-      transports: ['websocket'], // ensures real-time connection
-      autoConnect: true,         // automatically connect on import
-      reconnection: true,        // enable automatic reconnection
-      reconnectionAttempts: 5,   // number of attempts before giving up
-      reconnectionDelay: 1000,   // wait 1s before retry
+      transports: ['websocket'],
+      autoConnect: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      auth: {
+        token: this.getAccessToken(), // send token with handshake
+      },
     });
+
+    // Successful connection
+    this.socket.on('connect', () => {
+      this.connected = true;
+      console.log('Socket connected');
+    });
+
+    // Disconnection
+    this.socket.on('disconnect', () => {
+      this.connected = false;
+      console.log('Socket disconnected');
+    });
+
+    // Handle handshake errors (like Unauthorized)
+    this.socket.on('connect_error', async (err: any) => {
+      console.error('Socket connect_error:', err.message);
+
+      if (!err.message?.toLowerCase().includes('unauthorized')) return;
+      const handleLogout = () => store.dispatch(logout());
+
+      if (!isMutexLocked()) {
+        const newAccessToken = await refreshTokenAction();
+        if (newAccessToken) {
+          this.reconnectWithNewToken(newAccessToken);
+        } else {
+          handleLogout();
+        }
+        return;
+      }
+
+      await waitForMutex();
+      const token = this.getAccessToken();
+      if (token) {
+        this.reconnectWithNewToken(token);
+      } else {
+        handleLogout();
+      }
+    });
+
   }
 
   public static getInstance(): QuizSocketService {
@@ -25,5 +72,31 @@ export class QuizSocketService {
 
   public getSocket(): Socket {
     return this.socket;
+  }
+
+  public onConnect(callBack: () => any): void {
+    this.socket.on('connect', callBack);
+  }
+
+  public onDisconnect(callBack: () => any): void {
+    this.socket.on('disconnect', callBack);
+  }
+
+  public isConnected(): boolean {
+    return this.connected;
+  }
+
+  /** 🔑 Helper: get token from Redux */
+  private getAccessToken(): string | null {
+    const state = store.getState();
+    return selectAuth(state).access_token || null;
+  }
+
+  /** ♻️ Reconnect with a fresh token */
+  private reconnectWithNewToken(newToken: string) {
+    console.log('Reconnecting socket with refreshed token...');
+    this.socket.auth = { token: newToken };
+    this.socket.disconnect();
+    this.socket.connect();
   }
 }

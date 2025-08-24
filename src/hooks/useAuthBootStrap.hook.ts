@@ -5,11 +5,10 @@ import { selectIsAuthenticated, selectRememberMe } from '@/store/auth/auth.selec
 
 export function useAuthBootstrap() {
 
-  const authenticated = useRootState(selectIsAuthenticated);
-  const rememberMe = useRootState(selectRememberMe);
-  const isAuthenticated = authenticated && rememberMe;
-
   const [userQuery] = useLazyProfileQuery();
+  const authenticated = useRootState(selectIsAuthenticated);
+  const isAuthenticated = authenticated;
+
 
   useEffect(() => {
     if (isAuthenticated) {
