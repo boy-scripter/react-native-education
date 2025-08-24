@@ -1,10 +1,10 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from '@/screens/dashboard/home/home.screen';
-import PdfShowScreen from '@/screens/dashboard/pdf/pdfShow.screen';
-import PdfViewScreen from '@/screens/dashboard/pdf/pdfview';
-import EditProfileScreen from '@/screens/dashboard/EditProfile';
-// import QuizScreen from '@screens/dashboard/quiz.screen';
+import HomeScreen from '@screens/dashboard/home/home.screen';
+import PdfShowScreen from '@screens/dashboard/pdf/pdfShow.screen';
+import PdfViewScreen from '@screens/dashboard/pdf/pdfview';
+import EditProfileScreen from '@screens/dashboard/EditProfile';
+import QuizScreen from '@screens/dashboard/game/quiz.screen';
 // import LeaderBoardScreen from '@screens/dashboard/leaderboard.screen';
 // import QuizInstructionScreen from '@screens/dashboard/quizInstruction.screen';
 // import ResultScreen from '@screens/dashboard/result.screen';

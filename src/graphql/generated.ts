@@ -471,6 +471,13 @@ export type ProfileUpdateMutationVariables = Exact<{
 
 export type ProfileUpdateMutation = { __typename?: 'Mutation', profileUpdate: { __typename?: 'User', name: string, gender?: GenderEnum | undefined, email: string, dob?: any | undefined, avatar?: string | undefined, _id: string } };
 
+export type RefreshTokenMutationVariables = Exact<{
+  token: Scalars['String']['input'];
+}>;
+
+
+export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken: { __typename?: 'RefreshTokenResponse', access_token: string } };
+
 export type SetNewResetPasswordMutationVariables = Exact<{
   input: SetNewPasswordDto;
 }>;
@@ -568,6 +575,13 @@ export const ProfileUpdateDocument = `
   }
 }
     `;
+export const RefreshTokenDocument = `
+    mutation RefreshToken($token: String!) {
+  refreshToken(token: $token) {
+    access_token
+  }
+}
+    `;
 export const SetNewResetPasswordDocument = `
     mutation SetNewResetPassword($input: SetNewPasswordDto!) {
   setNewResetPassword(input: $input) {
@@ -656,6 +670,9 @@ const injectedRtkApi = baseApi.injectEndpoints({
     ProfileUpdate: build.mutation<ProfileUpdateMutation, ProfileUpdateMutationVariables>({
       query: (variables) => ({ document: ProfileUpdateDocument, variables })
     }),
+    RefreshToken: build.mutation<RefreshTokenMutation, RefreshTokenMutationVariables>({
+      query: (variables) => ({ document: RefreshTokenDocument, variables })
+    }),
     SetNewResetPassword: build.mutation<SetNewResetPasswordMutation, SetNewResetPasswordMutationVariables>({
       query: (variables) => ({ document: SetNewResetPasswordDocument, variables })
     }),
@@ -678,5 +695,5 @@ const injectedRtkApi = baseApi.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useProfileUpdateMutation, useSetNewResetPasswordMutation, useSignupMutation, useProfileQuery, useLazyProfileQuery, useCategoriesQuery, useLazyCategoriesQuery, useGetPdfsQuery, useLazyGetPdfsQuery, useInitiateUploadMutation } = injectedRtkApi;
+export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useProfileUpdateMutation, useRefreshTokenMutation, useSetNewResetPasswordMutation, useSignupMutation, useProfileQuery, useLazyProfileQuery, useCategoriesQuery, useLazyCategoriesQuery, useGetPdfsQuery, useLazyGetPdfsQuery, useInitiateUploadMutation } = injectedRtkApi;
 

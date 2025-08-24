@@ -59,6 +59,11 @@ export function CategoryCardComponent({image, _id, name, color, questionCount}: 
 }
 
 function QuizInstuctionModel({modalId, category}: {modalId: string; category: string}) {
+  function handleStartQuiz() {
+    close(modalId);
+    navigate('DashboardStack', {screen: 'Quiz', params: {mode: GameModeType.Single, category}});
+  }
+
   const {close} = useModal();
 
   return (
@@ -70,11 +75,7 @@ function QuizInstuctionModel({modalId, category}: {modalId: string; category: st
         <Text className="text-greyish-100 mb-2">4. Submit your answers before the timer runs out.</Text>
         <View className="flex-row gap-2">
           <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => close(modalId)} />
-          <Button
-            label="Start Quiz"
-            className="mt-4 flex-1 bg-green-600 border-green-600"
-            onPress={() => navigate('DashboardStack', {screen: 'Quiz', params: {mode: GameModeType.Single, category}})}
-          />
+          <Button label="Start Quiz" className="mt-4 flex-1 bg-green-600 border-green-600" onPress={handleStartQuiz} />
         </View>
       </View>
     </>

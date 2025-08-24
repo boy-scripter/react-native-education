@@ -15,13 +15,15 @@ if (__DEV__) {
 
 export const store = configureStore({
   reducer: {
-    [baseApi.reducerPath]: baseApi.reducer, // Register the base API reducer
+    [baseApi.reducerPath]: baseApi.reducer,
     auth: AuthReducer,
     quiz: QuizReducer,
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware().concat(...middlewares),
   devTools: true,
 });
+
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 

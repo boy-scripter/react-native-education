@@ -1,46 +1,26 @@
 import {MotiView} from 'moti';
 import React, {ReactNode, useState, useEffect, useCallback, JSX} from 'react';
 import Loader from '../ui/Loader';
-import { SpinnerLoader } from './SpinnerLoader';
-import { twMerge } from 'tailwind-merge';
-
+import {SpinnerLoader} from './SpinnerLoader';
+import {twMerge} from 'tailwind-merge';
 
 interface LoadingManagerProps<T = any> {
-  /** Async function to execute and manage loading state for */
-  asyncFunction: () => Promise<T>;
-
-  /** Content to render when data is loaded - can be ReactNode or function */
-  children: ReactNode | ((data: T | null, error: Error | null, isLoading: boolean) => ReactNode);
-
-  /** Skeleton component to show during loading */
-  skeleton?: ReactNode;
-
-  /** Number of skeleton components to render */
-  skeletonCount?: number;
-
-  /** NativeWind/Tailwind CSS classes for container styling */
-  className?: string;
-
-  /** Dependencies array - when changed, async function will re-execute */
-  dependencies?: React.DependencyList;
-
-  /** Callback fired when async function resolves successfully */
-  onSuccess?: (data: T) => void;
-
-  /** Callback fired when async function rejects with error */
-  onError?: (error: Error) => void;
-
-  /** Component to render when there's an error */
-  errorComponent?: (error: Error) => ReactNode;
-
-  /** Minimum loading time in milliseconds to prevent skeleton flash */
-  minLoadingTime?: number;
+  asyncFunction: () => Promise<T> /** Async function to execute and manage loading state for */;
+  children: ReactNode | ((data: T | null, error: Error | null, isLoading: boolean) => ReactNode) /** Content to render when data is loaded - can be ReactNode or function */;
+  skeleton?: ReactNode /** Skeleton component to show during loading */;
+  skeletonCount?: number /** Number of skeleton components to render */;
+  className?: string /** NativeWind/Tailwind CSS classes for container styling */;
+  dependencies?: React.DependencyList /** Dependencies array - when changed, async function will re-execute */;
+  onSuccess?: (data: T) => void /** Callback fired when async function resolves successfully */;
+  onError?: (error: Error) => void /** Callback fired when async function rejects with error */;
+  errorComponent?: (error: Error) => ReactNode /** Component to render when there's an error */;
+  minLoadingTime?: number /** Minimum loading time in milliseconds to prevent skeleton flash */;
 }
 
 export const LoadingManager = <T = any,>({
   asyncFunction,
   children,
-  skeleton = <SpinnerLoader/>,
+  skeleton = <SpinnerLoader />,
   skeletonCount = 1,
   className = '',
   dependencies = [],
@@ -86,7 +66,7 @@ export const LoadingManager = <T = any,>({
 
   // Animated container using Moti
   return (
-    <MotiView className={twMerge('flex-1',className)} animate={{opacity: 1}} transition={{type: 'timing', duration: 300}}>
+    <MotiView className={twMerge('flex-1', className)} animate={{opacity: 1}} transition={{type: 'timing', duration: 300}}>
       {isLoading ? (
         // Show skeletons with stagger animation
         <MotiView from={{opacity: 0}} animate={{opacity: 1}} transition={{type: 'timing', duration: 200}}>
@@ -111,7 +91,7 @@ export const LoadingManager = <T = any,>({
         </MotiView>
       ) : (
         // Show content with fade in animation
-        <MotiView className='flex-1 ' from={{opacity: 0, translateY: 10}} animate={{opacity: 1, translateY: 0}} transition={{type: 'timing', duration: 400}}>
+        <MotiView className="flex-1 " from={{opacity: 0, translateY: 10}} animate={{opacity: 1, translateY: 0}} transition={{type: 'timing', duration: 400}}>
           {typeof children === 'function' ? children(data, error, isLoading) : children}
         </MotiView>
       )}

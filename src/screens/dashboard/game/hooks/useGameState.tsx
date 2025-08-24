@@ -1,5 +1,5 @@
 import {useSelector} from 'react-redux';
-import {selectGame, selectGameState} from '@/store/quiz/quiz.selector';
+import {selectGame} from '@/store/quiz/quiz.selector';
 import {AllGameStrategy} from '@myTypes/quiz/quiz.interface';
 
 export function useGameState<T extends AllGameStrategy['type']>(expectedType: T) {

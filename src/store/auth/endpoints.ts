@@ -8,8 +8,14 @@ export const authApi = api.enhanceEndpoints({
                 skipToast: true,
             },
         },
+        RefreshToken: {
+            extraOptions: {
+                skipToast: true
+            }
+        }
     },
 });
 
-export const { useProfileUpdateMutation,useProfileQuery, useLazyProfileQuery, useLoginWithEmailMutation, useLoginWithGoogleMutation, useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation, useSignupMutation, useValidateOtpMutation } = authApi;
+
+export const { useProfileUpdateMutation, useProfileQuery, useLazyProfileQuery, useRefreshTokenMutation , useLoginWithEmailMutation, useLoginWithGoogleMutation, useSendForgotPasswordCodeMutation, useSetNewResetPasswordMutation, useSignupMutation, useValidateOtpMutation } = authApi;
 

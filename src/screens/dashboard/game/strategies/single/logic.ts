@@ -11,7 +11,7 @@ export interface ISinglerPlayerStateType extends BaseGameState { }
 export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
     
     const MODE = GameModeType.Single;
-    const socket = QuizSocketService.getInstance().getSocket();
+    const socket =  QuizSocketService.getInstance().getSocket();
     const events = new Observer<ListenEventsMap>();
 
     const dispatch = useAppDispatch()

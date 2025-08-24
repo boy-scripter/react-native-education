@@ -1,24 +1,22 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import {twMerge} from 'tailwind-merge';
-import CountdownTimer, {CountdownTimerProps} from '@/components/ui/CountDownTimer';
+import CountdownTimer from '@/components/ui/CountDownTimer';
 import colorConstant from '@/constant/color.constant';
 
 export type QuestionBoxProps = {
-  question?: string /** Text of the question displayed below the circle */;
-  progressPercentage?: number /** Circular progress fill percentage (0-100) */;
-  circleDiameter?: number /** Diameter of the circular progress in pixels */;
-  circleStrokeWidth?: number /** Stroke width of the circular progress */;
-  innerNumber?: number /** Number displayed inside the circle (fallback if countdown not used) */;
-  progressFillColor?: string /** Color of the circular progress fill */;
-  progressBackgroundColor?: string /** Color of the circular progress background */;
-  className?: string /** Additional styling classes for container */;
-  // coundown realted
-  countdownDuration: number /** Props to pass to the internal CountdownTimer component */;
-  countdownAutoStart?: boolean /** Automatically start countdown when mounted */;
-  onCountdownTick?: (remainingSeconds: number) => void /** Callback triggered on each tick of the countdown */;
-  onCountdownComplete?: () => void /** Callback triggered when countdown reaches zero */;
+  question: string;
+  countdownDuration: number; // dynamic from parent
+  innerNumber?: number;
+  countdownAutoStart?: boolean;
+  circleDiameter?: number;
+  circleStrokeWidth?: number;
+  progressFillColor?: string;
+  progressBackgroundColor?: string;
+  className?: string;
+  onCountdownTick?: (remainingSeconds: number) => void;
+  onCountdownComplete?: () => void;
 };
 
 export const QuestionBox: React.FC<QuestionBoxProps> = ({
@@ -26,7 +24,6 @@ export const QuestionBox: React.FC<QuestionBoxProps> = ({
   countdownDuration,
   innerNumber = 5,
   countdownAutoStart = true,
-  progressPercentage = 0,
   circleDiameter = 90,
   circleStrokeWidth = 8,
   className = '',
@@ -35,17 +32,36 @@ export const QuestionBox: React.FC<QuestionBoxProps> = ({
   onCountdownTick,
   onCountdownComplete,
 }) => {
+  const [progress, setProgress] = useState(100);
+  const [key, setKey] = useState(0); // force CountdownTimer reset
+
+  // Handle countdown tick
+  const handleTick = (remainingSeconds: number) => {
+    const percentage = (remainingSeconds / countdownDuration) * 100;
+    setProgress(percentage);
+    onCountdownTick?.(remainingSeconds);
+  };
+
+  // Reset when countdownDuration changes
+  useEffect(() => {
+    setProgress(100);
+    setKey(prev => prev + 1); // force re-mount CountdownTimer
+  }, [countdownDuration]);
+
   return (
     <View className={twMerge('w-full rounded-2xl bg-white p-8', className)} style={{elevation: 14}}>
       <View className="mx-auto p-2 bg-white rounded-full -mt-20 mb-5">
-        <AnimatedCircularProgress fill={progressPercentage} size={circleDiameter} width={circleStrokeWidth} tintColor={progressFillColor} backgroundColor={progressBackgroundColor} lineCap="round">
-          {
-            <View className="w-full flex-1 justify-center items-center bg-white">
-              <Text className="font-interBold text-2xl">
-                <CountdownTimer countdownDuration={countdownDuration} autoStart={countdownAutoStart} onTick={onCountdownTick} onComplete={onCountdownComplete} />
-              </Text>
-            </View>
-          }
+        <AnimatedCircularProgress fill={progress} size={circleDiameter} width={circleStrokeWidth} tintColor={progressFillColor} backgroundColor={progressBackgroundColor} lineCap="round">
+          <View className="w-full flex-1 justify-center items-center bg-white">
+            <Text className="font-interBold text-2xl">
+              <CountdownTimer
+                countdownDuration={countdownDuration}
+                autoStart={countdownAutoStart}
+                onTick={handleTick}
+                onComplete={onCountdownComplete}
+              />
+            </Text>
+          </View>
         </AnimatedCircularProgress>
       </View>
       <Text className="font-interBold text-xl text-theme">{question}</Text>

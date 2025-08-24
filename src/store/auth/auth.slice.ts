@@ -1,5 +1,5 @@
 import { createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
-import { AuthState, REMEMBER_ME , AuthResponse } from '@myTypes/auth';
+import { AuthState, REMEMBER_ME, AuthResponse } from '@myTypes/auth';
 import { authApi } from '@/store/auth/endpoints';
 import { useStorage } from '@/hooks/useStorage.hook';
 import { navigate } from '@/hooks/useNavigation.hook';
@@ -60,7 +60,7 @@ export const authSlice = createSlice({
       authApi.endpoints.Profile.matchFulfilled,
       (state, { payload }) => {
         state.user = {
-          ...state.user, // merge with existing
+          ...state.user,
           ...payload.profile,
         };
         console.log(state.user)
@@ -72,7 +72,7 @@ export const authSlice = createSlice({
       authApi.endpoints.ProfileUpdate.matchFulfilled,
       (state, { payload }) => {
         state.user = {
-          ...state.user, // merge with existing
+          ...state.user,
           ...payload.profileUpdate,
         };
         setDataLocally({ ...state });

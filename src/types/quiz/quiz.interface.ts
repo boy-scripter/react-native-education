@@ -79,7 +79,7 @@ export interface BaseGameState {
 export interface GameStrategy {
 
   getGameMode(): GameModeType;
-  startGame<TStartGameProps extends IStartGame>(options: TStartGameProps): void;
+  startGame<TStartGameProps extends IStartGame>(options: TStartGameProps): Promise<void>;
   submitAnswer(answerId: AnswerType): void;
 
   /* ── optional callback hooks ── */
@@ -87,7 +87,7 @@ export interface GameStrategy {
 }
 
 
-type ExtractByType<T extends AllGameStrategy, K extends AllGameStrategy['type']> =
+export type ExtractByType<T extends AllGameStrategy, K extends AllGameStrategy['type']> =
   T extends { type: K } ? T : never
 
 // all game startergy
@@ -95,14 +95,13 @@ export type AllGameStrategy =
   | { type: typeof GameModeType.Single; strategy: ISinglePlayerStrategy; state: ISinglerPlayerStateType }
   | { type: typeof GameModeType.Single; strategy: ISinglePlayerStrategy; state: ISinglerPlayerStateType }
 
-export const GameRegistry:
-  {
-    [K in AllGameStrategy['type']]: {
-      screen: React.ComponentType<IStartGame>
-      result: React.ComponentType<any>
-      strategy: () => ExtractByType<AllGameStrategy, K>['strategy']
-    }
-  } = {
+export const GameRegistry: {
+  [K in AllGameStrategy['type']]: {
+    screen: React.ComponentType<IStartGame>
+    result: React.ComponentType<any>
+    strategy: () => ExtractByType<AllGameStrategy, K>['strategy']
+  }
+} = {
   [GameModeType.Single]: {
     screen: lazy(() => import('@/screens/dashboard/game/strategies/single/ui/game')),
     result: lazy(() => import('@/screens/dashboard/game/strategies/single/ui/result')),

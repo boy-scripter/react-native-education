@@ -21,8 +21,6 @@ export async function goWithGoogle() {
 
 }
 
-
-
 export function setDataLocally(newData: AuthState) {
     if (newData.remember_me){
         const oldData = getItem<AuthenticatedUser>(REMEMBER_ME);

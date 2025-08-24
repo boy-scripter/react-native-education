@@ -1,22 +1,12 @@
-import { errorToast } from '@components/Toast/Toast.config';
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query';
 import { API_URL } from '@env';
-import { Mutex } from 'async-mutex';
 import { RootState } from '@store/store';
 import { selectAuth } from '@store/auth/auth.selector';
-import { logout, setAccessToken } from '@store/auth/auth.slice';
+import { logout } from '@store/auth/auth.slice';
 import { DocumentNode } from 'graphql';
-
-const mutex = new Mutex();
-const REFRESH_TOKEN_DOCUMENT = `
-mutation RefreshToken($token: String!) {
-  refreshToken(token: $token) {
-    message
-    access_token
-  }
-}
-`;
+import { errorToast } from '@components/Toast/Toast.config';
+import { refreshTokenAction, waitForMutex, isMutexLocked } from './refreshToken';
 
 const baseQuery = graphqlRequestBaseQuery({
   url: API_URL,
@@ -43,44 +33,13 @@ const handleGeneralError = (error: any, skipToast?: boolean) => {
 };
 
 
-
-const refreshToken = async (api: any, refresh_token: string) => {
-  const release = await mutex.acquire();
-  try {
-    const refreshResult = await baseQuery({
-      document: REFRESH_TOKEN_DOCUMENT,
-      variables: { token: refresh_token },
-    }, api, { skipToast: true });
-
-    const newAccessToken = (refreshResult?.data as any)?.refreshToken?.access_token;
-    if (!newAccessToken) {
-      errorToast({ text1: 'Failed to refresh token' });
-      api.dispatch(logout());
-      return null;
-    }
-
-    api.dispatch(setAccessToken(newAccessToken));
-    return newAccessToken;
-
-  } catch {
-
-    api.dispatch(logout());
-    return null;
-
-  } finally {
-
-    release();
-
-  }
-};
-
-export const finalBaseQuery: BaseQueryType = async (args, api, extraOptions: ExtraOptions) => {
-  await mutex.waitForUnlock();
+export const finalBaseQuery: BaseQueryType = async (args, api, extraOptions) => {
+  await waitForMutex();
 
   let result = await baseQuery(args, api, extraOptions);
-
   handleGeneralError(result.error, extraOptions?.skipToast);
 
+  // Handle unauthorized errors
   if (result.error?.message.toLowerCase() === 'unauthorized') {
     const state = api.getState() as RootState;
     const refresh_token = selectAuth(state).refresh_token;
@@ -90,12 +49,12 @@ export const finalBaseQuery: BaseQueryType = async (args, api, extraOptions: Ext
       return result;
     }
 
-    if (!mutex.isLocked()) {
-      const newAccessToken = await refreshToken(api, refresh_token);
+    if (!isMutexLocked()) {
+      const newAccessToken = await refreshTokenAction();
       if (!newAccessToken) return result;
       result = await baseQuery(args, api, extraOptions);
     } else {
-      await mutex.waitForUnlock();
+      await waitForMutex();
       result = await baseQuery(args, api, extraOptions);
     }
   }
