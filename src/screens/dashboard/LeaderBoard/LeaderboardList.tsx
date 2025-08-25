@@ -7,7 +7,7 @@ interface LeaderboardListProps {
 }
 
 const LeaderboardList: React.FC<LeaderboardListProps> = ({leaderboardData}) => (
-  <View className="p-4 gap-3 pb-8">
+  <View className="p-4 gap-3 pb-4">
     {leaderboardData.map((user, index) => (
       <TouchableOpacity key={index} className="bg-white rounded-2xl p-4 border-l-4 border-gray-200 shadow-md android:elevation-3" activeOpacity={0.8}>
         <View className="flex-row items-center justify-between">

@@ -16,8 +16,8 @@ interface TabToggleWrapperProps {
 
 const TabToggleWrapper: React.FC<TabToggleWrapperProps> = ({tabs, activeTab, onTabChange, className}) => {
   return (
-    <View className={`px-4 relative z-10 items-center ${className || ''}`}>
-      <Tab className="bg-white/10 backdrop-blur-lg rounded-2xl p-1 flex-row" defaultTab={activeTab} onChange={onTabChange}>
+    <View className={`px-4 mt-4 relative z-10 items-center ${className || ''}`}>
+      <Tab  className=" backdrop-blur-lg bg-white/80 rounded-2xl " defaultTab={activeTab} onChange={onTabChange}>
         {tabs.map(tab => (
           <Tab.Button key={tab.id} id={tab.id} label={tab.label} />
         ))}

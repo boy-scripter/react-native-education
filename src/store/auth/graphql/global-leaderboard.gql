@@ -1,0 +1,11 @@
+query GlobalLeaderboard($input: GlobalLeaderboardFilterDto!) {
+  globalLeaderboard(input: $input) {
+    rank
+    totalPoints
+    userId {
+      name
+      avatar
+      _id
+    }
+  }
+}

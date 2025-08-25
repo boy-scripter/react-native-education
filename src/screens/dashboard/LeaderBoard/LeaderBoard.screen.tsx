@@ -96,19 +96,20 @@ const LeaderBoardScreen: React.FC = () => {
 
   return (
     <View className="flex-1 ">
-      <View className=''>
+      <View className="">
         <LinearGradient
           colors={['#0f2027', '#203a43', '#2c5364']} // dark teal/blue gradient
-          className="h-96 w-full relative pb-5 rounded-2xl">
-          {/* <TabToggleWrapper
-          tabs={[
-            {id: 'daily', label: 'Daily'},
-            {id: 'weekly', label: 'Weekly'},
-            {id: 'monthly', label: 'Monthly'},
-          ]}
-          activeTab={activeTab}
-          onTabChange={handleTabChange}
-        /> */}
+          className="h-96 w-full relative pb-4 rounded-2xl">
+          <TabToggleWrapper
+            className=""
+            tabs={[
+              {id: 'daily', label: 'Daily'},
+              {id: 'weekly', label: 'Weekly'},
+              {id: 'monthly', label: 'Monthly'},
+            ]}
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+          />
           <Podium podiumData={podiumData} />
         </LinearGradient>
       </View>

@@ -428,6 +428,7 @@ export type User = {
 export type UserSummary = {
   __typename?: 'UserSummary';
   _id: Scalars['ID']['output'];
+  avatar?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
 };
 
@@ -451,6 +452,13 @@ export type ValidateOtpMutationVariables = Exact<{
 
 export type ValidateOtpMutation = { __typename?: 'Mutation', validateOtp: { __typename?: 'ValidateOtpResponse', token: string, message: string } };
 
+export type GlobalLeaderboardQueryVariables = Exact<{
+  input: GlobalLeaderboardFilterDto;
+}>;
+
+
+export type GlobalLeaderboardQuery = { __typename?: 'Query', globalLeaderboard: Array<{ __typename?: 'Leaderboard', rank: number, totalPoints: number, userId: { __typename?: 'UserSummary', name: string, avatar?: string | undefined, _id: string } }> };
+
 export type LoginWithGoogleMutationVariables = Exact<{
   idToken: Scalars['String']['input'];
 }>;
@@ -464,6 +472,11 @@ export type LoginWithEmailMutationVariables = Exact<{
 
 
 export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string, gender?: GenderEnum | undefined, dob?: any | undefined, avatar?: string | undefined } } };
+
+export type PersonalLeaderboardQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PersonalLeaderboardQuery = { __typename?: 'Query', personalLeaderboard?: { __typename?: 'PersonalLeaderBoard', rank: number, totalPoints: number } | undefined };
 
 export type ProfileUpdateMutationVariables = Exact<{
   input: UpdateProfileDto;
@@ -536,6 +549,19 @@ export const ValidateOtpDocument = `
   }
 }
     `;
+export const GlobalLeaderboardDocument = `
+    query GlobalLeaderboard($input: GlobalLeaderboardFilterDto!) {
+  globalLeaderboard(input: $input) {
+    rank
+    totalPoints
+    userId {
+      name
+      avatar
+      _id
+    }
+  }
+}
+    `;
 export const LoginWithGoogleDocument = `
     mutation LoginWithGoogle($idToken: String!) {
   loginWithGoogle(idToken: $idToken) {
@@ -563,6 +589,14 @@ export const LoginWithEmailDocument = `
       dob
       avatar
     }
+  }
+}
+    `;
+export const PersonalLeaderboardDocument = `
+    query PersonalLeaderboard {
+  personalLeaderboard {
+    rank
+    totalPoints
   }
 }
     `;
@@ -664,11 +698,17 @@ const injectedRtkApi = baseApi.injectEndpoints({
     ValidateOtp: build.mutation<ValidateOtpMutation, ValidateOtpMutationVariables>({
       query: (variables) => ({ document: ValidateOtpDocument, variables })
     }),
+    GlobalLeaderboard: build.query<GlobalLeaderboardQuery, GlobalLeaderboardQueryVariables>({
+      query: (variables) => ({ document: GlobalLeaderboardDocument, variables })
+    }),
     LoginWithGoogle: build.mutation<LoginWithGoogleMutation, LoginWithGoogleMutationVariables>({
       query: (variables) => ({ document: LoginWithGoogleDocument, variables })
     }),
     LoginWithEmail: build.mutation<LoginWithEmailMutation, LoginWithEmailMutationVariables>({
       query: (variables) => ({ document: LoginWithEmailDocument, variables })
+    }),
+    PersonalLeaderboard: build.query<PersonalLeaderboardQuery, PersonalLeaderboardQueryVariables | void>({
+      query: (variables) => ({ document: PersonalLeaderboardDocument, variables })
     }),
     ProfileUpdate: build.mutation<ProfileUpdateMutation, ProfileUpdateMutationVariables>({
       query: (variables) => ({ document: ProfileUpdateDocument, variables })
@@ -698,5 +738,5 @@ const injectedRtkApi = baseApi.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useProfileUpdateMutation, useRefreshTokenMutation, useSetNewResetPasswordMutation, useSignupMutation, useProfileQuery, useLazyProfileQuery, useCategoriesQuery, useLazyCategoriesQuery, useGetPdfsQuery, useLazyGetPdfsQuery, useInitiateUploadMutation } = injectedRtkApi;
+export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useGlobalLeaderboardQuery, useLazyGlobalLeaderboardQuery, useLoginWithGoogleMutation, useLoginWithEmailMutation, usePersonalLeaderboardQuery, useLazyPersonalLeaderboardQuery, useProfileUpdateMutation, useRefreshTokenMutation, useSetNewResetPasswordMutation, useSignupMutation, useProfileQuery, useLazyProfileQuery, useCategoriesQuery, useLazyCategoriesQuery, useGetPdfsQuery, useLazyGetPdfsQuery, useInitiateUploadMutation } = injectedRtkApi;
 

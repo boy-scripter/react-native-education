@@ -40,8 +40,8 @@ export const QuestionBox: React.FC<QuestionBoxProps> = ({
   }, [countdownDuration]);
 
   return (
-    <View className={twMerge('w-full rounded-2xl bg-white p-8', className)} style={{elevation: 6}}>
-      <View className="mx-auto p-2 bg-white rounded-full -mt-20 mb-5">
+    <View className={twMerge('w-full rounded-2xl bg-white border  border-greyish-100 mt-16 p-8', className)} >
+      <View className="mx-auto p-2 bg-white rounded-full border border-greyish-100 -mt-20 mb-5">
         <AnimatedCircularProgress fill={progress} size={circleDiameter} width={circleStrokeWidth} tintColor={progressFillColor} backgroundColor={progressBackgroundColor} lineCap="round">
           {() => (
             <View className="w-full flex-1 justify-center items-center bg-white">

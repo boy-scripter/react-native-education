@@ -9,10 +9,10 @@ export type { Question, AnswerTypeGql }
 
 export enum AnswerType {
   OPTION_SKIP = '',
-  OPTION_0 = '0',
-  OPTION_1 = '1',
-  OPTION_2 = '2',
-  OPTION_3 = '3',
+  OPTION_0 = 0,
+  OPTION_1 = 1,
+  OPTION_2 = 2,
+  OPTION_3 = 3,
 }
 
 // basic events for game

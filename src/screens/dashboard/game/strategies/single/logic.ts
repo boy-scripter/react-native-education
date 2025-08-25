@@ -1,12 +1,28 @@
 // strategies/createSinglePlayerStrategy.ts
-import { GameModeType, IStartGame, GameStrategy, ListenEventsMap, EventsEnum, BaseGameState } from '@/types/quiz';
+import { GameModeType, IStartGame, GameStrategy, ListenEventsMap, EventsEnum, BaseGameState, AnswerType } from '@/types/quiz';
 import { Observer } from '@/util';
 import { QuizSocketService } from '@/store/quiz/socket';
 import { useAppDispatch } from '@/store/store';
 import { setCurrentQuestion, setCurrentMode, setGameState } from '@/store/quiz/quiz.slice';
+import { createSelector } from '@reduxjs/toolkit';
+import { selectGameState } from '@/store/quiz/quiz.selector';
 
 export interface ISinglePlayerStrategy extends GameStrategy { }
 export interface ISinglerPlayerStateType extends BaseGameState { }
+
+export const selectQuizStats = createSelector(
+    [selectGameState],
+    (gameState?: BaseGameState) => {
+        if (!gameState) {
+            return { totalQuestions: 0, asked: 0 };
+        }
+
+        const totalQuestions = gameState.tq;
+        const asked = gameState.ci + 1; // current index is 0-based
+
+        return { totalQuestions, asked };
+    }
+);
 
 export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
 
@@ -17,6 +33,7 @@ export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
 
     function getGameMode() { return MODE }   /* returns mode */
 
+    // listners and dispaetchers
     socket.on(EventsEnum.STARTED_GAME, (state) => {
         events.emit(EventsEnum.STARTED_GAME, state)
         dispatch(setCurrentMode(MODE))
@@ -33,13 +50,20 @@ export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
     });
 
     socket.on(EventsEnum.RESULT, (result) => events.emit(EventsEnum.RESULT, result));
+    // end here listners and dispaetchers
 
     function startGame(options: IStartGame) {
-        socket.emit(EventsEnum.START_GAME, options);
+        socket.emit(
+            EventsEnum.START_GAME,
+            options
+        );
     }
 
-    function submitAnswer(answerId: string) {
-        socket.emit(EventsEnum.SUBMIT_ANSWER, { answerId });
+    function submitAnswer(answerId: AnswerType) {
+        socket.emit(
+            EventsEnum.SUBMIT_ANSWER,
+            { answer: answerId }
+        );
     }
 
     return { getGameMode, startGame, submitAnswer, events };

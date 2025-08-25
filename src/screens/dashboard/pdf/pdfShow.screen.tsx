@@ -1,6 +1,6 @@
 import TopImageLayout from '@components/layouts/TopImage.Layout';
 import Button from '@components/ui/Button';
-import {View, Text, FlatList} from 'react-native';
+import {View, Text, FlatList, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Loader from '@/components/ui/Loader';
 import {usePdfFacade} from './pdf.facade';
@@ -32,11 +32,12 @@ export default function PdfViewScreen() {
   }
 
   return (
-    <TopImageLayout lottie={require('@assets/lottie/profile.json')} title="Available PDFs"  description="Browse and view the available PDF documents below.">
+    <TopImageLayout lottie={require('@assets/lottie/profile.json')} title="Available PDFs" description="Browse and view the available PDF documents below.">
       <LoadingManager asyncFunction={() => onInitialPageRender()}>
         {totalDocs ? (
           <FlatList
             data={pdfList}
+            showsVerticalScrollIndicator={false}
             keyExtractor={item => item._id}
             contentContainerClassName="p-6  px-2 gap-5 "
             onEndReached={() => {
@@ -47,14 +48,17 @@ export default function PdfViewScreen() {
             onEndReachedThreshold={0.1}
             ListFooterComponent={loading ? <Loader /> : !hasNextPage && pdfList.length > 0 ? <Text className="text-center text-gray-500 py-3">No more PDFs</Text> : null}
             renderItem={({item: pdf}) => (
-              <View style={{elevation: 8, borderRadius: 10}} className="bg-white shadow-slate-400 p-3">
+              <TouchableOpacity className="bg-white rounded-2xl p-4 border-l-4 border-gray-300 shadow-xl " style={{elevation: 10}} activeOpacity={0.8}>
                 <View className="flex-row items-center justify-between">
-                  <Text className="text-theme px-2 text-base font-semibold">{pdf.title}</Text>
-                  <Button label="View" className="p-2 px-3" textClassName="text-sm" onPress={() => handlePdfPress(pdf.url)}>
+                  <Text className="text-gray-800 px-2 text-base font-bold flex-1" numberOfLines={1}>
+                    {pdf.title}
+                  </Text>
+                  <TouchableOpacity className="bg-theme p-2 px-4 rounded-xl flex-row items-center gap-2" onPress={() => handlePdfPress(pdf.url)} activeOpacity={0.8}>
                     <Icon name="eye" size={18} color="white" />
-                  </Button>
+                    <Text className="text-white text-sm font-semibold">View</Text>
+                  </TouchableOpacity>
                 </View>
-              </View>
+              </TouchableOpacity>
             )}
           />
         ) : (

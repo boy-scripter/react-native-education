@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Image, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {PodiumUser} from '@myTypes/leaderboard/leaderboard.interface';
+import colorConstant from '@/constant/color.constant';
 
 interface PodiumProps {
   podiumData: PodiumUser[];
@@ -34,13 +35,17 @@ const Podium: React.FC<PodiumProps> = ({podiumData}) => {
 
   return (
     <View className="flex-row flex-1 items-end justify-center px-4 gap-5 z-10 w-full">
-    
       {[sortedPodium[1], sortedPodium[0], sortedPodium[2]].map(
         (user, idx) =>
           user && (
-            <View key={user.name} className="flex-1 pb-4 items-center" style={{maxWidth: 85}}>
-              {user === sortedPodium[0] && <Text style={{fontSize:30}} className="mb-1">👑</Text>}
+            <View key={user.name} className="flex-1 pb-4 items-center" style={{maxWidth: 82}}>
+              {user === sortedPodium[0] && (
+                <Text style={{fontSize: 28}} className="mb-1">
+                  👑
+                </Text>
+              )}
               <Image source={{uri: user.avatar}} className="w-16 h-16 rounded-full border-4 border-white mb-2" />
+
               <LinearGradient
                 colors={rankGradients[user.rank] || ['#888', '#555']}
                 style={{
@@ -55,7 +60,7 @@ const Podium: React.FC<PodiumProps> = ({podiumData}) => {
               </LinearGradient>
 
               {/* User Info */}
-              <Text className="text-sm font-bold text-white mt-2">{user.name}</Text>
+              <Text className="text-sm font-bold text-white mt-1">{user.name}</Text>
               <Text className="text-sm text-white/80">{user.points} pts</Text>
             </View>
           ),

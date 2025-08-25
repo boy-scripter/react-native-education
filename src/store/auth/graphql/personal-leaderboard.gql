@@ -1,0 +1,6 @@
+query PersonalLeaderboard {
+  personalLeaderboard {
+    rank
+    totalPoints
+  }
+}

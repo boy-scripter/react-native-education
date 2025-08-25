@@ -11,10 +11,10 @@ from rich import print
 from urllib.parse import urlparse, urlunparse
 
 # --- Function ---
-def replace_api_url_domain(env_path: Path, new_base_url: str):
+def replace_api_and_host_url(env_path: Path, new_base_url: str):
     """
-    Replace the domain (scheme + netloc) part of API_URL in a .env file,
-    preserving the original path/query if present.
+    Replace the domain of API_URL and the full value of HOST_URL in a .env file.
+    Preserves the path/query of API_URL, and replaces HOST_URL entirely.
     """
     if env_path.exists():
         lines = env_path.read_text().splitlines()
@@ -24,13 +24,17 @@ def replace_api_url_domain(env_path: Path, new_base_url: str):
     parsed_new = urlparse(new_base_url)
     updated_lines = []
     api_url_found = False
+    host_url_found = False
 
     for line in lines:
-        if line.strip().startswith("API_URL="):
-            old_url = line.strip().split("=", 1)[1]
-            parsed_old = urlparse(old_url)
+        stripped = line.strip()
+        new_line = line  # default unchanged
 
-            new_url = urlunparse((
+        # Update API_URL
+        if stripped.startswith("API_URL="):
+            old_url = stripped.split("=", 1)[1]
+            parsed_old = urlparse(old_url)
+            new_api_url = urlunparse((
                 parsed_new.scheme,
                 parsed_new.netloc,
                 parsed_old.path,
@@ -38,16 +42,24 @@ def replace_api_url_domain(env_path: Path, new_base_url: str):
                 parsed_old.query,
                 parsed_old.fragment,
             ))
-            updated_lines.append(f"API_URL={new_url}")
+            new_line = f"API_URL={new_api_url}"
             api_url_found = True
-        else:
-            updated_lines.append(line)
 
+        # Update HOST_URL
+        if stripped.startswith("HOST_URL="):
+            new_line = f"HOST_URL={new_base_url}"
+            host_url_found = True
+
+        updated_lines.append(new_line)
+
+    # Append missing keys if not present
     if not api_url_found:
-        updated_lines.append(f"API_URL={new_base_url}")
+        updated_lines.append(f"API_URL={new_base_url}/api")  # default path
+    if not host_url_found:
+        updated_lines.append(f"HOST_URL={new_base_url}")
 
     env_path.write_text("\n".join(updated_lines) + "\n")
-    print(f"✅ [green]API_URL domain updated in {env_path}[/green]")
+    print(f"✅ API_URL and HOST_URL updated in {env_path}")
 
 # --- Config ---
 SCRIPT_DIR = Path(__file__).resolve().parent
