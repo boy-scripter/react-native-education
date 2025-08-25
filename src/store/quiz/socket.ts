@@ -10,6 +10,7 @@ export class QuizSocketService {
   private static instance: QuizSocketService;
   private socket: Socket;
   private connected = false;
+  private DEBUG: boolean = true
 
   private constructor() {
     this.socket = io(`${HOST_URL}/quiz`, {
@@ -35,7 +36,6 @@ export class QuizSocketService {
 
     // Handle handshake errors (like Unauthorized)
     this.socket.on('connect_error', async (err: any) => {
-
       if (!err.message?.toLowerCase().includes('unauthorized')) return;
       const handleLogout = () => store.dispatch(logout());
 
@@ -77,6 +77,15 @@ export class QuizSocketService {
 
   public onDisconnect(callBack: () => any): void {
     this.socket.on('disconnect', callBack);
+  }
+
+  public onException(callBack: (p1: any) => void): void {
+    this.socket.on('exception', (err: any) => {
+      if (this.DEBUG) {
+        console.log(err)
+      }
+      callBack(err);
+    });
   }
 
   public isConnected(): boolean {

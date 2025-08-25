@@ -9,7 +9,7 @@ export type DashboardStackParamList = {
   Quiz: IStartGame;
   QuizResult: { score: number; total: number };
   Result: undefined;
-  Leaderboard: { topicId: string };
+  Leaderboard: undefined;
 };
 
 export type DashboardStackNavigation = NavigatorScreenParams<DashboardStackParamList>;

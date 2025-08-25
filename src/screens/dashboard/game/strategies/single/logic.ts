@@ -15,9 +15,7 @@ export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
     const socket = QuizSocketService.getInstance().getSocket();
     const events = new Observer<ListenEventsMap>();
 
-    function getGameMode() {
-        return MODE
-    }
+    function getGameMode() { return MODE }   /* returns mode */
 
     socket.on(EventsEnum.STARTED_GAME, (state) => {
         events.emit(EventsEnum.STARTED_GAME, state)
@@ -26,7 +24,6 @@ export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
 
     socket.on(EventsEnum.NEW_QUESTION, (question) => {
         events.emit(EventsEnum.NEW_QUESTION, question)
-        alert(question)
         dispatch(setCurrentQuestion(question))
     });
 

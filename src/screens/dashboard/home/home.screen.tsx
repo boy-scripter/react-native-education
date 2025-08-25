@@ -4,12 +4,11 @@ import {AuthenticatedUser} from '@/types/auth';
 import {navigate} from '@hooks/useNavigation.hook';
 import {Text, View, ScrollView} from 'react-native';
 import {RankingAndLeaderboard} from './components/ratingandview';
-
 import {LoadingManager, Pulse} from '@/components/LoadingManger';
 import {useHomeFacade} from './home.facade';
+import {CategoryCardComponent} from './components/categorycard';
 import Img from '@/components/ui/Img';
 import ProfileImage from '@assets/images/profile.png';
-import {CategoryCardComponent} from './components/categorycard';
 
 export default function HomeScreen() {
   const {categories, onInitialPageRender} = useHomeFacade();
@@ -17,7 +16,7 @@ export default function HomeScreen() {
 
   return (
     <LoadingManager skeleton={<SkeletonLoading />} asyncFunction={onInitialPageRender}>
-      <ScrollView className="px-4 py-4 mt-2 ">
+      <ScrollView showsVerticalScrollIndicator={false} className="px-4 py-4 mt-2 ">
         <View className="flex flex-row justify-between">
           <View className="self-end">
             <Text className="font-interBold text-xl">Hi, {user.name}</Text>
@@ -31,7 +30,7 @@ export default function HomeScreen() {
         <View className="py-6">
           <View className="flex-col gap-4">
             {categories.map(currentObject => (
-              <CategoryCardComponent key={currentObject._id} {...currentObject} />
+              <CategoryCardComponent key={currentObject._id} {...currentObject}></CategoryCardComponent>
             ))}
           </View>
         </View>
@@ -42,7 +41,7 @@ export default function HomeScreen() {
 
 function SkeletonLoading() {
   return (
-    <ScrollView className="p-4 bg-white dark:bg-black">
+    <ScrollView showsVerticalScrollIndicator={false} className="p-4 bg-white dark:bg-black">
       {/* Header */}
       <View className="flex-row items-center mb-6">
         <View className="ml-3 flex-1">

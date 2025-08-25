@@ -30,7 +30,7 @@ export type Answer = {
 export const AnswerStatus = {
   Correct: 'CORRECT',
   Incorrect: 'INCORRECT',
-  Timeout: 'TIMEOUT'
+  Skip: 'SKIP'
 } as const;
 
 export type AnswerStatus = typeof AnswerStatus[keyof typeof AnswerStatus];
@@ -38,7 +38,8 @@ export const AnswerType = {
   Option_0: 'OPTION_0',
   Option_1: 'OPTION_1',
   Option_2: 'OPTION_2',
-  Option_3: 'OPTION_3'
+  Option_3: 'OPTION_3',
+  OptionSkip: 'OPTION_SKIP'
 } as const;
 
 export type AnswerType = typeof AnswerType[keyof typeof AnswerType];
@@ -462,7 +463,7 @@ export type LoginWithEmailMutationVariables = Exact<{
 }>;
 
 
-export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string, avatar?: string | undefined } } };
+export type LoginWithEmailMutation = { __typename?: 'Mutation', loginWithEmail: { __typename?: 'AuthResponse', access_token: string, refresh_token: string, user: { __typename?: 'User', _id: string, name: string, email: string, gender?: GenderEnum | undefined, dob?: any | undefined, avatar?: string | undefined } } };
 
 export type ProfileUpdateMutationVariables = Exact<{
   input: UpdateProfileDto;
@@ -558,6 +559,8 @@ export const LoginWithEmailDocument = `
       _id
       name
       email
+      gender
+      dob
       avatar
     }
   }

@@ -1,15 +1,23 @@
 import { GameModeType, GameStatus } from "./quiz.enum";
-import { AnswerType, Question } from "@/graphql/generated";
+import { AnswerType as AnswerTypeGql, Question } from "@/graphql/generated";
 import { SinglePlayerStratergy } from "@/screens/dashboard/game/strategies/single/logic";
 import { ISinglePlayerStrategy, ISinglerPlayerStateType } from "@/screens/dashboard/game/strategies/single/logic";
 import { Observer } from "@/util";
 import React, { lazy } from "react";
 
-export type { Question }
+export type { Question, AnswerTypeGql }
+
+export enum AnswerType {
+  OPTION_SKIP = '',
+  OPTION_0 = '0',
+  OPTION_1 = '1',
+  OPTION_2 = '2',
+  OPTION_3 = '3',
+}
 
 // basic events for game
 export interface IStartGame {
-  category: string;
+  categoryId: string;
   mode: GameModeType
 }
 
@@ -75,17 +83,15 @@ export interface BaseGameState {
   la?: string;           // lastAskedAt
 }
 
+
+
 // for implementaing structre
 export interface GameStrategy {
-
   getGameMode(): GameModeType;
   startGame<TStartGameProps extends IStartGame>(options: TStartGameProps): void;
   submitAnswer(answerId: AnswerType): void;
-
-  /* ── optional callback hooks ── */
   events: Observer<ListenEventsMap>
 }
-
 
 export type ExtractByType<T extends AllGameStrategy, K extends AllGameStrategy['type']> =
   T extends { type: K } ? T : never

@@ -61,7 +61,7 @@ export function CategoryCardComponent({image, _id, name, color, questionCount}: 
 function QuizInstuctionModel({modalId, category}: {modalId: string; category: string}) {
   function handleStartQuiz() {
     close(modalId);
-    navigate('DashboardStack', {screen: 'Quiz', params: {mode: GameModeType.Single, category}});
+    navigate('DashboardStack', {screen: 'Quiz', params: {mode: GameModeType.Single, categoryId: category}});
   }
 
   const {close} = useModal();

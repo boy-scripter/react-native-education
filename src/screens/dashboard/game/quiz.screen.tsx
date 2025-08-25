@@ -14,7 +14,7 @@ const Loader: React.FC<{message: string}> = ({message}) => (
 
 const QuizScreen: React.FC = () => {
   const route = useRoute<RouteProp<DashboardStackParamList, 'Quiz'>>();
-  const {mode, category, ...anyOther} = route.params;
+  const {mode, categoryId, ...anyOther} = route.params;
 
   const GameComponent = GameRegistry[mode].screen;
 
@@ -50,7 +50,7 @@ const QuizScreen: React.FC = () => {
     <View className="flex-1 p-5 justify-start">
       <View className="flex-1 justify-center">
         <Suspense fallback={<Loader message="Loading Your Game..." />}>
-          <GameComponent mode={mode} category={category} {...anyOther} />
+          <GameComponent mode={mode} categoryId={categoryId} {...anyOther} />
         </Suspense>
       </View>
     </View>

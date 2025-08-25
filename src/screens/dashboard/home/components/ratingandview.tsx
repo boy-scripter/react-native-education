@@ -2,20 +2,10 @@ import {Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Img from '@/components/ui/Img';
 import Button from '@/components/ui/Button';
-import { navigate } from '@/hooks/useNavigation.hook';
+import {navigate} from '@/hooks/useNavigation.hook';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-
-
 export function RankingAndLeaderboard() {
-
-    function handlePdfPress(url: string = 'https://icseindia.org/document/sample.pdf') {
-      navigate('DashboardStack', {
-        screen: 'PdfView',
-        params: { url },
-      });
-    }
-
   return (
     <>
       <View className="mt-5 w-full mx-auto rounded-3xl  py-4">
@@ -44,7 +34,7 @@ export function RankingAndLeaderboard() {
         </View>
       </View>
       {/* checdk learborad button */}
-      <Button onPress={() => handlePdfPress()} label="Check Leaderboard" className="flex-row mt-1 items-center">
+      <Button onPress={() => navigate('DashboardStack', {screen: 'Leaderboard'})} label="Check Leaderboard" className="flex-row mt-1 items-center">
         <Icon name="trophy-outline" size={30} color={'yellow'} />
       </Button>
     </>

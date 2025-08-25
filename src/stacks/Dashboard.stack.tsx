@@ -5,7 +5,7 @@ import PdfShowScreen from '@screens/dashboard/pdf/pdfShow.screen';
 import PdfViewScreen from '@screens/dashboard/pdf/pdfview';
 import EditProfileScreen from '@screens/dashboard/EditProfile';
 import QuizScreen from '@screens/dashboard/game/quiz.screen';
-// import LeaderBoardScreen from '@screens/dashboard/leaderboard.screen';
+import LeaderBoardScreen from '@screens/dashboard/LeaderBoard/LeaderBoard.screen';
 // import QuizInstructionScreen from '@screens/dashboard/quizInstruction.screen';
 // import ResultScreen from '@screens/dashboard/result.screen';
 
@@ -19,10 +19,10 @@ const DashboardStack: React.FC = () => {
       <Stack.Screen name="Quiz" component={QuizScreen} />
       <Stack.Screen name="PdfShow" component={PdfShowScreen} />
       <Stack.Screen name="PdfView" component={PdfViewScreen} />
+      <Stack.Screen name="Leaderboard" component={LeaderBoardScreen} />
       {/* 
       <Stack.Screen name="QuizResult" component={QuizInstructionScreen} />
-      <Stack.Screen name="Result" component={ResultScreen} />
-      <Stack.Screen name="Leaderboard" component={LeaderBoardScreen} /> */}
+      <Stack.Screen name="Result" component={ResultScreen} /> */}
     </Stack.Navigator>
   );
 };
