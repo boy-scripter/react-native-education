@@ -1,7 +1,7 @@
 import { RootStackParamList } from '@/types/navigation';
-import { createNavigationContainerRef, RouteProp, useRoute, } from '@react-navigation/native';
+import { CommonActions, createNavigationContainerRef, RouteProp, useRoute, } from '@react-navigation/native';
 import { useEffect } from 'react';
-
+import { StackActions } from '@react-navigation/native';
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
@@ -44,23 +44,19 @@ export function resetRoot(routeName: string, params?: object) {
   }
 }
 
-export function replace(name: string, params?: object) {
+
+
+export function replace(
+  ...args: RouteNameArgs
+) {
   if (navigationRef.isReady()) {
-    navigationRef.dispatch(state => {
-      const routes = state.routes.slice(0, state.routes.length - 1);
-      routes.push({
-        key: `${name}-${Date.now()}`, // Generate a unique key
-        name,
-        params,
-      });
-      return {
-        ...state,
-        routes,
-        index: routes.length - 1,
-      };
-    });
+    try {
+      navigationRef.goBack();
+      navigationRef.navigate(...args);
+    } catch { }
   }
 }
+
 
 export function getCurrentRoute() {
   if (navigationRef.isReady()) {
@@ -73,7 +69,7 @@ export function useRouteEffect<
   ParamList extends Record<string, any>,
   RouteName extends keyof ParamList
 >(
-  callback: (params : ParamList[RouteName]) => void,
+  callback: (params: ParamList[RouteName]) => void,
   deps?: (keyof ParamList[RouteName])[]
 ) {
   const route = useRoute<RouteProp<ParamList, RouteName>>();

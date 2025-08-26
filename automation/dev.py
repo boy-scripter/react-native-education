@@ -10,7 +10,6 @@ from pathlib import Path
 from rich import print
 from urllib.parse import urlparse, urlunparse
 
-# --- Function ---
 def replace_api_and_host_url(env_path: Path, new_base_url: str):
     """
     Replace the domain of API_URL and the full value of HOST_URL in a .env file.
@@ -64,7 +63,7 @@ def replace_api_and_host_url(env_path: Path, new_base_url: str):
 # --- Config ---
 SCRIPT_DIR = Path(__file__).resolve().parent
 GENYMOTION_VM_NAME = "Google Pixel 5a"
-BACKEND_COMPOSE_FILE = SCRIPT_DIR / "backend/docker-compose.yml"
+BACKEND_COMPOSE_FILE = "~/backend/"
 ENV_PATH = SCRIPT_DIR / "mobile-app" / ".env"
 APP_DIR = SCRIPT_DIR / "mobile-app"
 
@@ -82,7 +81,7 @@ mode = questionary.select(
 
 # --- Start Docker ---
 print("\n📦 [blue]Starting Docker backend...[/blue]")
-subprocess.run(["docker-compose", "-f", BACKEND_COMPOSE_FILE, "up", "-d"], check=True)
+subprocess.run(["wsl","--cd", BACKEND_COMPOSE_FILE ,"--", "docker","compose", "up" ,"-d"], check=True)
 
 # --- Start ngrok ---
 print("\n🌐 [blue]Starting ngrok...[/blue]")
@@ -100,7 +99,7 @@ except Exception as e:
     exit(1)
 
 # --- Write .env file ---
-replace_api_url_domain(ENV_PATH, ngrok_url)
+replace_api_and_host_url(ENV_PATH, ngrok_url)
 print(f"📝 [green]Wrote API_URL to {ENV_PATH}[/green]")
 
 # --- Start Metro ---

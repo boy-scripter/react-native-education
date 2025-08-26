@@ -90,6 +90,7 @@ export interface GameStrategy {
   getGameMode(): GameModeType;
   startGame<TStartGameProps extends IStartGame>(options: TStartGameProps): void;
   submitAnswer(answerId: AnswerType): void;
+  gameClean(): void;
   events: Observer<ListenEventsMap>
 }
 

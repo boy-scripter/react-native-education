@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import {useModal} from '@/modals/modal.context';
 import Button from '@/components/ui/Button';
 import {navigate} from '@/hooks';
+import colorConstant from '@/constant/color.constant';
 
 interface IndicatorProps {
   total_questions: number;
@@ -18,12 +19,15 @@ export function Indicator({total_questions, asked}: IndicatorProps) {
 
   return (
     <View className="flex-row mt-10 gap-6 px-2 items-center">
-      <Icon onPress={onPressIcon} name="close" color="black" size={18} className="border-greyish-100 bg-white border font-interBold p-2 rounded-full" />
+      <Button className="bg-transparent rounded-full border-transparent ">
+        <Icon onPress={onPressIcon} name="close" color="black" size={18} className="border-greyish-100 bg-white border font-interBold p-2 rounded-full" />
+      </Button>
       <View className="p-3 px-4 border-2 flex-row items-center gap-2 border-greyish-100 rounded-3xl flex-1">
-        <View className="bg-theme rounded-xl p-1.5 flex-1"></View>
-        <Text className="text-greyish-100 font-interBold">
-          {asked}/{total_questions}
-        </Text>
+        <View className="flex-1  flex-row h-4 rounded-xl overflow-hidden">
+          <View className="bg-theme" style={{width: `${(asked/total_questions) * 100}%`}} />
+          <View style={{width: `${(1) * 100}%`, backgroundColor: '#bbb8b8dc' }}  />
+        </View>
+        <Text className="text-greyish-100 font-interBold">{asked}/{total_questions}</Text>
       </View>
     </View>
   );

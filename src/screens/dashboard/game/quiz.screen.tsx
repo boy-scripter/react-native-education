@@ -48,6 +48,7 @@ const QuizScreen: React.FC = () => {
 
   return (
     <View className="flex-1 p-5 justify-start">
+
       <View className="flex-1 justify-center">
         <Suspense fallback={<Loader message="Loading Your Game..." />}>
           <GameComponent mode={mode} categoryId={categoryId} {...anyOther} />

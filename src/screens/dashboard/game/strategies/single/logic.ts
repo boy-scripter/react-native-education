@@ -3,9 +3,10 @@ import { GameModeType, IStartGame, GameStrategy, ListenEventsMap, EventsEnum, Ba
 import { Observer } from '@/util';
 import { QuizSocketService } from '@/store/quiz/socket';
 import { useAppDispatch } from '@/store/store';
-import { setCurrentQuestion, setCurrentMode, setGameState } from '@/store/quiz/quiz.slice';
+import { setCurrentQuestion, setCurrentMode, setGameState, resetGame } from '@/store/quiz/quiz.slice';
 import { createSelector } from '@reduxjs/toolkit';
 import { selectGameState } from '@/store/quiz/quiz.selector';
+import { replace } from '@/hooks';
 
 export interface ISinglePlayerStrategy extends GameStrategy { }
 export interface ISinglerPlayerStateType extends BaseGameState { }
@@ -27,11 +28,20 @@ export const selectQuizStats = createSelector(
 export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
 
     const dispatch = useAppDispatch()
+
     const MODE = GameModeType.Single;
     const socket = QuizSocketService.getInstance().getSocket();
     const events = new Observer<ListenEventsMap>();
 
     function getGameMode() { return MODE }   /* returns mode */
+
+    function gameClean() {
+        socket.off(EventsEnum.STARTED_GAME);
+        socket.off(EventsEnum.NEW_QUESTION)
+        socket.off(EventsEnum.STATE)
+        socket.off(EventsEnum.RESULT)
+        dispatch(resetGame())
+    }
 
     // listners and dispaetchers
     socket.on(EventsEnum.STARTED_GAME, (state) => {
@@ -49,9 +59,13 @@ export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
         dispatch(setGameState(state))
     });
 
-    socket.on(EventsEnum.RESULT, (result) => events.emit(EventsEnum.RESULT, result));
-    // end here listners and dispaetchers
+    socket.on(EventsEnum.RESULT, (result) => {
+        events.emit(EventsEnum.RESULT, result)
+        replace('DashboardStack', { screen: 'Result' })
+    });
 
+
+    // end here listners and dispaetchers
     function startGame(options: IStartGame) {
         socket.emit(
             EventsEnum.START_GAME,
@@ -66,5 +80,5 @@ export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
         );
     }
 
-    return { getGameMode, startGame, submitAnswer, events };
+    return { getGameMode, startGame, submitAnswer, gameClean, events };
 };
