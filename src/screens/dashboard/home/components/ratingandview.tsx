@@ -5,7 +5,12 @@ import Button from '@/components/ui/Button';
 import {navigate} from '@/hooks/useNavigation.hook';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export function RankingAndLeaderboard() {
+interface PersonalLeaderBoard {
+  rank?: number;
+  points?: number;
+}
+
+export function RankingAndLeaderboard(props: PersonalLeaderBoard) {
   return (
     <>
       <View className="mt-5 w-full mx-auto rounded-3xl  py-4">
@@ -17,7 +22,7 @@ export function RankingAndLeaderboard() {
             </LinearGradient>
             <View>
               <Text className="text-xs text-gray-600">Your Rank</Text>
-              <Text className="text-lg font-interBold text-yellow-600">#100</Text>
+              <Text className="text-lg font-interBold text-yellow-600">#{props.rank || 'NA'}</Text>
             </View>
           </View>
 
@@ -28,7 +33,7 @@ export function RankingAndLeaderboard() {
             </LinearGradient>
             <View>
               <Text className="text-xs text-gray-600">Total Points</Text>
-              <Text className="text-lg font-interBold text-sky-600">1200</Text>
+              <Text className="text-lg font-interBold text-sky-600">{props.points || 'NA'}</Text>
             </View>
           </View>
         </View>

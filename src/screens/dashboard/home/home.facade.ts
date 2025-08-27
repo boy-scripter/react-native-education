@@ -1,26 +1,37 @@
 import { useState, useCallback } from 'react';
 import { CategoriesQuery, useLazyCategoriesQuery } from '@/store/category/endpoint';
-import { useLazyPersonalLeaderboardQuery } from '@/store/leaderboard/endpoint';
+import { PersonalLeaderboardQuery, useLazyPersonalLeaderboardQuery } from '@/store/leaderboard/endpoint';
+
+type HomeData = {
+  categories: CategoriesQuery['categories'];
+  personalLeaderboard: PersonalLeaderboardQuery['personalLeaderboard']; // replace with proper type
+};
 
 export function useHomeFacade() {
   const [categoryQuery] = useLazyCategoriesQuery();
   const [personalLeaderboardQuery] = useLazyPersonalLeaderboardQuery();
 
-  const [categories, setCategories] = useState<CategoriesQuery['categories']>([]);
-
+  const [data, setData] = useState<HomeData>({
+    categories: [],
+    personalLeaderboard: undefined,
+  });
 
   const onInitialPageRender = useCallback(
     async () => {
       const [categoryData, leaderboardData] = await Promise.all([
         categoryQuery().unwrap(),
-        personalLeaderboardQuery().unwrap()
+        personalLeaderboardQuery().unwrap(),
       ]);
 
-      setCategories(categoryData.categories);
-    }, []);
+      setData({
+        categories: categoryData.categories,
+        personalLeaderboard: leaderboardData.personalLeaderboard,
+      });
+
+    }, [categoryQuery, personalLeaderboardQuery]);
 
   return {
     onInitialPageRender,
-    categories,
+    ...data,
   };
 }

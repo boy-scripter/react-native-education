@@ -41,14 +41,14 @@ export function CategoryCardComponent({image, _id, name, color, questionCount}: 
           <Text className="mt-1 text-xs text-gray-500 font-inter">{questionCount} Questions</Text>
         </View>
 
-        <View className="flex-col gap-2">
-          <Button onPress={handleOnPlay} icon="play" label="Play" iconSize={18} className="px-3 py-1 rounded-lg" iconPosition="left" style={{backgroundColor: color}} />
+        <View className="flex-row  mt-4 flex-1 gap-2  ">
+          <Button onPress={handleOnPlay} icon="play" label="Play" iconSize={18} className=" py-1 border border-greyish-100 px-4 rounded-lg" iconPosition="left" style={{backgroundColor: color}} />
           <Button
             onPress={() => navigate('DashboardStack', {screen: 'PdfShow', params: {category: _id}})}
             icon="file-pdf-box"
             label="Learn"
             iconSize={18}
-            className="px-3 py-1 rounded-lg"
+            className="px-3 py-1 border-greyish-100 rounded-lg"
             iconPosition="left"
             style={{backgroundColor: color}}
           />

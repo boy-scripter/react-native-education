@@ -1,21 +1,9 @@
-export interface TimeRange {
-  from: string;
-  to: string;
-  period: 'daily' | 'weekly' | 'monthly';
+import { GlobalLeaderboardQuery } from '@/store/leaderboard/endpoint';
+
+export enum TimeRange {
+  Last24Hours = 'last24hours',
+  Last7Day = 'last7day',
+  Last30Day = 'last30day',
 }
 
-export interface PodiumUser {
-  rank: 1 | 2 | 3;
-  name: string;
-  points: number;
-  color: string;
-  avatar: string;
-  icon: string;
-  isWinner?: boolean;
-}
-
-export interface LeaderboardUser {
-  name: string;
-  points: number;
-  avatar: string;
-}
+export type LeaderBoardUser = GlobalLeaderboardQuery['globalLeaderboard']['0']

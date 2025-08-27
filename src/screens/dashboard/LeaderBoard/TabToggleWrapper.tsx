@@ -10,7 +10,7 @@ export interface TabItem {
 interface TabToggleWrapperProps {
   tabs: TabItem[];
   activeTab: string;
-  onTabChange: (tabId: string) => void;
+  onTabChange: (tabId: any) => void;
   className?: string;
 }
 

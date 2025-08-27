@@ -11,22 +11,22 @@ import Img from '@/components/ui/Img';
 import ProfileImage from '@assets/images/profile.png';
 
 export default function HomeScreen() {
-  const {categories, onInitialPageRender} = useHomeFacade();
+  const {categories, personalLeaderboard ,onInitialPageRender} = useHomeFacade();
   const user = useRootState(selectUser) as unknown as AuthenticatedUser['user'];
 
   return (
-    <LoadingManager skeleton={<SkeletonLoading />} asyncFunction={onInitialPageRender}>
-      <ScrollView showsVerticalScrollIndicator={false} className="px-4 py-4 mt-2 ">
-        <View className="flex flex-row justify-between">
-          <View className="self-end">
-            <Text className="font-interBold text-xl">Hi, {user.name}</Text>
-            <Text>Let's Make this Day Productive</Text>
-          </View>
-          <View>
-            <Img fallbackUri={ProfileImage} onPress={() => navigate('DashboardStack', {screen: 'EditProfile'})} className="w-16 h-16 rounded-lg overflow-hidden" source={user.avatar} />
-          </View>
+    <ScrollView showsVerticalScrollIndicator={false} className="px-4 py-4 mt-2 ">
+      <View className="flex flex-row justify-between">
+        <View className="self-end">
+          <Text className="font-interBold text-xl">Hi, {user.name}</Text>
+          <Text>Let's Make this Day Productive</Text>
         </View>
-        <RankingAndLeaderboard />
+        <View>
+          <Img fallbackUri={ProfileImage} onPress={() => navigate('DashboardStack', {screen: 'EditProfile'})} className="w-16 h-16 rounded-lg overflow-hidden" source={user.avatar} />
+        </View>
+      </View>
+      <LoadingManager skeleton={<SkeletonLoading />} asyncFunction={onInitialPageRender}>
+        <RankingAndLeaderboard rank={personalLeaderboard?.rank} points={personalLeaderboard?.totalPoints} />
         <View className="py-6">
           <View className="flex-col gap-4">
             {categories.map(currentObject => (
@@ -34,25 +34,17 @@ export default function HomeScreen() {
             ))}
           </View>
         </View>
-      </ScrollView>
-    </LoadingManager>
+      </LoadingManager>
+    </ScrollView>
   );
 }
 
 function SkeletonLoading() {
   return (
-    <ScrollView showsVerticalScrollIndicator={false} className="p-4 bg-white dark:bg-black">
-      {/* Header */}
-      <View className="flex-row items-center mb-6">
-        <View className="ml-3 flex-1">
-          <Pulse className="w-32 h-4 mb-2" />
-          <Pulse className="w-48 h-5" />
-        </View>
-        <Pulse className="w-20 h-20 rounded-full" />
-      </View>
+    <ScrollView showsVerticalScrollIndicator={false} className="p-1 pt-2 dark:bg-black">
 
       {/* Rank & Points */}
-      <View className="flex-row justify-between mb-4">
+      <View className="flex-row justify-between border-theme rounded-lg mb-4">
         <Pulse className="w-[48%] h-16" />
         <Pulse className="w-[48%] h-16" />
       </View>
@@ -61,7 +53,7 @@ function SkeletonLoading() {
       <Pulse className="h-12 w-full mb-5" />
 
       {/* Quiz Cards (Repeatable) */}
-      {[1, 2, 3, 4, 5].map((_, index) => (
+      {[1, 2, 3, 4].map((_, index) => (
         <View key={index} className="flex-row items-start bg-gray-100 dark:bg-gray-800 p-3 rounded-lg mb-4">
           <Pulse className="w-32 h-32 rounded-md" />
           <View className="flex-1 ml-3">
