@@ -1,0 +1,6 @@
+query RefreshLeaderBoard {
+  refreshLeaderBoard {
+    lastRefreshAt
+    nextRefreshAt
+  }
+}
