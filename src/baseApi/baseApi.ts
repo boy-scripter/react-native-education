@@ -24,7 +24,9 @@ const baseQuery = graphqlRequestBaseQuery({
 
 
 const handleGeneralError = (error: any, skipToast?: boolean) => {
-  if (!error || skipToast) return;
+  if (!error) return;
+  const message = error.message?.toLowerCase?.();
+  if (skipToast || message === 'unauthorized') return;
   const errorMessage = error.message || 'Something went wrong';
   errorToast({ text1: errorMessage });
 };
