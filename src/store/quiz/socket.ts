@@ -4,7 +4,7 @@ import { refreshTokenAction, isMutexLocked, waitForMutex } from '@/baseApi/refre
 import { store } from '@store/store';
 import { logout } from '@store/auth/auth.slice';
 import { selectAuth } from '../auth/auth.selector';
-
+import { EventsMap } from "@socket.io/component-emitter"
 
 export class QuizSocketService {
   private static instance: QuizSocketService;
@@ -67,7 +67,7 @@ export class QuizSocketService {
     return QuizSocketService.instance;
   }
 
-  public getSocket(): Socket {
+  public getSocket<TServer extends EventsMap, TClient extends EventsMap>(): Socket<TServer, TClient> {
     return this.socket;
   }
 

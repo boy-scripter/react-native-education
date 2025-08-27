@@ -18,7 +18,7 @@ export type QuestionBoxProps = {
   onCountdownComplete?: () => void;
 };
 
-export const QuestionBox: React.FC<QuestionBoxProps> = ({
+const QuestionBoxComponent: React.FC<QuestionBoxProps> = ({
   question,
   countdownDuration,
   countdownAutoStart = true,
@@ -40,19 +40,19 @@ export const QuestionBox: React.FC<QuestionBoxProps> = ({
   }, [countdownDuration]);
 
   return (
-    <View className={twMerge('w-full rounded-2xl bg-white border  border-greyish-100 mt-16 p-8', className)} >
+    <View className={twMerge('w-full rounded-2xl bg-white border  border-greyish-100 mt-16 p-8', className)}>
       <View className="mx-auto p-2 bg-white rounded-full border border-greyish-100 -mt-20 mb-5">
         <AnimatedCircularProgress fill={progress} size={circleDiameter} width={circleStrokeWidth} tintColor={progressFillColor} backgroundColor={progressBackgroundColor} lineCap="round">
           {() => (
             <View className="w-full flex-1 justify-center items-center bg-white">
               <Text className="font-interBold text-2xl">
                 <CountdownTimer
-                 textClassName='text-3xl text-theme'
-                  key={key} // ensures reset when duration changes
+                  key={key}
+                  textClassName="text-3xl text-theme"
                   countdownDuration={countdownDuration}
                   autoStart={countdownAutoStart}
                   onTick={remaining => {
-                    setProgress((remaining / countdownDuration) * 100);  
+                    setProgress((remaining / countdownDuration) * 100);
                     onCountdownTick?.(remaining);
                   }}
                   onComplete={onCountdownComplete}
@@ -66,3 +66,5 @@ export const QuestionBox: React.FC<QuestionBoxProps> = ({
     </View>
   );
 };
+
+export const QuestionBox = React.memo(QuestionBoxComponent);

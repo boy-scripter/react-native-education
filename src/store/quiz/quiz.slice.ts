@@ -2,19 +2,23 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { GameModeType, Question } from '@/graphql/generated';
-import { BaseGameState } from '@/types/quiz';
+import { BaseGameState, IStartGame } from '@/types/quiz';
+
 
 // Define the initial state
 interface quizState {
     currentQuestion?: Question;
     currentMode?: GameModeType;
-    gameState?: BaseGameState; // e.g., 'loading', 'playing', 'finished'
+    currentCategory?: string;
+    gameState?: BaseGameState;
+
 }
 
 const initialState: quizState = {
     currentMode: undefined,
     gameState: undefined, // Default to loading state
     currentQuestion: undefined,
+    currentCategory: undefined,
 };
 
 // Create the slice
@@ -22,8 +26,9 @@ const quizSlice = createSlice({
     name: 'quiz',
     initialState,
     reducers: {
-        setCurrentMode(state, action: PayloadAction<GameModeType>) {
-            state.currentMode = action.payload;
+        setGameDetail(state, action: PayloadAction<IStartGame>) {
+            state.currentCategory = action.payload.categoryId;
+            state.currentMode = action.payload.mode;
         },
         setCurrentQuestion(state, action: PayloadAction<Question>) {
             state.currentQuestion = action.payload;
@@ -35,10 +40,11 @@ const quizSlice = createSlice({
             state.currentMode = undefined;
             state.currentQuestion = undefined;
             state.gameState = undefined;
+            state.currentCategory = undefined;
         },
     },
 });
 
 // Export the actions and the reducer
-export const { setCurrentMode, setCurrentQuestion, setGameState, resetGame } = quizSlice.actions;
+export const { setGameDetail, setCurrentQuestion, setGameState, resetGame } = quizSlice.actions;
 export default quizSlice.reducer;

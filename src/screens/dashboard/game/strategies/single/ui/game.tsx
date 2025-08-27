@@ -11,10 +11,8 @@ import AnswerBox from '../../../components/AnswerBox';
 import React, {useEffect} from 'react';
 
 export default function Game({mode, categoryId}: IStartGame) {
-
   const questionDetails = useSelector(selectCurrentQuestion);
   const quizStats = useSelector(selectQuizStats);
-
   const strategy = useStrategy(GameModeType.Single);
 
   useEffect(() => {
@@ -22,13 +20,7 @@ export default function Game({mode, categoryId}: IStartGame) {
     return () => strategy.gameClean();
   }, []);
 
-  if (!questionDetails) {
-    return (
-      <View>
-        <JoyStickLoader message="Loading Your Question..." />
-      </View>
-    );
-  }
+  if (!questionDetails) return <Loader />;
 
   return (
     <View>
@@ -39,6 +31,14 @@ export default function Game({mode, categoryId}: IStartGame) {
           return <AnswerBox key={index} id={index as AnswerType} label={value} onSelectId={() => strategy.submitAnswer(index as AnswerType)} />;
         })}
       </View>
+    </View>
+  );
+}
+
+function Loader() {
+  return (
+    <View>
+      <JoyStickLoader message="Loading Your Question..." />
     </View>
   );
 }

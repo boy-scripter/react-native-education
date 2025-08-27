@@ -1,9 +1,9 @@
 // strategies/createSinglePlayerStrategy.ts
-import { GameModeType, IStartGame, GameStrategy, ListenEventsMap, EventsEnum, BaseGameState, AnswerType } from '@/types/quiz';
+import { GameModeType, IStartGame, GameStrategy, ListenEventsMap, EmitEventsMap, EventsEnum, BaseGameState, AnswerType } from '@/types/quiz';
 import { Observer } from '@/util';
 import { QuizSocketService } from '@/store/quiz/socket';
 import { useAppDispatch } from '@/store/store';
-import { setCurrentQuestion, setCurrentMode, setGameState, resetGame } from '@/store/quiz/quiz.slice';
+import { setCurrentQuestion, setGameDetail, setGameState, resetGame } from '@/store/quiz/quiz.slice';
 import { createSelector } from '@reduxjs/toolkit';
 import { selectGameState } from '@/store/quiz/quiz.selector';
 import { replace } from '@/hooks';
@@ -27,10 +27,10 @@ export const selectQuizStats = createSelector(
 
 export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
 
-    const dispatch = useAppDispatch()
 
+    const dispatch = useAppDispatch()
     const MODE = GameModeType.Single;
-    const socket = QuizSocketService.getInstance().getSocket();
+    const socket = QuizSocketService.getInstance().getSocket<ListenEventsMap, EmitEventsMap>();
     const events = new Observer<ListenEventsMap>();
 
     function getGameMode() { return MODE }   /* returns mode */
@@ -46,7 +46,11 @@ export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
     // listners and dispaetchers
     socket.on(EventsEnum.STARTED_GAME, (state) => {
         events.emit(EventsEnum.STARTED_GAME, state)
-        dispatch(setCurrentMode(MODE))
+        dispatch(
+            setGameDetail({
+                mode: MODE,
+                categoryId: state.ca
+            }))
     });
 
     socket.on(EventsEnum.NEW_QUESTION, (question) => {
