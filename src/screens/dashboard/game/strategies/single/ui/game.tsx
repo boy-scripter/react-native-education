@@ -1,6 +1,6 @@
 import {AnswerType, GameModeType, IStartGame} from '@/types/quiz';
 import {View} from 'react-native';
-import {useStrategy} from '../../../hooks/useGameStrategy';
+import {useGameStrategy} from '../../../hooks/useGameStrategy';
 import {selectCurrentQuestion} from '@/store/quiz/quiz.selector';
 import {useSelector} from 'react-redux';
 import {JoyStickLoader} from '@/components/LoadingManger';
@@ -13,7 +13,7 @@ import React, {useEffect} from 'react';
 export default function Game({mode, categoryId}: IStartGame) {
   const questionDetails = useSelector(selectCurrentQuestion);
   const quizStats = useSelector(selectQuizStats);
-  const strategy = useStrategy(GameModeType.Single);
+  const strategy = useGameStrategy(GameModeType.Single);
 
   useEffect(() => {
     strategy.startGame({mode, categoryId});

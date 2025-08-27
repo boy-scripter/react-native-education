@@ -6,7 +6,7 @@ export const categoryApi = api.enhanceEndpoints({
     addTagTypes: ['category'],
     endpoints: {
         Categories: {
-            keepUnusedDataFor: Infinity
+            keepUnusedDataFor: Number.NEGATIVE_INFINITY
         }
     }
 })

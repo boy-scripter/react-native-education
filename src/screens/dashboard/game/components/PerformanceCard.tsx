@@ -1,3 +1,4 @@
+import { formatTime } from '@/util/format';
 import React from 'react';
 import {View, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -7,8 +8,8 @@ interface Props {
   incorrect: number;
   skipped: number;
   total: number;
-  timeUsed: string;
-  totalTime: string;
+  timeUsed: string | number;
+  totalTime: string | number;
 }
 
 const PerformanceCard: React.FC<Props> = ({correct, incorrect, skipped, total, timeUsed, totalTime}) => (
@@ -32,11 +33,13 @@ const PerformanceCard: React.FC<Props> = ({correct, incorrect, skipped, total, t
       <StatCard icon="close-circle" label="Incorrect" value={incorrect} color="#ef4444" bg="bg-red-50" border="border-red-100" />
       <StatCard icon="minus-circle" label="Skipped" value={skipped} color="#f59e0b" bg="bg-amber-50" border="border-amber-100" />
       <StatCard icon="format-list-numbered" label="Total" value={total} color="#6366f1" bg="bg-indigo-50" border="border-indigo-100" />
-      <StatCard icon="clock-outline" label="Time Used" value={timeUsed} color="#8b5cf6" bg="bg-purple-50" border="border-purple-100" />
-      <StatCard icon="clock" label="Total Time" value={totalTime} color="#ec4899" bg="bg-pink-50" border="border-pink-100" />
+      <StatCard icon="clock-outline" label="Time Used" value={formatTime(timeUsed)} color="#8b5cf6" bg="bg-purple-50" border="border-purple-100" />
+      <StatCard icon="clock" label="Total Time" value={formatTime(totalTime)} color="#ec4899" bg="bg-pink-50" border="border-pink-100" />
     </View>
   </View>
 );
+
+
 
 const StatCard = ({icon, label, value, color, bg, border}: any) => (
   <View

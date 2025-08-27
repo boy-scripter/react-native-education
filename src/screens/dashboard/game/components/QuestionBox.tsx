@@ -21,10 +21,10 @@ export type QuestionBoxProps = {
 const QuestionBoxComponent: React.FC<QuestionBoxProps> = ({
   question,
   countdownDuration,
+  className = '',
   countdownAutoStart = true,
   circleDiameter = 90,
   circleStrokeWidth = 8,
-  className = '',
   progressFillColor = colorConstant.theme.DEFAULT,
   progressBackgroundColor = colorConstant.greyish.DEFAULT,
   onCountdownTick,

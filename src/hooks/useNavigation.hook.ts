@@ -1,7 +1,8 @@
 import { RootStackParamList } from '@/types/navigation';
-import { CommonActions, createNavigationContainerRef, RouteProp, useRoute, } from '@react-navigation/native';
+import { CommonActions, createNavigationContainerRef, RouteProp, StackActions, useRoute, } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { StackActions } from '@react-navigation/native';
+
+
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
@@ -46,15 +47,12 @@ export function resetRoot(routeName: string, params?: object) {
 
 
 
-export function replace(
-  ...args: RouteNameArgs
-) {
-  if (navigationRef.isReady()) {
-    try {
-      navigationRef.goBack();
-      navigationRef.navigate(...args);
-    } catch { }
-  }
+export function replace(name: string, params?: object) {
+  if (!navigationRef.isReady()) return;
+
+  navigationRef.dispatch(
+    StackActions.replace(name, params)
+  );
 }
 
 

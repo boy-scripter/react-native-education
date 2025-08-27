@@ -6,7 +6,7 @@ import { useAppDispatch } from '@/store/store';
 import { setCurrentQuestion, setGameDetail, setGameState, resetGame } from '@/store/quiz/quiz.slice';
 import { createSelector } from '@reduxjs/toolkit';
 import { selectGameState } from '@/store/quiz/quiz.selector';
-import { replace } from '@/hooks';
+import { navigate, replace } from '@/hooks';
 
 export interface ISinglePlayerStrategy extends GameStrategy { }
 export interface ISinglerPlayerStateType extends BaseGameState { }
@@ -15,22 +15,39 @@ export const selectQuizStats = createSelector(
     [selectGameState],
     (gameState?: BaseGameState) => {
         if (!gameState) {
-            return { totalQuestions: 0, asked: 0 };
+            return {
+                totalQuestions: 0,
+                asked: 0,
+                skipped: 0,
+                incorrect: 0,
+                totalTimeTaken: 0,
+                totalAvailableTime: 0,
+                totalPoints: 0,
+                correct: 0,
+            };
         }
 
         const totalQuestions = gameState.tq;
-        const asked = gameState.ci + 1; // current index is 0-based
+        const asked = gameState.ci + 1;
+        const player = gameState.ps[0];
+        const answers = Object.values(player?.a || {});
+        const skipped = answers.filter(a => a.sk).length;
+        const incorrect = answers.filter(a => !a.c && !a.sk).length;
+        const totalPoints = answers.reduce((sum, a) => sum + (a.p || 0), 0);
+        const totalTimeTaken = answers.reduce((sum, a) => sum + (a.t || 0), 0);
+        const totalAvailableTime = answers.reduce((sum, a) => sum + (a.at || 0), 0);
+        const correct = asked - skipped - incorrect;
 
-        return { totalQuestions, asked };
+        return { totalQuestions, asked, skipped, incorrect, totalTimeTaken, totalAvailableTime, totalPoints, correct };
     }
 );
 
-export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
 
+export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
 
     const dispatch = useAppDispatch()
     const MODE = GameModeType.Single;
-    const socket = QuizSocketService.getInstance().getSocket<ListenEventsMap, EmitEventsMap>();
+    const socket = QuizSocketService.getInstance().getSocket();
     const events = new Observer<ListenEventsMap>();
 
     function getGameMode() { return MODE }   /* returns mode */
@@ -42,6 +59,7 @@ export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
         socket.off(EventsEnum.RESULT)
         dispatch(resetGame())
     }
+
 
     // listners and dispaetchers
     socket.on(EventsEnum.STARTED_GAME, (state) => {

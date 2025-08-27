@@ -4,13 +4,15 @@ import {useModal} from '@/modals/modal.context';
 import Button from '@/components/ui/Button';
 import {navigate} from '@/hooks';
 import colorConstant from '@/constant/color.constant';
+import React from 'react';
+import { MotiView } from 'moti';
 
 interface IndicatorProps {
   total_questions: number;
   asked: number;
 }
 
-export function Indicator({total_questions, asked}: IndicatorProps) {
+export const Indicator = React.memo(({total_questions, asked}: IndicatorProps) => {
   const {open} = useModal();
 
   const onPressIcon = () => {
@@ -24,14 +26,16 @@ export function Indicator({total_questions, asked}: IndicatorProps) {
       </Button>
       <View className="p-3 px-4 border-2 flex-row items-center gap-2 border-greyish-100 rounded-3xl flex-1">
         <View className="flex-1  flex-row h-4 rounded-xl overflow-hidden">
-          <View className="bg-theme" style={{width: `${(asked/total_questions) * 100}%`}} />
-          <View style={{width: `${(1) * 100}%`, backgroundColor: '#bbb8b8dc' }}  />
+          <MotiView className="bg-theme" style={{width: `${(asked / total_questions) * 100}%`}} />
+          <MotiView style={{width: `${1 * 100}%`, backgroundColor: '#bbb8b8dc'}} />
         </View>
-        <Text className="text-greyish-100 font-interBold">{asked}/{total_questions}</Text>
+        <Text className="text-greyish-100 font-interBold">
+          {asked}/{total_questions}
+        </Text>
       </View>
     </View>
   );
-}
+});
 
 function QuitModal({modalId}: {modalId: string}) {
   const {close} = useModal();

@@ -24,9 +24,9 @@ export const authSlice = createSlice({
       navigate('AuthStack', { screen: 'LoginAndSignup' });
       removeItem(REMEMBER_ME);
 
-      // state.access_token = null;
-      // state.refresh_token = null;
       // state.user = null;
+      state.refresh_token = null;
+      state.access_token = null;
       state.remember_me = false;
       state.isAuthenticated = false;
 

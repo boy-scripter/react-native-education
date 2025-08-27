@@ -7,13 +7,13 @@ import {ScoreCircle, PerformanceCard, ActionButtons} from './components';
 import {SpinnerLoader} from '@/components/LoadingManger';
 import {GameRegistry} from '@/types/quiz';
 import {useSelector} from 'react-redux';
-import {selectCurrentMode} from '@/store/quiz/quiz.selector';
+import {selectCurrentMode, selectGameCategory} from '@/store/quiz/quiz.selector';
 
-export const ResultScreen: React.FC = () => {
+const  ResultScreen: React.FC = () => {
   const mode = useSelector(selectCurrentMode);
-  const catergoryId = useSelector(state => state.quiz.catergoryId)
-  
-  if (!mode) {
+  const categoryId = useSelector(selectGameCategory);
+
+  if (!mode || !categoryId) {
     navigate('DashboardStack', {screen: 'Home'});
     return null;
   }
@@ -25,14 +25,12 @@ export const ResultScreen: React.FC = () => {
       <Suspense fallback={<SpinnerLoader />}>
         <View className="flex-1 justify-center items-center px-6 pb-8">
           <ResultComponent />
-          {/* <ScoreCircle score={86} />
-          <PerformanceCard correct={15} incorrect={5} skipped={3} total={23} timeUsed="12m" totalTime="15m" /> */}
           <ActionButtons
             buttons={[
-              {label: 'Play Again', icon: 'reload', action: () => console.log('Play Again'), color: 'bg-theme'},
+              {label: 'Play Again', icon: 'reload', action: () => navigate('DashboardStack', {screen: 'Quiz', params: {mode, categoryId}}), color: 'bg-theme'},
               {label: 'Home', icon: 'home', action: () => navigate('DashboardStack', {screen: 'Home'}), color: 'bg-gray-700'},
               {label: 'Share', icon: 'share-variant', action: () => Share.share({message: 'Check out my quiz results!'}), color: 'bg-blue-600'},
-              {label: 'See PDF', icon: 'file-pdf-box', action: () => console.log('See PDF'), color: 'bg-red-600'},
+              {label: 'See PDF', icon: 'file-pdf-box', action: () => navigate('DashboardStack', {screen: 'PdfShow', params: {category: categoryId}}), color: 'bg-red-600'},
               {label: 'Check Sheet', icon: 'clipboard-check', action: () => console.log('Check Sheet'), color: 'bg-green-600'},
               {label: 'Leaderboard', icon: 'trophy', action: () => navigate('DashboardStack', {screen: 'Leaderboard'}), color: 'bg-yellow-600'},
             ]}
@@ -54,3 +52,6 @@ const Header: React.FC = ({message}: {message?: string}) => (
     </View>
   </View>
 );
+
+function ShareMessage() {}
+export default ResultScreen

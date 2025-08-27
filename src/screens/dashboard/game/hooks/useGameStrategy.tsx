@@ -1,6 +1,6 @@
 import {AllGameStrategy, ExtractByType, GameModeType, GameRegistry} from '@myTypes/quiz';
 
-export function useStrategy<T extends AllGameStrategy['type']>(mode: T) {
+export function useGameStrategy<T extends AllGameStrategy['type']>(mode: T) {
   const strategyFn = GameRegistry[mode]?.strategy;
 
   if (!strategyFn) {
