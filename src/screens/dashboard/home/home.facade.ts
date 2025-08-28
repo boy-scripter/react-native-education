@@ -19,8 +19,8 @@ export function useHomeFacade() {
   const onInitialPageRender = useCallback(
     async () => {
       const [categoryData, leaderboardData] = await Promise.all([
-        categoryQuery().unwrap(),
-        personalLeaderboardQuery().unwrap(),
+        categoryQuery({},true).unwrap(),
+        personalLeaderboardQuery({},true).unwrap(),
       ]);
 
       setData({

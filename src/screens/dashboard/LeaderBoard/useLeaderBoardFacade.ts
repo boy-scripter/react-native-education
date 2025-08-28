@@ -13,15 +13,21 @@ const getTimeRange = (period: TimeRange): { gt: string } => {
 
   switch (period) {
     case TimeRange.Last24Hours:
-      fromDate.setHours(now.getHours() - 24, 0, 0, 0);
+      fromDate.setHours(now.getHours() - 24);
+      fromDate.setMinutes(0, 0, 0);
       break;
+
     case TimeRange.Last7Day:
       fromDate.setDate(now.getDate() - 7);
+      fromDate.setMinutes(0, 0, 0);
       break;
+
     case TimeRange.Last30Day:
       fromDate.setMonth(now.getMonth() - 1);
+      fromDate.setMinutes(0, 0, 0);
       break;
   }
+
 
   return { gt: fromDate.toISOString() };
 };
@@ -39,7 +45,7 @@ export function useLeaderBoardFacade() {
       const dateRange = getTimeRange(period);
       const response = await leaderboardQuery({
         input: { createdAt: dateRange }
-      }).unwrap();
+      }, true).unwrap();
 
       const fullList = response.globalLeaderboard || [];
       const sortedList = [...fullList].sort((a, b) => a.rank - b.rank);

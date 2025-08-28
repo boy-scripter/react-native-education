@@ -5,10 +5,6 @@ import {useState, useCallback} from 'react';
 import {useLazyRefreshLeaderBoardQuery} from '@/store/leaderboard/endpoint';
 import {Text, View} from 'react-native';
 
-interface RefreshCountdownProps {
-  onRefreshComplete?: () => void;
-}
-
 function useLeaderCountdownFacade() {
   const [triggerRefresh] = useLazyRefreshLeaderBoardQuery();
   const [seconds, setSeconds] = useState<number | null>(null);
@@ -27,14 +23,15 @@ function useLeaderCountdownFacade() {
   };
 }
 
-const RefreshCountdown: React.FC<RefreshCountdownProps> = ({onRefreshComplete}) => {
+const RefreshCountdown: React.FC = () => {
   const {seconds, onIntialRender} = useLeaderCountdownFacade();
+  const [refreshKey, setRefreshKey] = useState(0);
 
   return (
-    <LoadingManager asyncFunction={onIntialRender}>
+    <LoadingManager dependencies={[refreshKey]} asyncFunction={onIntialRender}>
       <View className="flex-row p-5 justify-center gap-2 items-center">
-        <Text className=" text-xl font-black text-greyish-200 ">LeaderBoardWill Refresh In</Text>
-        <CountdownTimer textClassName=" font-black text-xl text-greyish-200 " countdownDuration={seconds || 10 * 60} autoStart={true} onComplete={() => onRefreshComplete?.()} />
+        <Text className=" text-xl font-black text-greyish-200 ">LeaderBoardWill Refresh In {!seconds && 'Sometime'}</Text>
+        {seconds && <CountdownTimer textClassName=" font-black text-xl text-greyish-200 " countdownDuration={seconds} autoStart={true} onComplete={() => setRefreshKey(refreshKey + 1)} />}
       </View>
     </LoadingManager>
   );

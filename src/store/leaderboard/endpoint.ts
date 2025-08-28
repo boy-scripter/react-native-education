@@ -16,17 +16,23 @@ const leaderBoardApi = api.enhanceEndpoints({
         },
         RefreshLeaderBoard: {
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
+
                 const { data } = await queryFulfilled;
                 const next = parseInt(data.refreshLeaderBoard.nextRefreshAt, 10);
 
-                let localLastRefreshed = getItem<string | undefined>('lastRefreshedAt');
-                let lastRefreshed = localLastRefreshed ? parseInt(localLastRefreshed, 10) : 0;
+                const localLastRefreshed = await getItem<string | undefined>('lastRefreshedAt');
+                const lastRefreshed = localLastRefreshed ? parseInt(localLastRefreshed, 10) : 0;
 
-                if (next > lastRefreshed) {
-                    setItem('lastRefreshedAt', Date.now().toString());
+                console.log('leaderboard', next, lastRefreshed);
+
+                if (next !== lastRefreshed) {
+                    // store the new refresh time, not the old one
+                    await setItem('lastRefreshedAt', next.toString());
                     dispatch(leaderBoardApi.util.invalidateTags(['leaderboard']));
                 }
+
             }
+
 
         }
     }
@@ -39,5 +45,5 @@ export const {
     useLazyPersonalLeaderboardQuery, useLazyGlobalLeaderboardQuery,
     useRefreshLeaderBoardQuery, useLazyRefreshLeaderBoardQuery
 } = leaderBoardApi
-
-export type { PersonalLeaderboardQuery , GlobalLeaderboardQuery } from '@/graphql/generated'
+export { leaderBoardApi }
+export type { PersonalLeaderboardQuery, GlobalLeaderboardQuery } from '@/graphql/generated'

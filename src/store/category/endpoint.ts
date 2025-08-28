@@ -2,7 +2,7 @@
 import { api } from "@/graphql/generated";
 
 
-export const categoryApi = api.enhanceEndpoints({
+ const categoryApi = api.enhanceEndpoints({
     addTagTypes: ['category'],
     endpoints: {
         Categories: {
@@ -12,4 +12,5 @@ export const categoryApi = api.enhanceEndpoints({
 })
 
 export const { useCategoriesQuery, useLazyCategoriesQuery } = categoryApi;
+export { categoryApi }
 export type { CategoriesQuery } from "@/graphql/generated";
