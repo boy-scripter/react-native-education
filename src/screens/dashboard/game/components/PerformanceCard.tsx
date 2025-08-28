@@ -39,7 +39,7 @@ const StatCard = ({icon, label, value, color, bg, border}: any) => (
       shadowOpacity: 0.1,
       shadowRadius: 4,
     }}
-    className={`w-[32%] items-center py-4 ${bg} rounded-xl border ${border} mt-3`}>
+    className={`w-[32%] items-center py-4 ${bg} rounded-xl mt-3`}>
     <View className={`w-8 h-8 rounded-full items-center justify-center mb-2`} style={{backgroundColor: `${color}22`}}>
       <Icon name={icon} size={18} color={color} />
     </View>

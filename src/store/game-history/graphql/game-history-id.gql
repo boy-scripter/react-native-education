@@ -1,0 +1,31 @@
+query SinglePlayerGame($id: String!) {
+  gameHistoryById(input: $id) {
+    ... on SinglePlayerGame {
+      answers {
+        timeTaken
+        timeAvailable
+        status
+        selectedOption
+        questionId
+      }
+      categoryId {
+        name
+      }
+      _id
+      endedAt
+      mode
+      score
+      startedAt
+      status
+      totalCorrect
+      totalTimeAvailable
+      totalTimeTaken
+      questions {
+        time
+        questionText
+        options
+        answer
+      }
+    }
+  }
+}

@@ -19,9 +19,8 @@ export function RootStackNavigator() {
 export const AppStack: React.FC = () => {
   const isLoggedIn = useAuthBootstrap();
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName={isLoggedIn ? 'DashboardStack' : 'AuthStack'}>
-      <Stack.Screen name="AuthStack" component={AuthStack} />
-      <Stack.Screen name="DashboardStack" component={DashboardStack} />
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      {isLoggedIn ? <Stack.Screen name="DashboardStack" component={DashboardStack} /> : <Stack.Screen name="AuthStack" component={AuthStack} />}
     </Stack.Navigator>
   );
 };
