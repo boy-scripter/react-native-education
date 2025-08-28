@@ -5,13 +5,14 @@ import { GameModeType, Question } from '@/graphql/generated';
 import { BaseGameState, IStartGame } from '@/types/quiz';
 
 
+
 // Define the initial state
 interface quizState {
     currentQuestion?: Question;
     currentMode?: GameModeType;
     currentCategory?: string;
     gameState?: BaseGameState;
-
+    result?: any
 }
 
 const initialState: quizState = {
@@ -19,6 +20,7 @@ const initialState: quizState = {
     gameState: undefined, // Default to loading state
     currentQuestion: undefined,
     currentCategory: undefined,
+    result: undefined
 };
 
 // Create the slice
@@ -36,6 +38,9 @@ const quizSlice = createSlice({
         setGameState(state, action: PayloadAction<BaseGameState>) {
             state.gameState = action.payload;
         },
+        setResult(state, action: PayloadAction<any>) {
+            state.result = action.payload;
+        },
         resetGame(state) {
             state.currentMode = undefined;
             state.currentQuestion = undefined;
@@ -46,5 +51,5 @@ const quizSlice = createSlice({
 });
 
 // Export the actions and the reducer
-export const { setGameDetail, setCurrentQuestion, setGameState, resetGame } = quizSlice.actions;
+export const { setGameDetail, setCurrentQuestion, setGameState, resetGame ,setResult} = quizSlice.actions;
 export default quizSlice.reducer;

@@ -1,108 +1,94 @@
-// strategies/createSinglePlayerStrategy.ts
-import { GameModeType, IStartGame, GameStrategy, ListenEventsMap, EmitEventsMap, EventsEnum, BaseGameState, AnswerType } from '@/types/quiz';
-import { Observer } from '@/util';
-import { QuizSocketService } from '@/store/quiz/socket';
-import { useAppDispatch } from '@/store/store';
-import { setCurrentQuestion, setGameDetail, setGameState, resetGame } from '@/store/quiz/quiz.slice';
+// strategies/SinglePlayerStrategy.ts
+import { BaseGameStrategy } from '../abstract.strategy';
+import { GameModeType, IStartGame, AnswerType, EventsEnum, BaseGameState } from '@/types/quiz';
+import { store } from '@/store/store';
+import { setCurrentQuestion, setGameDetail, setGameState, setResult } from '@/store/quiz/quiz.slice';
+import { navigate } from '@/hooks';
+import { debounce } from '@/util/debounce';
 import { createSelector } from '@reduxjs/toolkit';
-import { selectGameState } from '@/store/quiz/quiz.selector';
-import { navigate, replace } from '@/hooks';
+import { selectGameResult } from '@/store/quiz/quiz.selector';
 
-export interface ISinglePlayerStrategy extends GameStrategy { }
+
 export interface ISinglerPlayerStateType extends BaseGameState { }
 
 export const selectQuizStats = createSelector(
-    [selectGameState],
-    (gameState?: BaseGameState) => {
+    [selectGameResult],
+    (gameState) => {
         if (!gameState) {
             return {
                 totalQuestions: 0,
                 asked: 0,
                 skipped: 0,
                 incorrect: 0,
+                correct: 0,
                 totalTimeTaken: 0,
                 totalAvailableTime: 0,
                 totalPoints: 0,
-                correct: 0,
             };
         }
 
-        const totalQuestions = gameState.tq;
-        const asked = gameState.ci + 1;
-        const player = gameState.ps[0];
-        const answers = Object.values(player?.a || {});
-        const skipped = answers.filter(a => a.sk).length;
-        const incorrect = answers.filter(a => !a.c && !a.sk).length;
-        const totalPoints = answers.reduce((sum, a) => sum + (a.p || 0), 0);
-        const totalTimeTaken = answers.reduce((sum, a) => sum + (a.t || 0), 0);
-        const totalAvailableTime = answers.reduce((sum, a) => sum + (a.at || 0), 0);
-        const correct = asked - skipped - incorrect;
+        const {
+            tq: totalQuestions,
+            ci,
+            totalCorrect = 0,
+            totalIncorrect = 0,
+            totalSkipped = 0,
+            totalTimeTaken = 0,
+            totalTimeAvailable = 0,
+            score: totalPoints = 0,
+        } = gameState;
 
-        return { totalQuestions, asked, skipped, incorrect, totalTimeTaken, totalAvailableTime, totalPoints, correct };
+        const asked = ci + 1;
+        return {
+            totalQuestions,
+            asked,
+            skipped: totalSkipped,
+            incorrect: totalIncorrect,
+            correct: totalCorrect,
+            totalTimeTaken,
+            totalAvailableTime: totalTimeAvailable,
+            totalPoints,
+        };
     }
 );
 
+export class SinglePlayerStrategy extends BaseGameStrategy {
+    protected MODE = GameModeType.Single;
 
-export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
 
-    const dispatch = useAppDispatch()
-    const MODE = GameModeType.Single;
-    const socket = QuizSocketService.getInstance().getSocket();
-    const events = new Observer<ListenEventsMap>();
 
-    function getGameMode() { return MODE }   /* returns mode */
+    // Define listeners (used by BaseGameStrategy)
+    protected getListeners() {
+        return {
+            [EventsEnum.STARTED_GAME]: (state: any) => { console.log(state, 'state'); store.dispatch(setGameDetail({ mode: this.MODE, categoryId: state.ca })); console.log(state, 'state'); },
 
-    function gameClean() {
-        socket.off(EventsEnum.STARTED_GAME);
-        socket.off(EventsEnum.NEW_QUESTION)
-        socket.off(EventsEnum.STATE)
-        socket.off(EventsEnum.RESULT)
-        dispatch(resetGame())
+            [EventsEnum.NEW_QUESTION]: (question: any) =>
+                store.dispatch(setCurrentQuestion(question)),
+
+            [EventsEnum.STATE]: (state: any) =>
+                store.dispatch(setGameState(state)),
+
+            [EventsEnum.RESULT]: (result: any) => {
+                {
+                    store.dispatch(setResult(result)),
+                        navigate('DashboardStack', { screen: 'Result' })
+                }
+            }
+        };
     }
 
 
-    // listners and dispaetchers
-    socket.on(EventsEnum.STARTED_GAME, (state) => {
-        // events.emit(EventsEnum.STARTED_GAME, state)
-        dispatch(
-            setGameDetail({
-                mode: MODE,
-                categoryId: state.ca
-            }))
-    });
-
-    socket.on(EventsEnum.NEW_QUESTION, (question) => {
-        // events.emit(EventsEnum.NEW_QUESTION, question)
-        dispatch(setCurrentQuestion(question))
-    });
-
-    socket.on(EventsEnum.STATE, (state) => {
-        // events.emit(EventsEnum.STATE, state)
-        dispatch(setGameState(state))
-    });
-
-    socket.on(EventsEnum.RESULT, (result) => {
-        // events.emit(EventsEnum.RESULT, result)
-        setTimeout(() => {
-            navigate('DashboardStack', { screen: 'Result' })
-        }, 1000)
-    });
-
-
-    // end here listners and dispaetchers
-    function startGame(options: IStartGame) {
-        socket.emit(
-            EventsEnum.START_GAME,
-            options
-        );
+    startGame(options: IStartGame) {
+        this.socket.emit(EventsEnum.START_GAME, options);
     }
 
-    function submitAnswer(answerId: AnswerType) {
-        socket.emit(
-            EventsEnum.SUBMIT_ANSWER,
-            { answer: answerId }
-        );
+
+    submitAnswer(answerId: AnswerType) {
+        this.socket.emit(EventsEnum.SUBMIT_ANSWER, { answer: answerId });
     }
 
-    return { getGameMode, startGame, submitAnswer, gameClean, events };
-};
+    // Optional: you can extend gameClean if needed
+    public gameClean() {
+        super.gameClean(); // cleans listeners + resets redux
+    }
+}

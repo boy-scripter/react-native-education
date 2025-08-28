@@ -8,3 +8,4 @@ export const selectCurrentMode = (state: RootState): GameModeType | undefined =>
 export const selectCurrentQuestion = (state: RootState): Question | undefined => state.quiz.currentQuestion;
 export const selectGameState = (state: RootState): BaseGameState | undefined => state.quiz.gameState;
 export const selectGameCategory = (state: RootState): string | undefined => state.quiz.gameState?.ca;
+export const selectGameResult = (state: RootState): any | undefined => state.quiz.result;

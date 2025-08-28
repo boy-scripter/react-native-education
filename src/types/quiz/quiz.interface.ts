@@ -1,11 +1,10 @@
 import { GameModeType, GameStatus } from "./quiz.enum";
-import { AnswerType as AnswerTypeGql, Question } from "@/graphql/generated";
-import { SinglePlayerStratergy } from "@/screens/dashboard/game/strategies/single/logic";
-import { ISinglePlayerStrategy, ISinglerPlayerStateType } from "@/screens/dashboard/game/strategies/single/logic";
-import { Observer } from "@/util";
+import { AnswerType as AnswerTypeGql, Question , AnswerStatus } from "@/graphql/generated";
+import { SinglePlayerStrategy, ISinglerPlayerStateType } from "@/screens/dashboard/game/strategies/single/logic";
+
 import React, { lazy } from "react";
 
-export type { Question, AnswerTypeGql }
+export type { Question, AnswerTypeGql , AnswerStatus }
 
 export enum AnswerType {
   OPTION_SKIP = '',
@@ -84,34 +83,24 @@ export interface BaseGameState {
 }
 
 
-
-// for implementaing structre
-export interface GameStrategy {
-  getGameMode(): GameModeType;
-  startGame<TStartGameProps extends IStartGame>(options: TStartGameProps): void;
-  submitAnswer(answerId: AnswerType): void;
-  gameClean(): void;
-  events: Observer<ListenEventsMap>
-}
-
 export type ExtractByType<T extends AllGameStrategy, K extends AllGameStrategy['type']> =
   T extends { type: K } ? T : never
 
 // all game startergy
 export type AllGameStrategy =
-  | { type: typeof GameModeType.Single; strategy: ISinglePlayerStrategy; state: ISinglerPlayerStateType }
-  | { type: typeof GameModeType.Single; strategy: ISinglePlayerStrategy; state: ISinglerPlayerStateType }
+  | { type: typeof GameModeType.Single; strategy: SinglePlayerStrategy; state: ISinglerPlayerStateType }
+  | { type: typeof GameModeType.Single; strategy: SinglePlayerStrategy; state: ISinglerPlayerStateType }
 
 export const GameRegistry: {
   [K in AllGameStrategy['type']]: {
     screen: React.ComponentType<IStartGame>
     result: React.ComponentType<any>
-    strategy: () => ExtractByType<AllGameStrategy, K>['strategy']
+    strategy: new () => ExtractByType<AllGameStrategy, K>['strategy']
   }
 } = {
   [GameModeType.Single]: {
     screen: lazy(() => import('@/screens/dashboard/game/strategies/single/ui/game')),
     result: lazy(() => import('@/screens/dashboard/game/strategies/single/ui/result')),
-    strategy: SinglePlayerStratergy,
+    strategy: SinglePlayerStrategy,
   } as const
 } 
