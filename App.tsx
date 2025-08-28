@@ -8,19 +8,16 @@ import {UIToast} from '@/components/Toast/Toast.config';
 import NetworkListener from '@/components/Network/NetworkListener';
 import 'react-native-devsettings';
 
-
 export default function App() {
   setupAdditionalConfig();
 
   return (
     <ReduxStore>
-  
-        <ModalProvider>
-          <RootStackNavigator></RootStackNavigator>
-        </ModalProvider>
-    
+      <ModalProvider>
+        <RootStackNavigator></RootStackNavigator>
+      </ModalProvider>
       <UIToast />
-      <NetworkListener></NetworkListener>
+      {/* <NetworkListener></NetworkListener> */}
     </ReduxStore>
   );
 }

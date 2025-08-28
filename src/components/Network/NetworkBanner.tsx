@@ -14,9 +14,7 @@ interface NetworkBannerProps {
 const NetworkBanner: React.FC<NetworkBannerProps> = ({isVisible, isOnline, statusText, iconName, onClose}) => {
   if (!isVisible) return null;
 
-  const getStatusBarHeight = (): number => {
-    return Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 24;
-  };
+  const getStatusBarHeight = (): number => (Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 24);
 
   const backgroundColor = isOnline ? '#22c55e' : '#ef4444'; // green-500 or red-500
   const borderColor = isOnline ? '#15803d' : '#b91c1c'; // green-700 or red-700
@@ -38,6 +36,7 @@ const NetworkBanner: React.FC<NetworkBannerProps> = ({isVisible, isOnline, statu
         zIndex: 9999,
         elevation: 9999,
       }}>
+        <Text>test</Text>
       <View className="flex-row items-center justify-between px-4 py-3">
         <View className="flex-row items-center flex-1">
           <Icon name={iconName} size={18} color="white" style={{marginRight: 8}} />

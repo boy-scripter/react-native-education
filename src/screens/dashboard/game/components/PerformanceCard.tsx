@@ -1,4 +1,4 @@
-import { formatTime } from '@/util/format';
+import {formatTime} from '@/util/format';
 import React from 'react';
 import {View, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,15 +13,7 @@ interface Props {
 }
 
 const PerformanceCard: React.FC<Props> = ({correct, incorrect, skipped, total, timeUsed, totalTime}) => (
-  <View
-    style={{
-      elevation: 12,
-      shadowColor: '#000',
-      shadowOffset: {width: 0, height: 6},
-      shadowOpacity: 0.15,
-      shadowRadius: 12,
-    }}
-    className="w-full bg-white rounded-3xl p-6 mb-8 border border-gray-100">
+  <View className="w-full bg-white rounded-3xl p-6 mb-8 border border-gray-100">
     <View className="mb-4">
       <Text className="text-center text-lg font-interBold text-gray-800 mb-1">Performance Overview</Text>
       <View className="w-16 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full mx-auto" />
@@ -38,8 +30,6 @@ const PerformanceCard: React.FC<Props> = ({correct, incorrect, skipped, total, t
     </View>
   </View>
 );
-
-
 
 const StatCard = ({icon, label, value, color, bg, border}: any) => (
   <View

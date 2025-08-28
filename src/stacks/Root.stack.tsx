@@ -9,14 +9,19 @@ import DashboardStack from './Dashboard.stack';
 const Stack = createStackNavigator<RootStackParamList>();
 
 export function RootStackNavigator() {
-  const isLoggedIn = useAuthBootstrap();
-
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName={isLoggedIn ? 'DashboardStack' : 'AuthStack'}>
-        <Stack.Screen name="AuthStack" component={AuthStack} />
-        <Stack.Screen name="DashboardStack" component={DashboardStack} />
-      </Stack.Navigator>
+      <AppStack></AppStack>
     </NavigationContainer>
   );
 }
+
+export const AppStack: React.FC = () => {
+  const isLoggedIn = useAuthBootstrap();
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName={isLoggedIn ? 'DashboardStack' : 'AuthStack'}>
+      <Stack.Screen name="AuthStack" component={AuthStack} />
+      <Stack.Screen name="DashboardStack" component={DashboardStack} />
+    </Stack.Navigator>
+  );
+};

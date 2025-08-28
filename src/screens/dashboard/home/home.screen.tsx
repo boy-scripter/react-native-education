@@ -2,7 +2,7 @@ import {selectUser} from '@/store/auth/auth.selector';
 import {useRootState} from '@/store/store';
 import {AuthenticatedUser} from '@/types/auth';
 import {navigate} from '@hooks/useNavigation.hook';
-import {Text, View, ScrollView} from 'react-native';
+import {Text, View, ScrollView, FlatList} from 'react-native';
 import {RankingAndLeaderboard} from './components/ratingandview';
 import {LoadingManager, Pulse} from '@/components/LoadingManger';
 import {useHomeFacade} from './home.facade';
@@ -11,11 +11,11 @@ import Img from '@/components/ui/Img';
 import ProfileImage from '@assets/images/profile.png';
 
 export default function HomeScreen() {
-  const {categories, personalLeaderboard ,onInitialPageRender} = useHomeFacade();
+  const {categories, personalLeaderboard, onInitialPageRender} = useHomeFacade();
   const user = useRootState(selectUser) as unknown as AuthenticatedUser['user'];
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} className="px-4 py-4 mt-2 ">
+    <View className="px-4 flex-1 py-4 mt-2 ">
       <View className="flex flex-row justify-between">
         <View className="self-end">
           <Text className="font-interBold text-xl">Hi, {user.name}</Text>
@@ -27,22 +27,26 @@ export default function HomeScreen() {
       </View>
       <LoadingManager skeleton={<SkeletonLoading />} asyncFunction={onInitialPageRender}>
         <RankingAndLeaderboard rank={personalLeaderboard?.rank} points={personalLeaderboard?.totalPoints} />
-        <View className="py-6">
+        <View >
           <View className="flex-col gap-4">
-            {categories.map(currentObject => (
-              <CategoryCardComponent key={currentObject._id} {...currentObject}></CategoryCardComponent>
-            ))}
+            <FlatList
+              data={categories}
+              contentContainerClassName="gap-4 "
+              keyExtractor={item => item._id}
+              renderItem={({item}) => <CategoryCardComponent {...item} />}
+              contentContainerStyle={{paddingVertical: 10}} // optional styling
+              showsVerticalScrollIndicator={false} // optional
+            />
           </View>
         </View>
       </LoadingManager>
-    </ScrollView>
+    </View>
   );
 }
 
 function SkeletonLoading() {
   return (
     <ScrollView showsVerticalScrollIndicator={false} className="p-1 pt-2 dark:bg-black">
-
       {/* Rank & Points */}
       <View className="flex-row justify-between border-theme rounded-lg mb-4">
         <Pulse className="w-[48%] h-16" />

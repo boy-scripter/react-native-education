@@ -22,7 +22,7 @@ export function CategoryCardComponent({image, _id, name, color, questionCount}: 
   }
 
   return (
-    <View style={{elevation: 14}} className="flex-row w-full h-40 p-2 rounded-2xl overflow-hidden bg-white shadow-xl">
+    <View className="flex-row w-full h-40 p-2 rounded-2xl overflow-hidden bg-white ">
       {/* Left: Image with overlay */}
       <View className="w-2/5 h-full relative rounded-xl overflow-hidden ">
         <Img className="py-2" source={image} resizeMode="contain" />

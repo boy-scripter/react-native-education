@@ -3,10 +3,16 @@ import {View, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RippleEffect from '@animation/RippleEffect';
 import colorConstant from '@constant/color.constant';
+import {twMerge} from 'tailwind-merge';
 
-const ScoreCircle: React.FC<{score: number}> = ({score}) => (
-  <View className="items-center mb-8">
-    <RippleEffect count={5} color={colorConstant.greyish[200]} className="rounded-full">
+interface Props {
+  className?: string;
+  score: number;
+}
+
+const ScoreCircle: React.FC<Props> = ({score, className = ''}) => (
+  <View className={twMerge('items-center  mb-8', className)}>
+    <RippleEffect count={4} color={colorConstant.greyish[200]} className="rounded-full bg-greyish-200">
       <View
         style={{
           shadowColor: '#000',
@@ -15,7 +21,7 @@ const ScoreCircle: React.FC<{score: number}> = ({score}) => (
           shadowRadius: 15,
           elevation: 20,
         }}
-        className="w-48 h-48 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 items-center justify-center">
+        className="w-48 h-48 rounded-full items-center justify-center">
         <View className="absolute inset-2 rounded-full bg-white/10" />
         <Text className="text-sm text-white font-interBold opacity-90 mb-1">Your Score</Text>
         <Text className="text-4xl text-white font-interBold">{score}</Text>

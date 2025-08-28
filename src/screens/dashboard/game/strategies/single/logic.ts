@@ -63,7 +63,7 @@ export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
 
     // listners and dispaetchers
     socket.on(EventsEnum.STARTED_GAME, (state) => {
-        events.emit(EventsEnum.STARTED_GAME, state)
+        // events.emit(EventsEnum.STARTED_GAME, state)
         dispatch(
             setGameDetail({
                 mode: MODE,
@@ -72,18 +72,20 @@ export const SinglePlayerStratergy = (): ISinglePlayerStrategy => {
     });
 
     socket.on(EventsEnum.NEW_QUESTION, (question) => {
-        events.emit(EventsEnum.NEW_QUESTION, question)
+        // events.emit(EventsEnum.NEW_QUESTION, question)
         dispatch(setCurrentQuestion(question))
     });
 
     socket.on(EventsEnum.STATE, (state) => {
-        events.emit(EventsEnum.STATE, state)
+        // events.emit(EventsEnum.STATE, state)
         dispatch(setGameState(state))
     });
 
     socket.on(EventsEnum.RESULT, (result) => {
-        events.emit(EventsEnum.RESULT, result)
-        replace('DashboardStack', { screen: 'Result' })
+        // events.emit(EventsEnum.RESULT, result)
+        setTimeout(() => {
+            navigate('DashboardStack', { screen: 'Result' })
+        }, 1000)
     });
 
 
