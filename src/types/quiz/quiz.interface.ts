@@ -1,10 +1,9 @@
 import { GameModeType, GameStatus } from "./quiz.enum";
-import { AnswerType as AnswerTypeGql, Question , AnswerStatus } from "@/graphql/generated";
-import { SinglePlayerStrategy, ISinglerPlayerStateType } from "@/screens/dashboard/game/strategies/single/logic";
-
+import { SinglePlayerStrategy, ISinglerPlayerStateType, SinglePlayerGameResult } from "@/screens/dashboard/game/strategies/single/logic";
 import React, { lazy } from "react";
 
-export type { Question, AnswerTypeGql , AnswerStatus }
+import { AnswerType as AnswerTypeGql, Question, AnswerStatus, SinglePlayerGame, GameHistory, Answer } from "@/graphql/generated";
+export type { Question, AnswerTypeGql, AnswerStatus, SinglePlayerGame, GameHistory, Answer }
 
 export enum AnswerType {
   OPTION_SKIP = '',
@@ -13,21 +12,10 @@ export enum AnswerType {
   OPTION_2 = 2,
   OPTION_3 = 3,
 }
-
 // basic events for game
 export interface IStartGame {
   categoryId: string;
   mode: GameModeType
-}
-
-export interface GameHistoryDoc {
-  id: string;
-  categoryId: string;
-  startedAt: string;
-  endedAt?: string;
-  questions: string[];
-  players: string[];
-  mode: GameModeType;
 }
 
 export enum EventsEnum {
@@ -41,7 +29,7 @@ export enum EventsEnum {
 
 export interface ListenEventsMap {
   [EventsEnum.NEW_QUESTION]: Question,
-  [EventsEnum.RESULT]: GameHistoryDoc
+  [EventsEnum.RESULT]: GameHistory
   [EventsEnum.STATE]: BaseGameState
   [EventsEnum.STARTED_GAME]: BaseGameState
 }
@@ -52,7 +40,7 @@ export interface EmitEventsMap {
 }
 
 // state related 
-export type Answer = {
+export type AnswerState = {
   c: boolean;
   p: number;     // points
   t: number;     // time taken (ms)
@@ -61,7 +49,7 @@ export type Answer = {
   s?: string;    // selected answer (undefined if skipped)
 };
 
-export interface Player {
+export interface PlayerState {
   id: string;
   si: string;
   n: string;             // name
@@ -72,7 +60,7 @@ export interface Player {
 export interface BaseGameState {
   m: GameModeType;       // mode
   s: GameStatus;         // status
-  ps: Player[];          // players
+  ps: PlayerState[];          // players
   qs: string[];          // question MongoIds
   tq: number;            // total questions
   ci: number;            // current question index
@@ -83,24 +71,25 @@ export interface BaseGameState {
 }
 
 
-export type ExtractByType<T extends AllGameStrategy, K extends AllGameStrategy['type']> =
-  T extends { type: K } ? T : never
+export type ExtractByType<T extends AllGameStrategy, K extends AllGameStrategy['type']> = T extends { type: K } ? T : never
 
 // all game startergy
 export type AllGameStrategy =
-  | { type: typeof GameModeType.Single; strategy: SinglePlayerStrategy; state: ISinglerPlayerStateType }
-  | { type: typeof GameModeType.Single; strategy: SinglePlayerStrategy; state: ISinglerPlayerStateType }
+  | { type: typeof GameModeType.Single; strategy: SinglePlayerStrategy; state: ISinglerPlayerStateType; history: SinglePlayerGameResult }
+  | { type: typeof GameModeType.Single; strategy: SinglePlayerStrategy; state: ISinglerPlayerStateType; history: SinglePlayerGameResult }
 
 export const GameRegistry: {
   [K in AllGameStrategy['type']]: {
     screen: React.ComponentType<IStartGame>
-    result: React.ComponentType<any>
+    result: React.ComponentType
+    sheet: React.ComponentType<{ data: ExtractByType<AllGameStrategy, K>['history'] }>
     strategy: new () => ExtractByType<AllGameStrategy, K>['strategy']
   }
 } = {
   [GameModeType.Single]: {
     screen: lazy(() => import('@/screens/dashboard/game/strategies/single/ui/game')),
     result: lazy(() => import('@/screens/dashboard/game/strategies/single/ui/result')),
+    sheet: lazy(() => import('@/screens/dashboard/game/strategies/single/ui/sheet')),
     strategy: SinglePlayerStrategy,
   } as const
 } 

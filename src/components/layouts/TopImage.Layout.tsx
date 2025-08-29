@@ -32,11 +32,8 @@ const TopImageLayout = ({image, lottie, title, description, children, containerC
           <LottieView source={lottie} autoPlay loop resizeMode="contain" style={{width: '100%', height: '100%'}} />
         </View>
       )}
-
       {title && <Text className="font-interBold px-5 text-white text-2xl py-2 z-10">{title}</Text>}
-
       {image && <ImageBackground source={{uri: image}} className="h-48 justify-end py-5 px-5" resizeMode="cover"></ImageBackground>}
-
       <View className={twMerge('flex-1 bg-white rounded-t-3xl px-5  ', containerClassName)}>
         {description && <Text className=" text-theme font-interBold text-base py-3 z-10">{description}</Text>}
         {children}

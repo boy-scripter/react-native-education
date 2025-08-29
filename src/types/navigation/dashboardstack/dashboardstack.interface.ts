@@ -9,6 +9,7 @@ export type DashboardStackParamList = {
   Quiz: IStartGame;
   Result: undefined;
   Leaderboard: undefined;
+  Sheet: { gameId : string }
 };
 
 export type DashboardStackNavigation = NavigatorScreenParams<DashboardStackParamList>;

@@ -309,7 +309,7 @@ export type QueryGameHistoriesArgs = {
 
 
 export type QueryGameHistoryByIdArgs = {
-  gameId: Scalars['String']['input'];
+  input: Scalars['String']['input'];
 };
 
 
@@ -334,6 +334,7 @@ export type QueryQuestionsArgs = {
 export type Question = {
   __typename?: 'Question';
   _id: Scalars['ID']['output'];
+  answer?: Maybe<Scalars['Int']['output']>;
   category: Category;
   options: Array<Scalars['String']['output']>;
   questionText: Scalars['String']['output'];
@@ -391,6 +392,8 @@ export type SinglePlayerGame = GameHistoryBase & {
   startedAt: Scalars['DateTime']['output'];
   status: GameResult;
   totalCorrect: Scalars['Number']['output'];
+  totalIncorrect: Scalars['Number']['output'];
+  totalSkipped: Scalars['Number']['output'];
   totalTimeAvailable: Scalars['Number']['output'];
   totalTimeTaken: Scalars['Number']['output'];
 };
@@ -503,6 +506,13 @@ export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'Category', _id: string, color: string, image: string, name: string, slug: string, questionCount: number }> };
+
+export type GameHistoryByIdQueryVariables = Exact<{
+  input: Scalars['String']['input'];
+}>;
+
+
+export type GameHistoryByIdQuery = { __typename?: 'Query', gameHistoryById: { __typename?: 'SinglePlayerGame', _id: string, endedAt?: any | undefined, mode: GameModeType, score: any, startedAt: any, status: GameResult, totalSkipped: any, totalIncorrect: any, totalCorrect: any, totalTimeAvailable: any, totalTimeTaken: any, answers: Array<{ __typename?: 'Answer', timeTaken: any, timeAvailable: any, status: AnswerStatus, selectedOption?: AnswerType | undefined, questionId: string }>, categoryId: { __typename?: 'Category', name: string }, questions: Array<{ __typename?: 'Question', time: number, questionText: string, options: Array<string>, answer?: number | undefined }> } };
 
 export type GlobalLeaderboardQueryVariables = Exact<{
   input: GlobalLeaderboardFilterDto;
@@ -644,6 +654,41 @@ export const CategoriesDocument = `
   }
 }
     `;
+export const GameHistoryByIdDocument = `
+    query gameHistoryById($input: String!) {
+  gameHistoryById(input: $input) {
+    ... on SinglePlayerGame {
+      answers {
+        timeTaken
+        timeAvailable
+        status
+        selectedOption
+        questionId
+      }
+      categoryId {
+        name
+      }
+      _id
+      endedAt
+      mode
+      score
+      startedAt
+      status
+      totalSkipped
+      totalIncorrect
+      totalCorrect
+      totalTimeAvailable
+      totalTimeTaken
+      questions {
+        time
+        questionText
+        options
+        answer
+      }
+    }
+  }
+}
+    `;
 export const GlobalLeaderboardDocument = `
     query GlobalLeaderboard($input: GlobalLeaderboardFilterDto!) {
   globalLeaderboard(input: $input) {
@@ -735,6 +780,9 @@ const injectedRtkApi = baseApi.injectEndpoints({
     Categories: build.query<CategoriesQuery, CategoriesQueryVariables | void>({
       query: (variables) => ({ document: CategoriesDocument, variables })
     }),
+    gameHistoryById: build.query<GameHistoryByIdQuery, GameHistoryByIdQueryVariables>({
+      query: (variables) => ({ document: GameHistoryByIdDocument, variables })
+    }),
     GlobalLeaderboard: build.query<GlobalLeaderboardQuery, GlobalLeaderboardQueryVariables>({
       query: (variables) => ({ document: GlobalLeaderboardDocument, variables })
     }),
@@ -754,5 +802,5 @@ const injectedRtkApi = baseApi.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useProfileUpdateMutation, useRefreshTokenMutation, useSetNewResetPasswordMutation, useSignupMutation, useProfileQuery, useLazyProfileQuery, useCategoriesQuery, useLazyCategoriesQuery, useGlobalLeaderboardQuery, useLazyGlobalLeaderboardQuery, usePersonalLeaderboardQuery, useLazyPersonalLeaderboardQuery, useRefreshLeaderBoardQuery, useLazyRefreshLeaderBoardQuery, useGetPdfsQuery, useLazyGetPdfsQuery, useInitiateUploadMutation } = injectedRtkApi;
+export const { useSendForgotPasswordCodeMutation, useValidateOtpMutation, useLoginWithGoogleMutation, useLoginWithEmailMutation, useProfileUpdateMutation, useRefreshTokenMutation, useSetNewResetPasswordMutation, useSignupMutation, useProfileQuery, useLazyProfileQuery, useCategoriesQuery, useLazyCategoriesQuery, useGameHistoryByIdQuery, useLazyGameHistoryByIdQuery, useGlobalLeaderboardQuery, useLazyGlobalLeaderboardQuery, usePersonalLeaderboardQuery, useLazyPersonalLeaderboardQuery, useRefreshLeaderBoardQuery, useLazyRefreshLeaderBoardQuery, useGetPdfsQuery, useLazyGetPdfsQuery, useInitiateUploadMutation } = injectedRtkApi;
 

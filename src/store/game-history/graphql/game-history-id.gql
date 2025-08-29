@@ -1,5 +1,5 @@
-query SinglePlayerGame($id: String!) {
-  gameHistoryById(input: $id) {
+query gameHistoryById($input: String!) {
+  gameHistoryById(input: $input) {
     ... on SinglePlayerGame {
       answers {
         timeTaken
@@ -17,6 +17,8 @@ query SinglePlayerGame($id: String!) {
       score
       startedAt
       status
+      totalSkipped
+      totalIncorrect
       totalCorrect
       totalTimeAvailable
       totalTimeTaken

@@ -7,14 +7,14 @@ import EditProfileScreen from '@screens/dashboard/EditProfile';
 import QuizScreen from '@screens/dashboard/game/quiz.screen';
 import LeaderBoardScreen from '@screens/dashboard/LeaderBoard/LeaderBoard.screen';
 import ResultScreen from '@/screens/dashboard/game/result.screen';
-// import QuizInstructionScreen from '@screens/dashboard/quizInstruction.screen';
-// import ResultScreen from '@screens/dashboard/result.screen';
+import SheetScreen from '@/screens/dashboard/game/sheet.screen';
+
 
 const Stack = createNativeStackNavigator();
 
 const DashboardStack: React.FC = () => {
   return (
-    <Stack.Navigator  screenOptions={{headerShown: false, animation: 'slide_from_right', gestureEnabled: true}} initialRouteName="Home">
+    <Stack.Navigator  screenOptions={{headerShown: false, animation: 'slide_from_right', gestureEnabled: true}} initialRouteName="Sheet">
       <Stack.Screen name="Home" component={HomeScreen}   />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="Quiz" component={QuizScreen} />
@@ -22,6 +22,7 @@ const DashboardStack: React.FC = () => {
       <Stack.Screen name="PdfView" component={PdfViewScreen} />
       <Stack.Screen name="Leaderboard" component={LeaderBoardScreen} />
       <Stack.Screen name="Result" component={ResultScreen} /> 
+      <Stack.Screen name="Sheet" component={SheetScreen} /> 
     </Stack.Navigator>
   );
 };

@@ -3,9 +3,9 @@ import {Text, View} from 'react-native';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import {twMerge} from 'tailwind-merge';
 import {MotiView} from 'moti';
-import {Svg, Circle, Path} from 'react-native-svg';
 import CountdownTimer from '@/components/ui/CountDownTimer';
 import colorConstant from '@/constant/color.constant';
+import { TimerIcon , QuestionIcon } from '@/components/Icons';
 
 export type QuestionBoxProps = {
   question: string;
@@ -76,20 +76,5 @@ const QuestionBoxComponent: React.FC<QuestionBoxProps> = ({
   );
 };
 
-const TimerIcon = ({size = 24, color = '#3b82f6'}) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    <Circle cx="12" cy="13" r="9" stroke={color} strokeWidth="2" />
-    <Path d="M12 7v6l4 4" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    <Path d="M16.51 3.51l1.414 1.414" stroke={color} strokeWidth="2" strokeLinecap="round" />
-  </Svg>
-);
-
-const QuestionIcon = ({size = 20, color = '#3b82f6'}) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    <Circle cx="12" cy="12" r="10" stroke={color} strokeWidth="2" />
-    <Path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    <Path d="M12 17h.01" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </Svg>
-);
 
 export const QuestionBox = React.memo(QuestionBoxComponent);

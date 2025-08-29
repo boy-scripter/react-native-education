@@ -15,15 +15,13 @@ export default function Game({mode, categoryId}: IStartGame) {
   const quizStats = useSelector(selectQuizStats);
   const strategy = useGameStrategy(GameModeType.Single);
 
-  useEffect(() => {
-    strategy.startGame({mode, categoryId});
-  }, []);
+  useEffect(() => strategy.startGame({mode, categoryId}), []);
 
   if (!questionDetails) return <Loader />;
 
   return (
     <View>
-      <Indicator total_questions={quizStats.totalQuestions} asked={quizStats.asked} />
+      <Indicator total_questions={quizStats.total} asked={quizStats.asked} />
       <QuestionBox onCountdownComplete={() => strategy.submitAnswer(AnswerType.OPTION_SKIP)} countdownDuration={questionDetails.time} question={questionDetails.questionText} />
       <View className="options gap-4 mt-10 w-full">
         {questionDetails.options.map((value, index) => {

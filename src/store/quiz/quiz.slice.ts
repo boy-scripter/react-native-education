@@ -1,9 +1,8 @@
 // src/redux/gameSlice.ts
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { GameModeType, Question } from '@/graphql/generated';
+import { GameHistory, GameModeType, Question } from '@myTypes/quiz';
 import { BaseGameState, IStartGame } from '@/types/quiz';
-
 
 
 // Define the initial state
@@ -12,7 +11,7 @@ interface quizState {
     currentMode?: GameModeType;
     currentCategory?: string;
     gameState?: BaseGameState;
-    result?: any
+    result?: GameHistory
 }
 
 const initialState: quizState = {
@@ -38,7 +37,7 @@ const quizSlice = createSlice({
         setGameState(state, action: PayloadAction<BaseGameState>) {
             state.gameState = action.payload;
         },
-        setResult(state, action: PayloadAction<any>) {
+        setResult(state, action: PayloadAction<GameHistory>) {
             state.result = action.payload;
         },
         resetGame(state) {
