@@ -66,7 +66,7 @@ export class SinglePlayerStrategy extends BaseGameStrategy {
                 store.dispatch(setCurrentQuestion(question)),
 
             [EventsEnum.STATE]: (state: any) =>
-                store.dispatch(setGameState(state)),
+                debounce(() => store.dispatch(setGameState(state)), 1000),
 
             [EventsEnum.RESULT]: (result: any) => {
                 {
