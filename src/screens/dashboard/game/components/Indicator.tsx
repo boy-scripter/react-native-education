@@ -3,9 +3,8 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import {useModal} from '@/modals/modal.context';
 import Button from '@/components/ui/Button';
 import {navigate} from '@/hooks';
-import colorConstant from '@/constant/color.constant';
-import React from 'react';
 import {MotiView} from 'moti';
+import React from 'react';
 
 interface IndicatorProps {
   total_questions: number;
@@ -15,9 +14,7 @@ interface IndicatorProps {
 export const Indicator = React.memo(({total_questions, asked}: IndicatorProps) => {
   const {open} = useModal();
 
-  const onPressIcon = () => {
-    const closeModalId = open(() => <QuitModal modalId={closeModalId} />, 'Are You Want To Exit?');
-  };
+  const onPressIcon = () => open(() => <QuitModal />, 'Are You Want To Exit?');
 
   return (
     <View className="flex-row mt-10 gap-6 px-2 items-center">
@@ -37,18 +34,18 @@ export const Indicator = React.memo(({total_questions, asked}: IndicatorProps) =
   );
 });
 
-function QuitModal({modalId}: {modalId: string}) {
+function QuitModal() {
   const {close} = useModal();
 
   return (
     <View className="px-2">
       <View className="flex-row gap-2">
-        <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => close(modalId)} />
+        <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => close()} />
         <Button
           label="Yes"
           className="mt-4 flex-1 bg-green-600 border-green-600"
           onPress={() => {
-            close(modalId);
+            close();
             navigate('DashboardStack', {screen: 'HomeTab', params: {screen: 'Home'}});
           }}
         />
