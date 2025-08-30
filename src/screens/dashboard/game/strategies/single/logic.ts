@@ -15,12 +15,17 @@ export interface ISinglerPlayerStateType extends BaseGameState { }
 export class SinglePlayerStrategy extends BaseGameStrategy {
     protected MODE = GameModeType.Single;
 
+
+    private debouncedSetGameState = debounce((state: ISinglerPlayerStateType) => {
+        store.dispatch(setGameState(state));
+    }, 1000);
+
     // Define listeners (used by BaseGameStrategy)
     protected getListeners() {
         return {
             [EventsEnum.STARTED_GAME]: (state: ISinglerPlayerStateType) => store.dispatch(setGameDetail({ mode: this.MODE, categoryId: state.ca })),
             [EventsEnum.NEW_QUESTION]: (question: Question) => store.dispatch(setCurrentQuestion(question)),
-            [EventsEnum.STATE]: (state: ISinglerPlayerStateType) => debounce(() => store.dispatch(setGameState(state)), 1000),
+            [EventsEnum.STATE]: (state: ISinglerPlayerStateType) => this.debouncedSetGameState(state),
             [EventsEnum.RESULT]: (result: SinglePlayerGameResult) => {
                 {
                     store.dispatch(setResult(result)),
@@ -68,6 +73,10 @@ export const selectQuizResult = createSelector(
 export const selectQuizStats = createSelector(
     [selectGameState],
     (state: ISinglerPlayerStateType | undefined) => {
+        alert(JSON.stringify({
+            asked: state?.ci !== undefined ? state.ci + 1 : 0,
+            total: state?.tq ?? 1,
+        }))
         return {
             asked: state?.ci !== undefined ? state.ci + 1 : 0,
             total: state?.tq ?? 1,
