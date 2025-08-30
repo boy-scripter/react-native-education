@@ -32,7 +32,8 @@ export default function Login() {
 
   async function handleOnLoginClick(formValues: loginType) {
     await login({input: formValues}).unwrap();
-    resetRoot('DashboardStack');
+        resetRoot('DashboardStack');
+
   }
 
   return (

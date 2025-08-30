@@ -22,12 +22,17 @@ export default function HomeScreen() {
           <Text>Let's Make this Day Productive</Text>
         </View>
         <View>
-          <Img fallbackUri={ProfileImage} onPress={() => navigate('DashboardStack', {screen: 'EditProfile'})} className="w-16 h-16 rounded-lg overflow-hidden" source={user.avatar} />
+          <Img
+            fallbackUri={ProfileImage}
+            onPress={() => navigate('DashboardStack', {screen: 'HomeTab', params: {screen: 'EditProfile'}})}
+            className="w-16 h-16 rounded-lg overflow-hidden"
+            source={user.avatar}
+          />
         </View>
       </View>
       <LoadingManager skeleton={<SkeletonLoading />} asyncFunction={onInitialPageRender}>
         <RankingAndLeaderboard rank={personalLeaderboard?.rank} points={personalLeaderboard?.totalPoints} />
-        <View >
+        <View>
           <View className="flex-col gap-4">
             <FlatList
               data={categories}

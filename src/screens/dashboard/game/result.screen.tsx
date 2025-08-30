@@ -14,7 +14,7 @@ const ResultScreen: React.FC = () => {
   const categoryId = useSelector(selectGameCategory);
 
   if (!mode || !categoryId) {
-    navigate('DashboardStack', {screen: 'Home'});
+    navigate('DashboardStack', {screen: 'HomeTab', params: {screen: 'Home'}});
     return null;
   }
   const ResultComponent = GameRegistry[mode].result;
@@ -29,7 +29,7 @@ const ResultScreen: React.FC = () => {
             <ActionButtons
               buttons={[
                 {label: 'Play Again', icon: 'reload', action: () => navigate('DashboardStack', {screen: 'Quiz', params: {mode, categoryId}}), color: 'bg-theme'},
-                {label: 'Home', icon: 'home', action: () => navigate('DashboardStack', {screen: 'Home'}), color: 'bg-gray-700'},
+                {label: 'Home', icon: 'home', action: () => navigate('DashboardStack', {screen: 'HomeTab', params: {screen: 'Home'}}), color: 'bg-gray-700'},
                 {label: 'See PDF', icon: 'file-pdf-box', action: () => navigate('DashboardStack', {screen: 'PdfShow', params: {category: categoryId}}), color: 'bg-red-600'},
                 {label: 'Leaderboard', icon: 'trophy', action: () => navigate('DashboardStack', {screen: 'Leaderboard'}), color: 'bg-yellow-600'},
               ]}

@@ -49,7 +49,7 @@ function QuitModal({modalId}: {modalId: string}) {
           className="mt-4 flex-1 bg-green-600 border-green-600"
           onPress={() => {
             close(modalId);
-            navigate('DashboardStack', {screen: 'Home'});
+            navigate('DashboardStack', {screen: 'HomeTab', params: {screen: 'Home'}});
           }}
         />
       </View>
