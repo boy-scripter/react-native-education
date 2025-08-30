@@ -1,7 +1,7 @@
 import React, {createContext, ReactNode, useCallback, useContext, useState} from 'react';
 import {UIModalComponent} from './Modal';
 import {nanoid} from 'nanoid/non-secure';
-import { View } from 'react-native';
+import {View} from 'react-native';
 
 interface ModalStructure {
   id: string;
@@ -12,67 +12,41 @@ interface ModalStructure {
 const ModalContext = createContext<null | ReturnType<typeof useModalContextCreator>>(null);
 
 const useModalContextCreator = () => {
-  const [modalList, setModalList] = useState<ModalStructure[]>([]);
-
-  const getModalId = () => nanoid();
-
-  const isModalExist = useCallback(
-    (id: string) => {
-      return modalList.some(modalsConfig => modalsConfig.id === id);
-    },
-    [modalList],
-  );
+  const [modal, setModal] = useState<ModalStructure | null>(null);
 
   const open = useCallback((component: React.FC<any>, title?: string) => {
-    const modalId = getModalId();
-
-    if (!isModalExist(modalId)) {
-      setModalList(state => [...state, {id: modalId, title, component}]);
-    }
+    const modalId = nanoid();
+    setModal({id: modalId, title, component});
     return modalId;
   }, []);
 
-  const close = useCallback(
-    (id: string) => {
-      const modalId = id;
+  const close = useCallback(() => {
+    setModal(null);
+  }, []);
 
-      //  i have removed the if condidtion due to stale issue beacuse we are storing a compoent in memory that migh create a stale issue
-      // if (isModalExist(modalId)) {
-      setModalList(state => state.filter(modal => modal.id !== modalId));
-      // }
-    },
-    [modalList],
-  );
+  const isModalExist = useCallback((id: string) => modal?.id === id, [modal]);
 
-  return {close, open, isModalExist, modalList};
+  return {open, close, isModalExist, modal};
 };
 
-const ModalRenderer = ({index = 0}: {index?: number}) => {
-  const {modalList, close, isModalExist} = useModal();
+const ModalRenderer = () => {
+  const {modal, close} = useModal();
 
-  if (index >= modalList.length) return null;
-  const {component: Component, title, id} = modalList[index];
+  if (!modal) return null;
 
-  function NestedModalComponent() {
-    return (
-      <>
-        <Component></Component>
-        <ModalRenderer index={index + 1} />
-      </>
-    );
-  }
+  const {component: Component, title, id} = modal;
 
-  return <UIModalComponent key={title} title={title} onClose={() => close(id)} component={NestedModalComponent} visible={isModalExist(id)} />;
+  return <UIModalComponent key={id} title={title} onClose={() => close()} component={Component} visible={true} />;
 };
 
 const ModalProvider = ({children}: {children: ReactNode}) => {
-  const {open, close, modalList, isModalExist} = useModalContextCreator();
+  const modalContext = useModalContextCreator();
 
   return (
-    <ModalContext.Provider value={{open, close, modalList, isModalExist}}>
-      {children}
+    <ModalContext.Provider value={modalContext}>
+        {children}
       <View>
-        <ModalRenderer></ModalRenderer>
+        <ModalRenderer />
       </View>
     </ModalContext.Provider>
   );
