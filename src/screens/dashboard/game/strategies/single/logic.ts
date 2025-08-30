@@ -73,10 +73,7 @@ export const selectQuizResult = createSelector(
 export const selectQuizStats = createSelector(
     [selectGameState],
     (state: ISinglerPlayerStateType | undefined) => {
-        alert(JSON.stringify({
-            asked: state?.ci !== undefined ? state.ci + 1 : 0,
-            total: state?.tq ?? 1,
-        }))
+
         return {
             asked: state?.ci !== undefined ? state.ci + 1 : 0,
             total: state?.tq ?? 1,

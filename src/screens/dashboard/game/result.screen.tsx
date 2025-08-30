@@ -1,7 +1,6 @@
-import React, {Suspense} from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import React, {Suspense, useEffect} from 'react';
+import {View, ScrollView} from 'react-native';
 import {navigate} from '@hooks/useNavigation.hook';
-import {Share} from 'react-native';
 import {ActionButtons} from './components';
 import {SpinnerLoader} from '@/components/LoadingManger';
 import {GameRegistry} from '@/types/quiz';
@@ -12,6 +11,7 @@ import {Header} from '@/components/ui/Header';
 const ResultScreen: React.FC = () => {
   const mode = useSelector(selectCurrentMode);
   const categoryId = useSelector(selectGameCategory);
+
 
   if (!mode || !categoryId) {
     navigate('DashboardStack', {screen: 'HomeTab', params: {screen: 'Home'}});

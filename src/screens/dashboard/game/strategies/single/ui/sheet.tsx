@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ScrollView, Text, View} from 'react-native';
+import {FlatList, Text, View} from 'react-native';
 import {SinglePlayerGameResult} from '../logic';
 import {formatTime} from '@/util/format';
 import {Answer, Question} from '@myTypes/quiz';
@@ -9,7 +9,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 export default function Sheet({data}: {data: SinglePlayerGameResult}) {
   return (
     <>
-      <StatsSummary  correct={data.totalCorrect} incorrect={data.totalIncorrect} skipped={data.totalSkipped} time={data.totalTimeTaken} />
+      <StatsSummary correct={data.totalCorrect} incorrect={data.totalIncorrect} skipped={data.totalSkipped} time={data.totalTimeTaken} />
       <View className="flex-1">
         <FlatList
           data={data.questions}
@@ -81,7 +81,7 @@ const StatusIcon = ({status, size = 24}: {status: string; size?: number}) => {
 };
 
 const QuestionCard = ({question, answer, index}: {question: Question; answer: Answer; index: number}) => {
-  const selectedOptionIndex = answer.selectedOption ? parseInt(answer.selectedOption.split('_')[1]) - 1 : null;
+  const selectedOptionIndex = answer.selectedOption ? parseInt(answer.selectedOption.split('_')[1])  : null;
 
   return (
     <View className="bg-white rounded-xl p-4 mb-4 shadow-sm">

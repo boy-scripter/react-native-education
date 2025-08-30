@@ -25,7 +25,6 @@ export default function Sheet() {
     setGameHistory(data.gameHistoryById);
   }
 
-  // Only render LoadingManager; it handles the loading state
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <Header message="Answer Sheet" />

@@ -1,11 +1,10 @@
-import {View, Text} from 'react-native';
+import React from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {match} from 'ts-pattern';
 import Icon from 'react-native-vector-icons/AntDesign';
 import colorConstant from '@/constant/color.constant';
 import {AnswerType} from '@/types/quiz';
-import {MotiPressable} from 'moti/interactions';
-import {useMemo} from 'react';
-import { MotiView } from 'moti';
+import {MotiView} from 'moti';
 
 interface AnswerBoxProps {
   id: AnswerType;
@@ -47,7 +46,8 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({id, label, status = 'idle', onSele
     .exhaustive();
 
   return (
-    <MotiPressable
+    <TouchableOpacity
+      activeOpacity={0.7}
       onPress={() => onSelectId?.(id)}
       style={{
         padding: 18,
@@ -64,31 +64,7 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({id, label, status = 'idle', onSele
         shadowOpacity: 0.3,
         shadowRadius: 8,
         elevation: 4,
-      }}
-      transition={useMemo(
-        () =>
-          ({hovered, pressed}) => {
-            'worklet';
-            return {
-              duration: 200,
-              delay: hovered || pressed ? 0 : 50,
-            };
-          },
-        [],
-      )}
-      animate={useMemo(
-        () =>
-          ({hovered, pressed}) => {
-            'worklet';
-            return {
-              opacity: hovered || pressed ? 0.8 : 1,
-              scale: hovered || pressed ? 0.96 : 1,
-              borderColor: hovered || pressed ? colorConstant.theme.DEFAULT : borderColor,
-              backgroundColor: hovered || pressed ? `${colorConstant.theme.DEFAULT}3d` : bgColor,
-            };
-          },
-        [borderColor, bgColor],
-      )}>
+      }}>
       {/* Option Letter/Number */}
       <View className="flex-row items-center gap-3">
         <View
@@ -97,9 +73,8 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({id, label, status = 'idle', onSele
             backgroundColor: status === 'idle' ? '#f3f4f6' : 'rgba(255, 255, 255, 0.2)',
             borderWidth: 1,
             borderColor: status === 'idle' ? '#d1d5db' : 'rgba(255, 255, 255, 0.3)',
-          }}>
-         
-        </View>
+          }}
+        />
 
         <Text className="font-interBold flex-1" style={{color: textColor}}>
           {label}
@@ -120,7 +95,7 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({id, label, status = 'idle', onSele
           <Icon name={iconName} color="white" size={18} />
         </MotiView>
       )}
-    </MotiPressable>
+    </TouchableOpacity>
   );
 };
 

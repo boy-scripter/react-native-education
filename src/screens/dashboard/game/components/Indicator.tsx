@@ -1,10 +1,11 @@
+import React from 'react';
 import {View, Text} from 'react-native';
+import {MotiView} from 'moti';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useModal} from '@/modals/modal.context';
 import Button from '@/components/ui/Button';
 import {navigate} from '@/hooks';
-import {MotiView} from 'moti';
-import React from 'react';
+import colorConstant from '@/constant/color.constant';
 
 interface IndicatorProps {
   total_questions: number;
@@ -16,15 +17,24 @@ export const Indicator = React.memo(({total_questions, asked}: IndicatorProps) =
 
   const onPressIcon = () => open(() => <QuitModal />, 'Are You Want To Exit?');
 
+  const progressRatio = Math.min(asked / total_questions, 1);
+
   return (
     <View className="flex-row mt-10 gap-6 px-2 items-center">
+      {/* Close Button */}
       <Button className="bg-transparent rounded-full border-transparent">
         <Icon onPress={onPressIcon} name="close" color="black" size={18} className="border-greyish-100 bg-white border font-interBold p-2 rounded-full" />
       </Button>
+
+      {/* Progress Bar Container */}
       <View className="p-3 px-4 border-2 flex-row items-center gap-2 border-greyish-100 rounded-3xl flex-1">
-        <View className="flex-1 flex-row h-4 rounded-xl overflow-hidden">
-          <MotiView from={{width: 0}} animate={{width: `${(asked / total_questions) * 100}%`}} transition={{type: 'timing', duration: 600}} className="bg-theme" />
-          <MotiView style={{width: `${((total_questions - asked) / total_questions) * 100}%`, backgroundColor: '#bbb8b8dc'}} />
+        <View className="flex-1 h-4 bg-gray-300 rounded-xl overflow-hidden">
+          <MotiView
+            from={{scaleX: 0}}
+            animate={{scaleX: progressRatio}}
+            transition={{type: 'timing', duration: 200}}
+            style={{backgroundColor: colorConstant.theme.DEFAULT, height: '100%', transformOrigin: 'left'}}
+          />
         </View>
         <Text className="text-greyish-100 font-interBold">
           {asked}/{total_questions}

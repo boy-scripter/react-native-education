@@ -13,7 +13,7 @@ interface ButtonConfig {
 const ActionButtons: React.FC<{buttons: ButtonConfig[]}> = ({buttons}) => (
   <View className="w-full">
     <View className="mb-4">
-      <Text className="text-center text-lg font-interBold text-gray-800 mb-1">What's Next?</Text>
+      <Text className="text-center text-lg font-interBold text-gray-800 my-2">What's Next?</Text>
       <View className="w-12 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full mx-auto" />
     </View>
 
