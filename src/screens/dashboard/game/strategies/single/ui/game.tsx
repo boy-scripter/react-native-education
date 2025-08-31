@@ -1,5 +1,5 @@
 import {AnswerType, GameModeType, IStartGame} from '@/types/quiz';
-import {View} from 'react-native';
+import {View, FlatList} from 'react-native';
 import {useGameStrategy} from '../../../hooks/useGameStrategy';
 import {selectCurrentQuestion} from '@/store/quiz/quiz.selector';
 import {useSelector} from 'react-redux';
@@ -15,7 +15,9 @@ export default function Game({mode, categoryId}: IStartGame) {
   const quizStats = useSelector(selectQuizStats);
   const strategy = useGameStrategy(GameModeType.Single);
 
-  useEffect(() => strategy.startGame({mode, categoryId}), []);
+  useEffect(() => {
+    strategy.startGame({mode, categoryId});
+  }, []);
 
   if (!questionDetails) return <Loader />;
 
@@ -23,11 +25,13 @@ export default function Game({mode, categoryId}: IStartGame) {
     <View>
       <Indicator total_questions={quizStats.total} asked={quizStats.asked} />
       <QuestionBox onCountdownComplete={() => strategy.submitAnswer(AnswerType.OPTION_SKIP)} countdownDuration={questionDetails.time} question={questionDetails.questionText} />
-      <View className="options gap-4 mt-10 w-full">
-        {questionDetails.options.map((value, index) => {
-          return <AnswerBox key={index} id={(index + '') as AnswerType} label={value} onSelectId={() => strategy.submitAnswer((index + '') as AnswerType)} />;
-        })}
-      </View>
+
+      <FlatList
+        data={questionDetails.options}
+        keyExtractor={(_, index) => index.toString()}
+        renderItem={({item, index}) => <AnswerBox id={String(index) as AnswerType} label={item} onSelectId={() => strategy.submitAnswer(String(index) as AnswerType)} />}
+        contentContainerStyle={{marginTop: 40, gap: 16, width: '100%'}}
+      />
     </View>
   );
 }

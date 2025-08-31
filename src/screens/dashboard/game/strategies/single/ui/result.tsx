@@ -6,7 +6,7 @@ import {useGameStrategy} from '../../../hooks/useGameStrategy';
 import {Share} from 'react-native'; // Add this import
 import {View, TouchableOpacity, Text} from 'react-native'; // Add these imports
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Add this import
-import {navigate} from '@/hooks';
+import {navigate, replace} from '@/hooks';
 
 export default function Result() {
   const strategy = useGameStrategy('SINGLE');

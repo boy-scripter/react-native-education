@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {View, Text} from 'react-native';
 import {MotiView} from 'moti';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useModal} from '@/modals/modal.context';
 import Button from '@/components/ui/Button';
-import {navigate} from '@/hooks';
+import {navigate, replace} from '@/hooks';
 import colorConstant from '@/constant/color.constant';
 
 interface IndicatorProps {
@@ -15,8 +15,7 @@ interface IndicatorProps {
 export const Indicator = React.memo(({total_questions, asked}: IndicatorProps) => {
   const {open} = useModal();
 
-  const onPressIcon = () => open(() => <QuitModal />, 'Are You Want To Exit?');
-
+  const onPressIcon = useCallback(() => open(() => <QuitModal />, 'Are You Want To Exit?'), []);
   const progressRatio = Math.min(asked / total_questions, 1);
 
   return (
@@ -56,7 +55,7 @@ function QuitModal() {
           className="mt-4 flex-1 bg-green-600 border-green-600"
           onPress={() => {
             close();
-            navigate('DashboardStack', {screen: 'HomeTab', params: {screen: 'Home'}});
+            replace('DashboardStack', {screen: 'HomeTab', params: {screen: 'Home'}});
           }}
         />
       </View>

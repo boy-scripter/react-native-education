@@ -23,7 +23,6 @@ const leaderBoardApi = api.enhanceEndpoints({
                 const localLastRefreshed = await getItem<string | undefined>('lastRefreshedAt');
                 const lastRefreshed = localLastRefreshed ? parseInt(localLastRefreshed, 10) : 0;
 
-                console.log('leaderboard', next, lastRefreshed);
 
                 if (next !== lastRefreshed) {
                     // store the new refresh time, not the old one

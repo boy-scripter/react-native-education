@@ -26,16 +26,16 @@ const QuestionBoxComponent: React.FC<QuestionBoxProps> = ({
   countdownDuration,
   className = '',
   countdownAutoStart = true,
-  circleDiameter = 90,
-  circleStrokeWidth = 8,
+  circleDiameter = 100,
+  circleStrokeWidth = 10,
   progressFillColor = colorConstant.theme.DEFAULT,
   progressBackgroundColor = '#fff',
   onCountdownTick,
   onCountdownComplete,
 }) => {
   const [key, setKey] = useState(0);
-
   const progress = useSharedValue(100);
+
   useEffect(() => {
     progress.value = 100;
     setKey(prev => prev + 1); 

@@ -57,8 +57,6 @@ const EditProfileScreen = () => {
 
   const { getItem } = useStorage();
   const user = useRootState(selectUser);
-  console.log('user', user , getItem(REMEMBER_ME));
-  console.log(user)
 
   const {control, handleSubmit, formState} = useForm<profileSchemaType>({
     resolver: zodResolver(profileSchema),

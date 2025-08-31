@@ -1,6 +1,6 @@
-import React, {useEffect, useState, Suspense} from 'react';
+import React, {useEffect, useState, Suspense, useCallback} from 'react';
 import {View, Text} from 'react-native';
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {RouteProp, useFocusEffect, useRoute} from '@react-navigation/native';
 import {DashboardStackParamList} from '@/types/navigation/dashboardstack/dashboardstack.interface';
 import {GameRegistry} from '@/types/quiz';
 import {JoyStickLoader} from '@/components/LoadingManger';
@@ -12,31 +12,34 @@ const Loader: React.FC<{message: string}> = ({message}) => (
   </View>
 );
 
- const QuizScreen: React.FC = () => {
+const QuizScreen: React.FC = () => {
   const route = useRoute<RouteProp<DashboardStackParamList, 'Quiz'>>();
   const {mode, categoryId, ...anyOther} = route.params;
-
-  const GameComponent = GameRegistry[mode].screen;
   const [socketConnected, setSocketConnected] = useState(false);
+  const GameComponent = GameRegistry[mode].screen;
 
-  useEffect(() => {
-    const socketService = QuizSocketService.getInstance();
+  useFocusEffect(
+    useCallback(() => {
+      const socketService = QuizSocketService.getInstance();
+      const socket = socketService.getSocket();
 
-    const onConnect = () => setSocketConnected(true);
-    const onDisconnect = () => setSocketConnected(false);
+      const onConnect = () => setSocketConnected(true);
+      const onDisconnect = () => setSocketConnected(false);
 
-    socketService.onConnect(onConnect);
-    socketService.onDisconnect(onDisconnect);
+      socket.on('connect', onConnect);
+      socket.on('disconnect', onDisconnect);
 
-    if (socketService.isConnected()) setSocketConnected(true);
+      return () => {
+        socket.off('connect', onConnect);
+        socket.off('disconnect', onDisconnect);
+        QuizSocketService.reset(); 
+      };
+    }, []),
+  );
 
-    return () => {
-      socketService.getSocket().off('connect', onConnect);
-      socketService.getSocket().off('disconnect', onDisconnect);
-    };
-  }, []);
-
-  if (!socketConnected) return <Loader message="Game Socket Initializing..." />;
+  if (!socketConnected) {
+    return <Loader message="Game Socket Initializing..." />;
+  }
 
   return (
     <View className="flex-1 p-5 justify-start">

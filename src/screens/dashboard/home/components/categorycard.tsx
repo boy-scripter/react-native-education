@@ -1,7 +1,7 @@
 import {Text, View} from 'react-native';
 import Img from '@/components/ui/Img';
 import Button from '@/components/ui/Button';
-import {navigate} from '@/hooks/useNavigation.hook';
+import {navigate, replace} from '@/hooks/useNavigation.hook';
 import {useModal} from '@/modals/modal.context';
 import {GameModeType} from '@/graphql/generated';
 
@@ -18,7 +18,7 @@ export function CategoryCardComponent({image, _id, name, color, questionCount}: 
   const overlayColor = color + '80';
 
   function handleOnPlay() {
-    const id = open(() => <QuizInstuctionModel category={_id} modalId={id} />, 'Read Instuction Carefully');
+    const id = open(() => <QuizInstuctionModel category={_id} />, 'Read Instuction Carefully');
   }
 
   return (
@@ -58,9 +58,9 @@ export function CategoryCardComponent({image, _id, name, color, questionCount}: 
   );
 }
 
-function QuizInstuctionModel({modalId, category}: {modalId: string; category: string}) {
+function QuizInstuctionModel({category}: {category: string}) {
   function handleStartQuiz() {
-    close(modalId);
+    close();
     navigate('DashboardStack', {screen: 'Quiz', params: {mode: GameModeType.Single, categoryId: category}});
   }
 
@@ -74,7 +74,7 @@ function QuizInstuctionModel({modalId, category}: {modalId: string; category: st
         <Text className="text-greyish-100 mb-2">3. You can skip questions and return to them later.</Text>
         <Text className="text-greyish-100 mb-2">4. Submit your answers before the timer runs out.</Text>
         <View className="flex-row gap-2">
-          <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => close(modalId)} />
+          <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => close()} />
           <Button label="Start Quiz" className="mt-4 flex-1 bg-green-600 border-green-600" onPress={handleStartQuiz} />
         </View>
       </View>

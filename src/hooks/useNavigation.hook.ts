@@ -47,12 +47,22 @@ export function resetRoot(routeName: string, params?: object) {
 
 
 
-export function replace(name: string, params?: object) {
-  if (!navigationRef.isReady()) return;
-
-  navigationRef.dispatch(
-    StackActions.replace(name, params)
-  );
+export function replace(screenName: string) {
+  if (navigationRef.isReady()) {
+    navigationRef.dispatch(state => {
+      const routes = state.routes.slice(0, -1);
+      routes.push({
+        name: screenName,
+        params: undefined,
+        key: `${screenName}-${Date.now()}`, // unique key
+      });
+      return CommonActions.reset({
+        ...state,
+        index: routes.length - 1,
+        routes,
+      });
+    });
+  }
 }
 
 

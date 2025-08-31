@@ -3,10 +3,11 @@ import { BaseGameStrategy } from '../abstract.strategy';
 import { GameModeType, IStartGame, AnswerType, EventsEnum, BaseGameState, SinglePlayerGame, Question } from '@/types/quiz';
 import { store } from '@/store/store';
 import { setCurrentQuestion, setGameDetail, setGameState, setResult } from '@/store/quiz/quiz.slice';
-import { navigate } from '@/hooks';
+import { navigate, replace } from '@/hooks';
 import { debounce } from '@/util/debounce';
 import { createSelector } from '@reduxjs/toolkit';
 import { selectGameResult, selectGameState } from '@/store/quiz/quiz.selector';
+import { resetGameStrategy } from '../../hooks/useGameStrategy';
 
 export type SinglePlayerGameResult = SinglePlayerGame
 export interface ISinglerPlayerStateType extends BaseGameState { }
@@ -28,8 +29,9 @@ export class SinglePlayerStrategy extends BaseGameStrategy {
             [EventsEnum.STATE]: (state: ISinglerPlayerStateType) => this.debouncedSetGameState(state),
             [EventsEnum.RESULT]: (result: SinglePlayerGameResult) => {
                 {
-                    store.dispatch(setResult(result)),
-                        navigate('DashboardStack', { screen: 'Result' })
+                    store.dispatch(setResult(result));
+                    replace('Result');
+
                 }
             }
         };
@@ -40,13 +42,13 @@ export class SinglePlayerStrategy extends BaseGameStrategy {
         this.socket.emit(EventsEnum.START_GAME, options);
     }
 
-
     submitAnswer(answerId: AnswerType) {
         this.socket.emit(EventsEnum.SUBMIT_ANSWER, { answer: answerId });
     }
 
     public gameClean() {
         super.gameClean();
+        resetGameStrategy(this.MODE)
     }
 }
 

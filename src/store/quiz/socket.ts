@@ -7,10 +7,10 @@ import { selectAuth } from '../auth/auth.selector';
 import { EventsMap } from "@socket.io/component-emitter"
 
 export class QuizSocketService {
-  private static instance: QuizSocketService;
+  private static instance: QuizSocketService | null = null;
   private socket: Socket;
   private connected = false;
-  private DEBUG: boolean = true
+  private DEBUG: boolean = false;
 
   private constructor() {
     this.socket = io(`${HOST_URL}/quiz`, {
@@ -24,17 +24,14 @@ export class QuizSocketService {
       },
     });
 
-    // Successful connection
     this.socket.on('connect', () => {
       this.connected = true;
     });
 
-    // Disconnection
     this.socket.on('disconnect', () => {
       this.connected = false;
     });
 
-    // Handle handshake errors (like Unauthorized)
     this.socket.on('connect_error', async (err: any) => {
       if (!err.message?.toLowerCase().includes('unauthorized')) return;
       const handleLogout = () => store.dispatch(logout());
@@ -57,14 +54,23 @@ export class QuizSocketService {
         handleLogout();
       }
     });
-
   }
 
+  /** Singleton getter */
   public static getInstance(): QuizSocketService {
     if (!QuizSocketService.instance) {
       QuizSocketService.instance = new QuizSocketService();
     }
     return QuizSocketService.instance;
+  }
+
+  /** 🔄 Reset: disconnect and destroy instance */
+  public static reset(): void {
+    if (QuizSocketService.instance) {
+      QuizSocketService.instance.socket.removeAllListeners();
+      QuizSocketService.instance.socket.disconnect();
+      QuizSocketService.instance = null;
+    }
   }
 
   public getSocket<TServer extends EventsMap, TClient extends EventsMap>(): Socket<TServer, TClient> {
@@ -82,7 +88,7 @@ export class QuizSocketService {
   public onException(callBack: (p1: any) => void): void {
     this.socket.on('exception', (err: any) => {
       if (this.DEBUG) {
-        console.log(err)
+        console.log(err);
       }
       callBack(err);
     });
@@ -98,12 +104,10 @@ export class QuizSocketService {
     return selectAuth(state).access_token || null;
   }
 
-
-  /** ♻️ Reconnect with a fresh token */
   private reconnectWithNewToken(newToken: string) {
     console.log('Reconnecting socket with refreshed token...');
     this.socket.io.opts.extraHeaders = {
-      ...this.socket.io.opts.extraHeaders, // keep other headers if any
+      ...this.socket.io.opts.extraHeaders,
       Authorization: `Bearer ${newToken}`,
     };
     this.socket.disconnect();

@@ -4,7 +4,7 @@ import {match} from 'ts-pattern';
 import Icon from 'react-native-vector-icons/AntDesign';
 import colorConstant from '@/constant/color.constant';
 import {AnswerType} from '@/types/quiz';
-import {MotiView} from 'moti';
+import { MotiPressable } from 'moti/interactions'
 
 interface AnswerBoxProps {
   id: AnswerType;
@@ -46,26 +46,36 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({id, label, status = 'idle', onSele
     .exhaustive();
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.7}
+    <MotiPressable
       onPress={() => onSelectId?.(id)}
       style={{
-        padding: 18,
-        paddingRight: 24,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        paddingVertical: 18,
+        paddingHorizontal: 20,
         borderWidth: 2,
-        borderRadius: 16,
         borderColor,
+        flexDirection: 'row',
+        justifyContent : 'center',
+        alignItems : 'center',
+        borderRadius: 12,
         backgroundColor: bgColor,
-        shadowColor: shadowColor,
+        shadowColor,
         shadowOffset: {width: 0, height: 4},
         shadowOpacity: 0.3,
         shadowRadius: 8,
         elevation: 4,
+      }}
+      animate={({pressed}) => {
+        'worklet';
+        return {
+          scale: pressed ? 0.92 : 1, // shrink on press
+        };
+      }}
+      transition={{
+        type: 'spring',
+        damping: 15,
+        stiffness: 200,
       }}>
-      {/* Option Letter/Number */}
+      {/* Left side: Option circle + label */}
       <View className="flex-row items-center gap-3">
         <View
           className="w-8 h-8 rounded-full items-center justify-center"
@@ -81,21 +91,18 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({id, label, status = 'idle', onSele
         </Text>
       </View>
 
-      {/* Status Icon with Animation */}
+      {/* Right side: animated status icon */}
       {iconName && (
-        <MotiView
-          from={{scale: 0, opacity: 0}}
-          animate={{scale: 1, opacity: 1}}
-          transition={{type: 'spring', damping: 15, delay: 100}}
+        <View
           className="border h-8 w-8 rounded-full items-center justify-center"
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.25)',
             borderColor: 'rgba(255, 255, 255, 0.4)',
           }}>
           <Icon name={iconName} color="white" size={18} />
-        </MotiView>
+        </View>
       )}
-    </TouchableOpacity>
+    </MotiPressable>
   );
 };
 

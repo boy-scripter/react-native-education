@@ -1,22 +1,23 @@
-import React, {Suspense, useEffect} from 'react';
+import React, {Suspense} from 'react';
 import {View, ScrollView} from 'react-native';
-import {navigate} from '@hooks/useNavigation.hook';
+import {navigate, replace} from '@hooks/useNavigation.hook';
 import {ActionButtons} from './components';
 import {SpinnerLoader} from '@/components/LoadingManger';
 import {GameRegistry} from '@/types/quiz';
 import {useSelector} from 'react-redux';
 import {selectCurrentMode, selectGameCategory} from '@/store/quiz/quiz.selector';
 import {Header} from '@/components/ui/Header';
+import {useFocusEffect} from '@react-navigation/native';
 
 const ResultScreen: React.FC = () => {
   const mode = useSelector(selectCurrentMode);
   const categoryId = useSelector(selectGameCategory);
 
-
   if (!mode || !categoryId) {
     navigate('DashboardStack', {screen: 'HomeTab', params: {screen: 'Home'}});
     return null;
   }
+
   const ResultComponent = GameRegistry[mode].result;
 
   return (
@@ -28,8 +29,8 @@ const ResultScreen: React.FC = () => {
             <ResultComponent />
             <ActionButtons
               buttons={[
-                {label: 'Play Again', icon: 'reload', action: () => navigate('DashboardStack', {screen: 'Quiz', params: {mode, categoryId}}), color: 'bg-theme'},
-                {label: 'Home', icon: 'home', action: () => navigate('DashboardStack', {screen: 'HomeTab', params: {screen: 'Home'}}), color: 'bg-gray-700'},
+                {label: 'Play Again', icon: 'reload', action: () => replace('DashboardStack', {screen: 'Quiz', params: {mode, categoryId}}), color: 'bg-theme'},
+                {label: 'Home', icon: 'home', action: () => replace('DashboardStack', {screen: 'HomeTab', params: {screen: 'Home'}}), color: 'bg-gray-700'},
                 {label: 'See PDF', icon: 'file-pdf-box', action: () => navigate('DashboardStack', {screen: 'PdfShow', params: {category: categoryId}}), color: 'bg-red-600'},
                 {label: 'Leaderboard', icon: 'trophy', action: () => navigate('DashboardStack', {screen: 'Leaderboard'}), color: 'bg-yellow-600'},
               ]}
@@ -41,5 +42,4 @@ const ResultScreen: React.FC = () => {
   );
 };
 
-function ShareMessage() {}
 export default ResultScreen;

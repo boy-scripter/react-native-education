@@ -47,6 +47,12 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({countdownDuration, isRun
     }
   }, [countdownDuration]);
 
+  useEffect(() => {
+    return () => {
+      pause();
+    };
+  }, []);
+
   return (
     <View>
       <Text className={twMerge('text-white font-interBold', textClassName)}>
