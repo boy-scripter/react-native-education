@@ -18,24 +18,22 @@ const QuizScreen: React.FC = () => {
   const [socketConnected, setSocketConnected] = useState(false);
   const GameComponent = GameRegistry[mode].screen;
 
-  useFocusEffect(
-    useCallback(() => {
-      const socketService = QuizSocketService.getInstance();
-      const socket = socketService.getSocket();
+  useEffect(() => {
+    const socketService = QuizSocketService.getInstance();
+    const socket = socketService.getSocket();
 
-      const onConnect = () => setSocketConnected(true);
-      const onDisconnect = () => setSocketConnected(false);
+    const onConnect = () => setSocketConnected(true);
+    const onDisconnect = () => setSocketConnected(false);
 
-      socket.on('connect', onConnect);
-      socket.on('disconnect', onDisconnect);
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
 
-      return () => {
-        socket.off('connect', onConnect);
-        socket.off('disconnect', onDisconnect);
-        QuizSocketService.reset(); 
-      };
-    }, []),
-  );
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      QuizSocketService.reset();
+    };
+  }, []);
 
   if (!socketConnected) {
     return <Loader message="Game Socket Initializing..." />;

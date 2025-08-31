@@ -4,3 +4,4 @@ export * from './useNavigation.hook';
 export * from './usePaginated.hook';
 export * from './useScreen.hook';
 export * from './useStorage.hook';
+export * from './useBackHandler.hook'

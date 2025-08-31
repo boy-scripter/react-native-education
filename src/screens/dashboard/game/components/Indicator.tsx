@@ -4,8 +4,9 @@ import {MotiView} from 'moti';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useModal} from '@/modals/modal.context';
 import Button from '@/components/ui/Button';
-import {navigate, replace} from '@/hooks';
+import {goBack, navigate, useBackHandler} from '@/hooks';
 import colorConstant from '@/constant/color.constant';
+import {useGameStrategy} from '../hooks/useGameStrategy';
 
 interface IndicatorProps {
   total_questions: number;
@@ -17,6 +18,11 @@ export const Indicator = React.memo(({total_questions, asked}: IndicatorProps) =
 
   const onPressIcon = useCallback(() => open(() => <QuitModal />, 'Are You Want To Exit?'), []);
   const progressRatio = Math.min(asked / total_questions, 1);
+
+  useBackHandler(() => {
+    onPressIcon();
+    return true;
+  });
 
   return (
     <View className="flex-row mt-10 gap-6 px-2 items-center">
@@ -45,6 +51,7 @@ export const Indicator = React.memo(({total_questions, asked}: IndicatorProps) =
 
 function QuitModal() {
   const {close} = useModal();
+  const strategy = useGameStrategy();
 
   return (
     <View className="px-2">
@@ -55,7 +62,8 @@ function QuitModal() {
           className="mt-4 flex-1 bg-green-600 border-green-600"
           onPress={() => {
             close();
-            replace('DashboardStack', {screen: 'HomeTab', params: {screen: 'Home'}});
+            strategy?.gameClean();
+            goBack();
           }}
         />
       </View>

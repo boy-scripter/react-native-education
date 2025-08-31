@@ -2,8 +2,6 @@ import { RootStackParamList } from '@/types/navigation';
 import { CommonActions, createNavigationContainerRef, RouteProp, StackActions, useRoute, } from '@react-navigation/native';
 import { useEffect } from 'react';
 
-
-
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
 export type RouteNameArgs = {
@@ -19,6 +17,12 @@ export type RouteNameArgs = {
     options?: { merge?: boolean; pop?: boolean }
   ];
 }[keyof RootStackParamList]
+
+
+interface ReplaceOptions {
+  params?: object;
+  merge?: boolean;
+}
 
 export function navigate(...args: RouteNameArgs) {
   if (navigationRef.isReady()) {
@@ -47,24 +51,32 @@ export function resetRoot(routeName: string, params?: object) {
 
 
 
-export function replace(screenName: string) {
-  if (navigationRef.isReady()) {
-    navigationRef.dispatch(state => {
-      const routes = state.routes.slice(0, -1);
-      routes.push({
-        name: screenName,
-        params: undefined,
-        key: `${screenName}-${Date.now()}`, // unique key
-      });
-      return CommonActions.reset({
-        ...state,
-        index: routes.length - 1,
-        routes,
-      });
-    });
-  }
-}
+export function replace(screenName: string, options?: ReplaceOptions) {
+  if (!navigationRef.isReady()) return;
 
+  navigationRef.dispatch(state => {
+    const routes = state.routes.slice(0, -1);
+    const current = state.routes[state.routes.length - 1];
+
+    // Merge params if requested
+    const finalParams =
+      options?.merge && current?.params
+        ? { ...current.params, ...options.params }
+        : options?.params;
+
+    routes.push({
+      name: screenName,
+      params: finalParams,
+      key: `${screenName}-${Date.now()}`,
+    });
+
+    return CommonActions.reset({
+      ...state,
+      index: routes.length - 1,
+      routes,
+    });
+  });
+}
 
 export function getCurrentRoute() {
   if (navigationRef.isReady()) {

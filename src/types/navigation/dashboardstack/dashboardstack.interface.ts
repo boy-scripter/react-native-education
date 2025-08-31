@@ -7,7 +7,7 @@ export type DashboardStackParamList = {
   PdfView: { url: string };
   PdfShow: { category: string };
   Quiz: IStartGame;
-  Result: undefined;
+  Result: IStartGame;
   Leaderboard: undefined;
   Sheet: { gameId : string }
 };

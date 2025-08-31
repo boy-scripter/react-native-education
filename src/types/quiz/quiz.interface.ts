@@ -70,7 +70,6 @@ export interface BaseGameState {
   la?: string;           // lastAskedAt
 }
 
-
 export type ExtractByType<T extends AllGameStrategy, K extends AllGameStrategy['type']> = T extends { type: K } ? T : never
 
 // all game startergy

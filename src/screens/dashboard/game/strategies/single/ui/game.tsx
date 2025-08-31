@@ -17,6 +17,7 @@ export default function Game({mode, categoryId}: IStartGame) {
 
   useEffect(() => {
     strategy.startGame({mode, categoryId});
+    
   }, []);
 
   if (!questionDetails) return <Loader />;

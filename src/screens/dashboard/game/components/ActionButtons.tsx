@@ -29,7 +29,7 @@ const ActionButtons: React.FC<{buttons: ButtonConfig[]}> = ({buttons}) => (
               shadowOpacity: 0.12,
               shadowRadius: 6,
             }}>
-            <Button label={btn.label} onPress={btn.action} className={`${btn.color} rounded-xl`}>
+            <Button label={btn.label} onPress={btn.action} className={`${btn.color} border-none rounded-xl`}>
               <Icon name={btn.icon} size={18} color="white" />
             </Button>
           </View>

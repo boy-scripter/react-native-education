@@ -30,8 +30,7 @@ export class SinglePlayerStrategy extends BaseGameStrategy {
             [EventsEnum.RESULT]: (result: SinglePlayerGameResult) => {
                 {
                     store.dispatch(setResult(result));
-                    replace('Result');
-
+                    replace('Result', { merge: true });
                 }
             }
         };

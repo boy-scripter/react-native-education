@@ -1,12 +1,12 @@
 import {useSelector} from 'react-redux';
 import {PerformanceCard, ScoreCircle} from '../../../components';
-import {selectQuizResult, SinglePlayerGameResult} from '../logic';
+import {selectQuizResult} from '../logic';
 import {useEffect} from 'react';
 import {useGameStrategy} from '../../../hooks/useGameStrategy';
-import {Share} from 'react-native'; // Add this import
-import {View, TouchableOpacity, Text} from 'react-native'; // Add these imports
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Add this import
-import {navigate, replace} from '@/hooks';
+import {Share} from 'react-native'; 
+import {View, TouchableOpacity, Text} from 'react-native'; 
+import {navigate} from '@/hooks';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; 
 
 export default function Result() {
   const strategy = useGameStrategy('SINGLE');
