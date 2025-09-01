@@ -5,6 +5,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import Loader from '@components/ui/Loader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {match, P} from 'ts-pattern';
+import Animated, {useAnimatedStyle, useSharedValue, withSpring} from 'react-native-reanimated';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export type ButtonProps = {
   label?: string;
@@ -39,8 +42,20 @@ const Button: React.FC<ButtonProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const isDisabled = isLoading || disabled;
 
+  // animation part
+  const scale = useSharedValue(1);
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+    opacity: isDisabled ? 0.5 : 1,
+  }));
+
   const handlePress = async (event: GestureResponderEvent) => {
     if (!onPress) return;
+
+    scale.value = withSpring(0.96, {}, () => {
+      scale.value = withSpring(1);
+    });
+
     const result = onPress(event);
     if (result && loadingMode && typeof result.then === 'function') {
       try {
@@ -72,11 +87,11 @@ const Button: React.FC<ButtonProps> = ({
       .otherwise(() => null);
 
   return (
-    <Pressable
+    <AnimatedPressable
       onPress={handlePress}
       disabled={isDisabled}
-      className={twMerge('bg-theme border-theme overflow-hidden p-2 py-3 rounded-lg flex-row items-center justify-center', isDisabled && 'opacity-50', className)}
-      style={{borderWidth: 1}}
+      style={[animatedStyle]}
+      className={twMerge('bg-theme border border-theme overflow-hidden p-2 py-3 rounded-lg flex-row items-center justify-center', isDisabled && 'opacity-50', className)}
       {...props}>
       <LinearGradient colors={['rgba(255, 255, 255, 0.317)', 'transparent']} start={{x: 0.5, y: 0}} end={{x: 0.5, y: 0.5}} style={StyleSheet.absoluteFillObject} />
       <View className="flex-row items-center gap-2">
@@ -87,7 +102,7 @@ const Button: React.FC<ButtonProps> = ({
         {iconPosition === 'right' && renderIcon()}
       </View>
       {renderLoader()}
-    </Pressable>
+    </AnimatedPressable>
   );
 };
 

@@ -4,7 +4,7 @@ import {match} from 'ts-pattern';
 import Icon from 'react-native-vector-icons/AntDesign';
 import colorConstant from '@/constant/color.constant';
 import {AnswerType} from '@/types/quiz';
-import { MotiPressable } from 'moti/interactions'
+import {MotiPressable} from 'moti/interactions';
 
 interface AnswerBoxProps {
   id: AnswerType;
@@ -15,34 +15,10 @@ interface AnswerBoxProps {
 
 const AnswerBox: React.FC<AnswerBoxProps> = ({id, label, status = 'idle', onSelectId}) => {
   const {iconName, textColor, borderColor, bgColor, shadowColor} = match(status)
-    .with('correct', () => ({
-      borderColor: '#22C55E',
-      bgColor: '#22C55E',
-      shadowColor: '#22C55E40',
-      iconName: 'check',
-      textColor: '#FFFFFF',
-    }))
-    .with('incorrect', () => ({
-      borderColor: '#EF4444',
-      bgColor: '#EF4444',
-      shadowColor: '#EF444440',
-      iconName: 'close',
-      textColor: '#FFFFFF',
-    }))
-    .with('skipped', () => ({
-      borderColor: '#FACC15',
-      bgColor: '#FACC15',
-      shadowColor: '#FACC1540',
-      iconName: 'minus',
-      textColor: '#FFFFFF',
-    }))
-    .with('idle', () => ({
-      borderColor: colorConstant.greyish[100],
-      bgColor: '#FFFFFF',
-      shadowColor: '#00000010',
-      iconName: null,
-      textColor: '#000000',
-    }))
+    .with('correct', () => ({borderColor: '#22C55E', bgColor: '#22C55E', shadowColor: '#22C55E40', iconName: 'check', textColor: '#FFFFFF'}))
+    .with('incorrect', () => ({borderColor: '#EF4444', bgColor: '#EF4444', shadowColor: '#EF444440', iconName: 'close', textColor: '#FFFFFF'}))
+    .with('skipped', () => ({borderColor: '#FACC15', bgColor: '#FACC15', shadowColor: '#FACC1540', iconName: 'minus', textColor: '#FFFFFF'}))
+    .with('idle', () => ({borderColor: colorConstant.greyish[100], bgColor: '#FFFFFF', shadowColor: '#00000010', iconName: null, textColor: '#000000'}))
     .exhaustive();
 
   return (
@@ -54,8 +30,8 @@ const AnswerBox: React.FC<AnswerBoxProps> = ({id, label, status = 'idle', onSele
         borderWidth: 2,
         borderColor,
         flexDirection: 'row',
-        justifyContent : 'center',
-        alignItems : 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
         borderRadius: 12,
         backgroundColor: bgColor,
         shadowColor,

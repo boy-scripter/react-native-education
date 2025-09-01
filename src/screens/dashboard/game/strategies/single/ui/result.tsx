@@ -3,10 +3,11 @@ import {PerformanceCard, ScoreCircle} from '../../../components';
 import {selectQuizResult} from '../logic';
 import {useEffect} from 'react';
 import {useGameStrategy} from '../../../hooks/useGameStrategy';
-import {Share} from 'react-native'; 
-import {View, TouchableOpacity, Text} from 'react-native'; 
+import {Share} from 'react-native';
+import {View} from 'react-native';
 import {navigate} from '@/hooks';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; 
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Button from '@/components/ui/Button';
 
 export default function Result() {
   const strategy = useGameStrategy('SINGLE');
@@ -43,21 +44,9 @@ export default function Result() {
       {/* Action Buttons */}
       <View style={{flexDirection: 'row', justifyContent: 'center', gap: 16, marginTop: 20}}>
         {actionButtons.map((button, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={button.action}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              backgroundColor: button.color === 'bg-blue-600' ? '#2563eb' : '#16a34a',
-              paddingHorizontal: 20,
-              paddingVertical: 12,
-              borderRadius: 8,
-              gap: 8,
-            }}>
+          <Button label={button.label} key={index} onPress={button.action} className={`${button.color} border-[0] px-5`}>
             <Icon name={button.icon} size={20} color="white" />
-            <Text style={{color: 'white', fontWeight: '600'}}>{button.label}</Text>
-          </TouchableOpacity>
+          </Button>
         ))}
       </View>
     </>

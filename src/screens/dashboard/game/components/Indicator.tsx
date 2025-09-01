@@ -37,7 +37,7 @@ export const Indicator = React.memo(({total_questions, asked}: IndicatorProps) =
           <MotiView
             from={{scaleX: 0}}
             animate={{scaleX: progressRatio}}
-            transition={{type: 'timing', duration: 200}}
+            transition={{type: 'timing', duration: 700}}
             style={{backgroundColor: colorConstant.theme.DEFAULT, height: '100%', transformOrigin: 'left'}}
           />
         </View>

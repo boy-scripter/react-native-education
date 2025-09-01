@@ -27,9 +27,9 @@ const QuestionBoxComponent: React.FC<QuestionBoxProps> = ({
   className = '',
   countdownAutoStart = true,
   circleDiameter = 100,
-  circleStrokeWidth = 10,
+  circleStrokeWidth = 13,
   progressFillColor = colorConstant.theme.DEFAULT,
-  progressBackgroundColor = '#fff',
+  progressBackgroundColor = colorConstant.greyish.DEFAULT,
   onCountdownTick,
   onCountdownComplete,
 }) => {
@@ -58,7 +58,7 @@ const QuestionBoxComponent: React.FC<QuestionBoxProps> = ({
             autoStart={countdownAutoStart}
             onTick={remaining => {
               progress.value = withTiming((remaining / countdownDuration) * 100, {
-                duration: 300,
+                duration: 500,
                 easing: Easing.linear,
               });
               onCountdownTick?.(remaining);

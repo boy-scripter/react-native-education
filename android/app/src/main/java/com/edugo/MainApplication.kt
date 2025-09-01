@@ -43,14 +43,17 @@ class MainApplication : Application(), ReactApplication {
     super.onCreate()
     SoLoader.init(this, OpenSourceMergedSoMapping)
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-      // If you opted-in for the New Architecture, we load the native entry point for this app.
       load()
     }
+
+   if (BuildConfig.DEBUG) {
      initializeFlipper(this, reactNativeHost.reactInstanceManager)
+    }
+
   }
 
       private fun initializeFlipper(context: Context, reactInstanceManager: ReactInstanceManager) {
-          if (BuildConfig.DEBUG) {
+        
               try {
                   // Load the Flipper initializer class via reflection
                   val flipperClass = Class.forName("com.edugo.ReactNativeFlipper")
@@ -67,7 +70,7 @@ class MainApplication : Application(), ReactApplication {
               } catch (e: Exception) {
                   e.printStackTrace()
               }
-          }
+          
       }
 
 

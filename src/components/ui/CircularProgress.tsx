@@ -37,18 +37,12 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
     <View className="items-center justify-center">
       {/* Main container with shadow */}
       <View
-        className="bg-white rounded-full items-center justify-center"
+        className="bg-white rounded-full items-center justify-center shadow-xl"
         style={{
           width: size + 20,
           height: size + 20,
-          shadowColor: shadowColor,
-          shadowOffset: {
-            width: 0,
-            height: 6,
-          },
-          shadowOpacity: shadowOpacity,
-          shadowRadius: shadowRadius,
-          elevation: 12,
+    
+          elevation: 4,
         }}>
         <Svg width={size} height={size}>
           <Circle cx={size / 2} cy={size / 2} r={radius} stroke={backgroundColor} strokeWidth={strokeWidth} fill="transparent" />

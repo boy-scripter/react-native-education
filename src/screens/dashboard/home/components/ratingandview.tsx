@@ -4,9 +4,9 @@ import Img from '@/components/ui/Img';
 import Button from '@/components/ui/Button';
 import {navigate} from '@/hooks/useNavigation.hook';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useAppDispatch } from '@/store/store';
-import { resetGame } from '@/store/quiz/quiz.slice';
-import { logout } from '@/store/auth/auth.slice';
+import {useAppDispatch} from '@/store/store';
+import {resetGame} from '@/store/quiz/quiz.slice';
+import {logout} from '@/store/auth/auth.slice';
 
 interface PersonalLeaderBoard {
   rank?: number;
@@ -14,7 +14,7 @@ interface PersonalLeaderBoard {
 }
 
 export function RankingAndLeaderboard(props: PersonalLeaderBoard) {
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   return (
     <>
       <View className="mt-5 w-full mx-auto rounded-3xl  py-4">
@@ -43,7 +43,7 @@ export function RankingAndLeaderboard(props: PersonalLeaderBoard) {
         </View>
       </View>
       {/* checdk learborad button */}
-      <Button onPress={() => dispatch(logout()) } label="Check Leaderboard" className="flex-row mt-1 items-center">
+      <Button onPress={() => navigate('DashboardStack', {screen: 'Leaderboard'})} label="Check Leaderboard" className="flex-row mt-1 items-center">
         <Icon name="trophy-outline" size={30} color={'yellow'} />
       </Button>
     </>
