@@ -4,10 +4,9 @@ import './global.css';
 import {setupAdditionalConfig} from './additionalConfig';
 import {ReduxStore} from '@/store/store';
 import {UIToast} from '@/components/Toast/Toast.config';
-import {ModalRoot} from '@/modals/modal.service';
-import NetworkListener from '@/components/Network/NetworkListener';
+import {ModalRoot} from '@/modals';
+import {NetworkListener} from '@/components/Network';
 import 'react-native-devsettings';
-import {View} from 'react-native';
 
 export default function App() {
   setupAdditionalConfig();
@@ -17,7 +16,7 @@ export default function App() {
       <RootStackNavigator></RootStackNavigator>
       <UIToast />
       <ModalRoot></ModalRoot>
-      {/* <NetworkListener></NetworkListener> */}
+      <NetworkListener></NetworkListener>
     </ReduxStore>
   );
 }

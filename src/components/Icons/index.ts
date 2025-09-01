@@ -1,2 +1,5 @@
 export * from './QuestionIcon'
 export * from './TimerIcon'
+export * from './CellularIcon'
+export * from './OfflineIcon'
+export * from './WifiIcon'
