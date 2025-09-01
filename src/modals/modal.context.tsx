@@ -1,62 +1,54 @@
-import React, {createContext, ReactNode, useCallback, useContext, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {UIModalComponent} from './Modal';
 import {nanoid} from 'nanoid/non-secure';
-import {View} from 'react-native';
+import {useImperativeHandle, forwardRef} from 'react';
 
+// new parts
 interface ModalStructure {
   id: string;
   title?: string;
   component: React.FC<any>;
 }
 
-const ModalContext = createContext<null | ReturnType<typeof useModalContextCreator>>(null);
-
-const useModalContextCreator = () => {
-  const [modal, setModal] = useState<ModalStructure | null>(null);
-
-  const open = useCallback((component: React.FC<any>, title?: string) => {
-    const modalId = nanoid();
-    setModal({id: modalId, title, component});
-    return modalId;
-  }, []);
-
-  const close = useCallback(() => {
-    setModal(null);
-  }, []);
-
-  const isModalExist = useCallback((id: string) => modal?.id === id, [modal]);
-
-  return {open, close, isModalExist, modal};
+export type ModalHostRef = {
+  show: (component: React.FC<any>, title?: string) => string;
+  hide: () => void;
+  isModalExist: (id: string) => boolean;
 };
 
-const ModalRenderer = () => {
-  const {modal, close} = useModal();
+const ModalHost = forwardRef<ModalHostRef>((_, ref) => {
+  const modalRef = useRef<ModalStructure | null>(null);
+  const [visible, setVisible] = useState(false);
 
-  if (!modal) return null;
+  useImperativeHandle(ref, () => ({
+    show: (component, title) => {
+      modalRef.current = {id: nanoid(), title, component};
+      setVisible(true); // trigger render once
+      return modalRef.current.id;
+    },
+    hide: () => {
+      setVisible(false);
+      modalRef.current = null;
+    },
+    isModalExist: (id: string) => modalRef.current?.id === id,
+  }));
 
-  const {component: Component, title, id} = modal;
+  if (!visible || !modalRef.current) return null;
 
-  return <UIModalComponent key={id} title={title} onClose={() => close()} component={Component} visible={true} />;
-};
-
-const ModalProvider = ({children}: {children: ReactNode}) => {
-  const modalContext = useModalContextCreator();
+  const {component: Component, title, id} = modalRef.current;
 
   return (
-    <ModalContext.Provider value={modalContext}>
-        {children}
-      <View>
-        <ModalRenderer />
-      </View>
-    </ModalContext.Provider>
+    <UIModalComponent
+      key={id}
+      title={title}
+      onClose={() => {
+        setVisible(false);
+        modalRef.current = null;
+      }}
+      component={Component}
+      visible={visible}
+    />
   );
-};
+});
 
-// Hook to consume context
-const useModal = () => {
-  const context = useContext(ModalContext);
-  if (!context) throw new Error('Modal Context Provider not found');
-  return context;
-};
-
-export {useModal, ModalProvider};
+export {ModalHost};

@@ -2,11 +2,12 @@ import React, {useCallback} from 'react';
 import {View, Text} from 'react-native';
 import {MotiView} from 'moti';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {useModal} from '@/modals/modal.context';
+
 import Button from '@/components/ui/Button';
-import {goBack, navigate, useBackHandler} from '@/hooks';
+import {goBack, useBackHandler} from '@/hooks';
 import colorConstant from '@/constant/color.constant';
 import {useGameStrategy} from '../hooks/useGameStrategy';
+import { ModalService } from '@/modals';
 
 interface IndicatorProps {
   total_questions: number;
@@ -14,9 +15,8 @@ interface IndicatorProps {
 }
 
 export const Indicator = React.memo(({total_questions, asked}: IndicatorProps) => {
-  const {open} = useModal();
 
-  const onPressIcon = useCallback(() => open(() => <QuitModal />, 'Are You Want To Exit?'), []);
+  const onPressIcon = useCallback(() => ModalService.show(() => <QuitModal />, 'Are You Want To Exit?'), []);
   const progressRatio = Math.min(asked / total_questions, 1);
 
   useBackHandler(() => {
@@ -50,18 +50,18 @@ export const Indicator = React.memo(({total_questions, asked}: IndicatorProps) =
 });
 
 function QuitModal() {
-  const {close} = useModal();
+
   const strategy = useGameStrategy();
 
   return (
     <View className="px-2">
       <View className="flex-row gap-2">
-        <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => close()} />
+        <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => ModalService.hide()} />
         <Button
           label="Yes"
           className="mt-4 flex-1 bg-green-600 border-green-600"
           onPress={() => {
-            close();
+            ModalService.hide();
             strategy?.gameClean();
             goBack();
           }}

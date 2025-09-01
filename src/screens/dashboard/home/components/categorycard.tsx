@@ -1,9 +1,9 @@
 import {Text, View} from 'react-native';
 import Img from '@/components/ui/Img';
 import Button from '@/components/ui/Button';
-import {navigate, replace} from '@/hooks/useNavigation.hook';
-import {useModal} from '@/modals/modal.context';
-import {GameModeType} from '@/graphql/generated';
+import {navigate} from '@/hooks/useNavigation.hook';
+import {GameModeType} from '@myTypes/quiz';
+import {ModalService} from '@/modals/modal.service';
 
 interface QuizCardProps {
   _id: string;
@@ -14,11 +14,10 @@ interface QuizCardProps {
 }
 
 export function CategoryCardComponent({image, _id, name, color, questionCount}: QuizCardProps) {
-  const {open} = useModal();
   const overlayColor = color + '80';
 
   function handleOnPlay() {
-    const id = open(() => <QuizInstuctionModel category={_id} />, 'Read Instuction Carefully');
+    ModalService.show(() => <QuizInstuctionModel category={_id} />, 'Read Instuction Carefully');
   }
 
   return (
@@ -59,12 +58,11 @@ export function CategoryCardComponent({image, _id, name, color, questionCount}: 
 }
 
 function QuizInstuctionModel({category}: {category: string}) {
+  
   function handleStartQuiz() {
-    close();
+    ModalService.hide();
     navigate('DashboardStack', {screen: 'Quiz', params: {mode: GameModeType.Single, categoryId: category}});
   }
-
-  const {close} = useModal();
 
   return (
     <>
@@ -74,7 +72,7 @@ function QuizInstuctionModel({category}: {category: string}) {
         <Text className="text-greyish-100 mb-2">3. You can skip questions and return to them later.</Text>
         <Text className="text-greyish-100 mb-2">4. Submit your answers before the timer runs out.</Text>
         <View className="flex-row gap-2">
-          <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => close()} />
+          <Button label="Cancel" className="mt-4 flex-1 bg-red-600 border-red-600" onPress={() => ModalService.hide()} />
           <Button label="Start Quiz" className="mt-4 flex-1 bg-green-600 border-green-600" onPress={handleStartQuiz} />
         </View>
       </View>

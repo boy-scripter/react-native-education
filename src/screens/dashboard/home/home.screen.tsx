@@ -39,8 +39,8 @@ export default function HomeScreen() {
               contentContainerClassName="gap-4 "
               keyExtractor={item => item._id}
               renderItem={({item}) => <CategoryCardComponent {...item} />}
-              contentContainerStyle={{paddingVertical: 10}} // optional styling
-              showsVerticalScrollIndicator={false} // optional
+              contentContainerStyle={{paddingVertical: 10}} 
+              showsVerticalScrollIndicator={false} 
             />
           </View>
         </View>

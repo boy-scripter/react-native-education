@@ -3,8 +3,8 @@ import {Pressable, View} from 'react-native';
 import {DateTime} from 'luxon';
 import Input, {InputProps} from './Input';
 import DatePicker from 'react-native-date-picker';
-import {useModal} from '@/modals/modal.context';
 import Button from '@components/ui/Button';
+import {ModalService} from '@/modals';
 
 type DatePickerInputProps = {
   value?: string; // ISO or formatted string
@@ -15,12 +15,10 @@ type DatePickerInputProps = {
 } & InputProps;
 
 export default function DatePickerInput({value, label, onChange, placeholder = 'Select Date', className = '', ...props}: DatePickerInputProps) {
-  const {open, close} = useModal();
-
   let computedDate = value ? DateTime.fromISO(value).toJSDate() : DateTime.now().toJSDate();
 
   const handleOpen = () => {
-    const modalId = open(
+    ModalService.show(
       () => (
         <View className="flex items-center">
           <DatePicker
@@ -37,7 +35,7 @@ export default function DatePickerInput({value, label, onChange, placeholder = '
             icon="check"
             onPress={() => {
               onChange?.(computedDate.toISOString());
-              close(modalId);
+              ModalService.hide();
             }}
             className="mt-4 w-full"
           />
