@@ -30,8 +30,14 @@ const RefreshCountdown: React.FC = () => {
   return (
     <LoadingManager dependencies={[refreshKey]} asyncFunction={onIntialRender}>
       <View className="flex-row p-5 justify-center gap-2 items-center">
-        <Text className=" text-xl font-black text-greyish-200 ">LeaderBoardWill Refresh In {!seconds && 'Sometime'}</Text>
-        {seconds && <CountdownTimer textClassName=" font-black text-xl text-greyish-200 " countdownDuration={seconds} autoStart={true} onComplete={() => setRefreshKey(refreshKey + 1)} />}
+        {seconds ? (
+          <>
+            <Text className="text-xl font-black text-greyish-200">LeaderBoard Will Refresh In</Text>
+            <CountdownTimer textClassName="font-black text-xl text-greyish-200" countdownDuration={seconds} autoStart={true} onComplete={() => setRefreshKey(refreshKey + 1)} />
+          </>
+        ) : (
+          <Text className="text-xl font-black text-greyish-200">LeaderBoard Will Refresh In Sometime</Text>
+        )}
       </View>
     </LoadingManager>
   );

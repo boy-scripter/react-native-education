@@ -12,10 +12,10 @@ interface AnswerManagerProps {
 }
 
 const AnswerManager: React.FC<AnswerManagerProps> = ({options, onSubmitAnswer}) => {
-  const loaderProgress = useSharedValue(0); // loader active by default
+  const loaderProgress = useSharedValue(0); 
 
   const handleSelect = (index: AnswerType) => {
-    loaderProgress.value = 1; // show loader when an answer is selected
+    loaderProgress.value = 1;
     onSubmitAnswer(index);
   };
 
@@ -26,7 +26,7 @@ const AnswerManager: React.FC<AnswerManagerProps> = ({options, onSubmitAnswer}) 
   return (
     <View className="rounded-xl bg-white p-4 mt-4 pt-0">
       {/* Answers fade out when loader is shown */}
-      <MotiView from={{opacity: 0, scale: 0.95}} animate={{opacity: loaderProgress.value ? 0 : 1, scale: loaderProgress.value ? 0.95 : 1}} transition={{type: 'timing', duration: 250}} >
+      <MotiView from={{opacity: 0, scale: 0.95}} animate={{opacity: loaderProgress.value ? 0 : 1, scale: loaderProgress.value ? 0.95 : 1}} transition={{type: 'timing', duration: 150}} >
       <FlatList
         data={options}
         keyExtractor={(_, index) => index.toString()}
@@ -39,7 +39,7 @@ const AnswerManager: React.FC<AnswerManagerProps> = ({options, onSubmitAnswer}) 
       <MotiView
         from={{opacity: 0}}
         animate={{opacity: loaderProgress.value ? 1 : 0}}
-        transition={{type: 'timing', duration: 250}}
+        transition={{type: 'timing', duration: 150}}
         pointerEvents={loaderProgress.value ? 'none' : 'none'}
         style={[StyleSheet.absoluteFill, {justifyContent: 'center', alignItems: 'center'}]}>
         <Loader size={'large'} />
