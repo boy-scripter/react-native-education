@@ -13,8 +13,7 @@ export type CountdownTimerProps = {
 };
 
 const CountdownTimer: React.FC<CountdownTimerProps> = ({countdownDuration, isRunning: externalRunning, onTick, onComplete, textClassName, autoStart = false}) => {
-  const currentDuration = useRef(countdownDuration);
-
+  
   // Helper to calculate expiry timestamp
   const calculateExpiryTime = (seconds: number) => {
     const time = new Date();
@@ -23,34 +22,25 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({countdownDuration, isRun
   };
 
   const {seconds, minutes, start, pause, restart, isRunning} = useTimer({
-    expiryTimestamp: calculateExpiryTime(currentDuration.current),
+    expiryTimestamp: calculateExpiryTime(countdownDuration),
     autoStart,
     onExpire: onComplete,
   });
 
-  // Sync external running state
   useEffect(() => {
     if (externalRunning === true && !isRunning) start();
     if (externalRunning === false && isRunning) pause();
   }, [externalRunning, isRunning]);
 
-  // Call onTick on every second
-  useEffect(() => {
-    onTick?.(minutes * 60 + seconds);
-  }, [seconds, minutes, onTick]);
 
-  // Restart timer if duration changes
   useEffect(() => {
-    if (currentDuration.current !== countdownDuration) {
-      currentDuration.current = countdownDuration;
       restart(calculateExpiryTime(countdownDuration), externalRunning ?? autoStart);
-    }
   }, [countdownDuration]);
 
   useEffect(() => {
-    return () => {
-      pause();
-    };
+      return () => {
+        pause();
+      };
   }, []);
 
   return (

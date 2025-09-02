@@ -7,7 +7,7 @@ interface StepsAnimationProps {
   children: React.ReactNode[];
   duration?: number;
   className?: string;
-  mode?: 'soft' | 'hard'; // 🔥 new feature
+  mode?: 'soft' | 'hard'; 
 }
 
 export const StepsAnimation = ({step, children, className, duration = 300, mode = 'soft'}: StepsAnimationProps) => {
